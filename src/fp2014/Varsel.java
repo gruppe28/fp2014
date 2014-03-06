@@ -2,7 +2,7 @@ package fp2014;
 
 public class Varsel {
 	/*
-	 * asdfhiafhai
+	 * asd
 	 */
 	private String tidspunkt;
 	private String dato;
