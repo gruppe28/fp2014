@@ -1,7 +1,9 @@
 package fp2014;
 
 public class Varsel {
-	
+	/*
+	 * asdfhiafhai
+	 */
 	private String tidspunkt;
 	private String dato;
 	private String brukernavn;
