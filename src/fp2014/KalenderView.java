@@ -27,7 +27,9 @@ public class KalenderView {
 	
 	public KalenderView() {
 		
-		
+		/*
+		 * sdjahshdkjaskahdlahdlashdl
+		 */
 		
 	}
 }
