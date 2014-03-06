@@ -2,7 +2,6 @@ package fp2014;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -20,6 +19,7 @@ import com.toedter.calendar.JDateChooser;
  */
 
 
+@SuppressWarnings("serial")
 public class KalenderView extends JPanel {
 	
 	private ArrayList<Avtale> avtaler;
@@ -36,7 +36,7 @@ public class KalenderView extends JPanel {
 		JPanel avtale = new JPanel();
 		
 		kalender.setPreferredSize(new Dimension(1000, 500));
-		header.setPreferredSize(new Dimension(1400, 200));
+		header.setPreferredSize(new Dimension(1400, 150));
 		avtale.setPreferredSize(new Dimension(400, 500));
 		
 		/*
@@ -44,71 +44,112 @@ public class KalenderView extends JPanel {
 		 */
 		
 		avtale.setLayout(new GridBagLayout());
+		GridBagConstraints gbcA = new GridBagConstraints();
 		
 		JTextField avtaleNavn = new JTextField("Navn på avtale");
 		JTextField avtaleBeskrivelse = new JTextField("Beskrivelse av avtalen");
 		JTextField startTidspunkt = new JTextField("Starttidspunkt");
 		JTextField sluttTidspunkt = new JTextField("Slutttidspunkt");
 		JDateChooser datoVelger = new JDateChooser();
-		
 		JButton moterom = new JButton("Velg Møterom");
 		JButton deltakere = new JButton("Administrer deltakere");
 		JButton alarm = new JButton("Opprett alarm");
 		JButton slettAvtale = new JButton("Slett avtale");
 		JButton lagre = new JButton("Lagre");
 		
-		gbc.insets = new Insets(4, 2, 4, 2);
-		gbc.anchor = GridBagConstraints.EAST;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbcA.insets = new Insets(4, 2, 4, 2);
+		gbcA.anchor = GridBagConstraints.EAST;
+		gbcA.fill = GridBagConstraints.HORIZONTAL;
 		
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		avtale.add(avtaleNavn, gbc);
+		gbcA.gridx = 0;
+		gbcA.gridy = 0;
+		gbcA.gridwidth = 2;
+		avtale.add(avtaleNavn, gbcA);
 		
-		gbc.gridy = 1;
-		avtale.add(avtaleBeskrivelse, gbc);
+		gbcA.gridy = 1;
+		gbcA.gridwidth = 2;
+		avtale.add(avtaleBeskrivelse, gbcA);
+
+		gbcA.gridy = 2;
+		gbcA.gridwidth = 2;
+		avtale.add(startTidspunkt, gbcA);
 		
-		gbc.gridy = 2;
-		avtale.add(startTidspunkt, gbc);
+		gbcA.gridy = 3;
+		gbcA.gridwidth = 2;
+		avtale.add(sluttTidspunkt, gbcA);
 		
-		gbc.gridy = 3;
-		avtale.add(sluttTidspunkt, gbc);
+		gbcA.gridy = 4;
+		gbcA.gridwidth = 2;
+		avtale.add(datoVelger, gbcA);
 		
-		gbc.gridy = 4;
-		avtale.add(datoVelger, gbc);
+		gbcA.gridy = 5;
+		gbcA.gridwidth = 2;
+		avtale.add(moterom, gbcA);
 		
-		gbc.gridy = 5;
-		avtale.add(moterom, gbc);
+		gbcA.gridy = 6;
+		gbcA.gridwidth = 2;
+		avtale.add(deltakere, gbcA);
 		
-		gbc.gridy = 6;
-		avtale.add(deltakere, gbc);
+		gbcA.gridy = 7;
+		gbcA.gridwidth = 2;
+		avtale.add(alarm, gbcA);
 		
-		gbc.gridy = 7;
-		avtale.add(alarm, gbc);
+		gbcA.gridy = 8;
+		gbcA.gridwidth = 1;
+		avtale.add(slettAvtale, gbcA);
 		
-		gbc.gridy = 8;
-		avtale.add(slettAvtale, gbc);
-		
-		gbc.gridy = 9;
-		avtale.add(lagre, gbc);
+		gbcA.gridy = 8;
+		gbcA.gridx = 1;
+		avtale.add(lagre, gbcA);
 		
 		/*
 		 * Header
 		 */
 		
 		header.setLayout(new GridBagLayout());
+		GridBagConstraints gbcH = new GridBagConstraints();
 		
-//		JButton forrigeUke
+		JButton forrigeUke = new JButton("<--");
+		JTextField ukeNr = new JTextField("          Uke X          ");
+		JButton nesteUke = new JButton("-->");
+		JButton logUt = new JButton("Logg ut 'brukernavn'");
+		JButton varsler = new JButton("Varsler: X");
 		
+		gbcH.anchor = GridBagConstraints.EAST;
+		gbcH.fill = GridBagConstraints.HORIZONTAL;
+		
+		gbcH.gridx=0;
+		gbcH.gridheight = 2;
+		gbcH.insets = new Insets(4, 330, 4, 40);
+		header.add(forrigeUke, gbcH);
+
+		gbcH.gridx=1;
+		gbcH.insets = new Insets(4, 4, 4, 40);
+		header.add(ukeNr, gbcH);
+		
+		gbcH.gridx=2;
+		gbcH.insets = new Insets(4, 4, 4, 570);
+		header.add(nesteUke, gbcH);
+		
+		gbcH.gridx=3;
+		gbcH.gridheight = 1;
+		gbcH.insets = new Insets(4, 4, 4, 0);
+		header.add(logUt, gbcH);
+		
+		gbcH.gridx=3;
+		gbcH.gridy=1;
+		header.add(varsler, gbcH);
 		
 		
 		/*
 		 * Kalender
 		 */
-		JButton but1 = new JButton();
-		but1.setText("kalender");
-		kalender.add(but1);
 		
+		
+		
+		/*
+		 * 
+		 */
 		
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.VERTICAL;
