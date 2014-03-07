@@ -35,9 +35,9 @@ public class KalenderView extends JPanel {
 		JPanel header = new JPanel();
 		JPanel avtale = new JPanel();
 		
-		kalender.setPreferredSize(new Dimension(1000, 500));
-		header.setPreferredSize(new Dimension(1400, 150));
-		avtale.setPreferredSize(new Dimension(400, 500));
+		kalender.setPreferredSize(new Dimension(1200, 500));
+		header.setPreferredSize(new Dimension(1400, 100));
+		avtale.setPreferredSize(new Dimension(200, 500));
 		
 		/*
 		 * Avtale
@@ -52,6 +52,7 @@ public class KalenderView extends JPanel {
 		JTextField sluttTidspunkt = new JTextField("Slutttidspunkt");
 		JDateChooser datoVelger = new JDateChooser();
 		JButton moterom = new JButton("Velg Møterom");
+		JTextField visRom = new JTextField("Rom ikke valgt");
 		JButton deltakere = new JButton("Administrer deltakere");
 		JButton alarm = new JButton("Opprett alarm");
 		JButton slettAvtale = new JButton("Slett avtale");
@@ -86,19 +87,24 @@ public class KalenderView extends JPanel {
 		gbcA.gridwidth = 2;
 		avtale.add(moterom, gbcA);
 		
+		visRom.setEditable(false);
 		gbcA.gridy = 6;
 		gbcA.gridwidth = 2;
-		avtale.add(deltakere, gbcA);
+		avtale.add(visRom, gbcA);
 		
 		gbcA.gridy = 7;
 		gbcA.gridwidth = 2;
-		avtale.add(alarm, gbcA);
+		avtale.add(deltakere, gbcA);
 		
 		gbcA.gridy = 8;
+		gbcA.gridwidth = 2;
+		avtale.add(alarm, gbcA);
+		
+		gbcA.gridy = 9;
 		gbcA.gridwidth = 1;
 		avtale.add(slettAvtale, gbcA);
 		
-		gbcA.gridy = 8;
+		gbcA.gridy = 9;
 		gbcA.gridx = 1;
 		avtale.add(lagre, gbcA);
 		
