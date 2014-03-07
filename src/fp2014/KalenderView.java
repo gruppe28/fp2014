@@ -5,10 +5,14 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -35,9 +39,9 @@ public class KalenderView extends JPanel {
 		JPanel header = new JPanel();
 		JPanel avtale = new JPanel();
 		
-		kalender.setPreferredSize(new Dimension(1200, 500));
-		header.setPreferredSize(new Dimension(1400, 100));
-		avtale.setPreferredSize(new Dimension(200, 500));
+		kalender.setPreferredSize(new Dimension(1100, 500));
+		header.setPreferredSize(new Dimension(1280, 100));
+		avtale.setPreferredSize(new Dimension(180, 500));
 		
 		/*
 		 * Avtale
@@ -48,6 +52,8 @@ public class KalenderView extends JPanel {
 		
 		JTextField avtaleNavn = new JTextField("Navn på avtale");
 		JTextField avtaleBeskrivelse = new JTextField("Beskrivelse av avtalen");
+		JLabel startTid = new JLabel("Fra:");
+		JLabel sluttTid = new JLabel("Til:");
 		JTextField startTidspunkt = new JTextField("Starttidspunkt");
 		JTextField sluttTidspunkt = new JTextField("Slutttidspunkt");
 		JDateChooser datoVelger = new JDateChooser();
@@ -72,12 +78,18 @@ public class KalenderView extends JPanel {
 		avtale.add(avtaleBeskrivelse, gbcA);
 
 		gbcA.gridy = 2;
-		gbcA.gridwidth = 2;
+		gbcA.gridwidth = 1;
 		avtale.add(startTidspunkt, gbcA);
 		
+		gbcA.gridx = 1;
+		avtale.add(startTid, gbcA);
+		
 		gbcA.gridy = 3;
+		gbcA.gridx = 0;
 		gbcA.gridwidth = 2;
 		avtale.add(sluttTidspunkt, gbcA);
+		
+//		avtale.add(comp)
 		
 		gbcA.gridy = 4;
 		gbcA.gridwidth = 2;
@@ -85,6 +97,23 @@ public class KalenderView extends JPanel {
 		
 		gbcA.gridy = 5;
 		gbcA.gridwidth = 2;
+		moterom.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JDialog romFrame = new JDialog();
+				JPanel romPanel = new JPanel();
+				romPanel.add(new JButton("AutoRom"));
+				romPanel.add(new JButton("Selvvalgt rom"));
+				romPanel.add(new JButton("Sted"));
+				romFrame.setModal(true);
+				
+				romFrame.setContentPane(romPanel);
+				romFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				romFrame.setVisible(true);
+				romFrame.pack();
+			}
+		});
 		avtale.add(moterom, gbcA);
 		
 		visRom.setEditable(false);
@@ -150,7 +179,6 @@ public class KalenderView extends JPanel {
 		/*
 		 * Kalender
 		 */
-		
 		
 		
 		/*
