@@ -212,7 +212,9 @@ public class KalenderView extends JPanel {
 		
 		frame.setContentPane(mainPanel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();frame.setVisible(true);
+		frame.pack();
+		frame.setResizable(false);
+		frame.setVisible(true);
 		
 	}
 }
