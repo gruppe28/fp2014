@@ -8,13 +8,22 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Date;
 
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -52,11 +61,14 @@ public class KalenderView extends JPanel {
 		
 		JTextField avtaleNavn = new JTextField("Navn pï¿½ï¿½ï¿½ avtale");
 		JTextField avtaleBeskrivelse = new JTextField("Beskrivelse av avtalen");
+		
 		JLabel startTid = new JLabel("Fra:");
 		JLabel sluttTid = new JLabel("Til:");
-		JTextField startTidspunkt = new JTextField("Starttidspunkt");
-		JTextField sluttTidspunkt = new JTextField("Slutttidspunkt");
-		JDateChooser datoVelger = new JDateChooser();
+		JTextField startTidspunkt = new JTextField("hh:mm");
+		JTextField sluttTidspunkt = new JTextField("hh:mm");
+		JDateChooser datoVelgerFra = new JDateChooser();
+		JDateChooser datoVelgerTil = new JDateChooser();
+		
 		JButton moterom = new JButton("Velg Mï¿½ï¿½ï¿½terom");
 		JTextField visRom = new JTextField("Rom ikke valgt");
 		JButton deltakere = new JButton("Administrer deltakere");
@@ -65,49 +77,121 @@ public class KalenderView extends JPanel {
 		JButton lagre = new JButton("Lagre");
 		
 		gbcA.insets = new Insets(4, 2, 4, 2);
-		gbcA.anchor = GridBagConstraints.EAST;
+		gbcA.anchor = GridBagConstraints.NORTH;
 		gbcA.fill = GridBagConstraints.HORIZONTAL;
+		gbcA.weightx = 1;
+		gbcA.weighty = 0;
 		
 		gbcA.gridx = 0;
 		gbcA.gridy = 0;
-		gbcA.gridwidth = 2;
+		gbcA.gridwidth = 3;
 		avtale.add(avtaleNavn, gbcA);
 		
 		gbcA.gridy = 1;
-		gbcA.gridwidth = 2;
+		gbcA.gridwidth = 3;
 		avtale.add(avtaleBeskrivelse, gbcA);
 
 		gbcA.gridy = 2;
 		gbcA.gridwidth = 1;
-		avtale.add(startTidspunkt, gbcA);
-		
-		gbcA.gridx = 1;
 		avtale.add(startTid, gbcA);
 		
+		gbcA.gridx = 1;
+		avtale.add(startTidspunkt, gbcA);
+
+		gbcA.gridx = 2;
+		avtale.add(datoVelgerFra, gbcA);
+				
 		gbcA.gridy = 3;
 		gbcA.gridx = 0;
-		gbcA.gridwidth = 2;
+		avtale.add(sluttTid, gbcA);
+		
+		gbcA.gridx = 1;
 		avtale.add(sluttTidspunkt, gbcA);
 		
-//		avtale.add(comp)
+		gbcA.gridx = 2;
+		avtale.add(datoVelgerTil, gbcA);
 		
 		gbcA.gridy = 4;
-		gbcA.gridwidth = 2;
-		avtale.add(datoVelger, gbcA);
-		
-		gbcA.gridy = 5;
-		gbcA.gridwidth = 2;
+		gbcA.gridx = 0;
+		gbcA.gridwidth = 3;
 		moterom.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				JDialog romFrame = new JDialog();
 				JPanel romPanel = new JPanel();
-				romPanel.add(new JButton("AutoRom"));
-				romPanel.add(new JButton("Selvvalgt rom"));
-				romPanel.add(new JButton("Sted"));
-				romFrame.setModal(true);
 				
+				JRadioButton velgMoterom = new JRadioButton("Velg møterom", true);
+				JRadioButton velgMotested = new JRadioButton("Velg møtested");
+				
+				romPanel.add(velgMoterom);
+				romPanel.add(velgMotested);
+				
+				/*
+				 * Møtested-komponenter
+				 */
+				
+				JLabel stedLabel = new JLabel("Skrin inn møtested:");
+				JTextField motested = new JTextField(20);
+				JButton lagreSted = new JButton("Lagre");
+				
+				
+				/*
+				 * Møterom-komponenter
+				 */
+				
+				JSlider antDeltagere = new JSlider(1, 40, 10);
+				
+				DefaultListModel<JRadioButton> romListModel = new DefaultListModel<JRadioButton>();
+				
+				romListModel.addElement(new JRadioButton("Rom #1"));
+				romListModel.addElement(new JRadioButton("Rom #2"));
+				romListModel.addElement(new JRadioButton("Rom #3"));
+				romListModel.addElement(new JRadioButton("Rom #4"));
+				romListModel.addElement(new JRadioButton("Rom #5"));
+				romListModel.addElement(new JRadioButton("Rom #6"));
+				romListModel.addElement(new JRadioButton("Rom #7"));
+				romListModel.addElement(new JRadioButton("Rom #8"));
+				romListModel.addElement(new JRadioButton("Rom #9"));
+				
+				
+				JList<JRadioButton> romList = new JList<JRadioButton>(romListModel);
+				JScrollPane romListScroller = new JScrollPane(romList);
+				romListScroller.setPreferredSize(new Dimension(300, 200));
+
+				romList.setCellRenderer(new DefaultListCellRenderer());
+				romList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				
+				JButton lagreRom = new JButton("Lagre");
+				
+				
+				/*
+				 * 
+				 */
+				
+				romPanel.add(stedLabel);
+				romPanel.add(motested);
+				romPanel.add(lagreSted);
+				romPanel.add(antDeltagere);
+				romPanel.add(romListScroller);
+				romPanel.add(lagreRom);
+				
+				ButtonGroup group = new ButtonGroup();
+				group.add(velgMotested);
+				group.add(velgMoterom);
+				
+				
+				velgMoterom.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
+				
+				romFrame.setModal(true);
+				romFrame.setMinimumSize(new Dimension(350, 350));
 				romFrame.setContentPane(romPanel);
 				romFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				romFrame.setVisible(true);
@@ -117,24 +201,26 @@ public class KalenderView extends JPanel {
 		avtale.add(moterom, gbcA);
 		
 		visRom.setEditable(false);
-		gbcA.gridy = 6;
-		gbcA.gridwidth = 2;
+		gbcA.gridy = 5;
+		gbcA.gridwidth = 3;
 		avtale.add(visRom, gbcA);
 		
-		gbcA.gridy = 7;
-		gbcA.gridwidth = 2;
+		gbcA.gridy = 6;
+		gbcA.gridwidth = 3;
 		avtale.add(deltakere, gbcA);
+		
+		gbcA.gridy = 7;
+		gbcA.gridwidth = 3;
+		avtale.add(alarm, gbcA);
 		
 		gbcA.gridy = 8;
 		gbcA.gridwidth = 2;
-		avtale.add(alarm, gbcA);
-		
-		gbcA.gridy = 9;
-		gbcA.gridwidth = 1;
+		gbcA.insets = new Insets(200, 2, 4, 2);
 		avtale.add(slettAvtale, gbcA);
 		
-		gbcA.gridy = 9;
-		gbcA.gridx = 1;
+		gbcA.gridy = 8;
+		gbcA.gridx = 2;
+		gbcA.gridwidth = 1;
 		avtale.add(lagre, gbcA);
 		
 		/*
@@ -145,7 +231,7 @@ public class KalenderView extends JPanel {
 		GridBagConstraints gbcH = new GridBagConstraints();
 		
 		JButton forrigeUke = new JButton("<--");
-		JTextField ukeNr = new JTextField("          Uke X          ");
+		JTextField ukeNr = new JTextField("Uke X");
 		JButton nesteUke = new JButton("-->");
 		JButton logUt = new JButton("Logg ut 'brukernavn'");
 		JButton varsler = new JButton("Varsler: X");
