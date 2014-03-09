@@ -142,22 +142,24 @@ public class KalenderView extends JPanel {
 				
 				JSlider antDeltagere = new JSlider(1, 40, 10);
 				
-				DefaultListModel<JRadioButton> romListModel = new DefaultListModel<JRadioButton>();
+				DefaultListModel<String> romListModel = new DefaultListModel<String>();
 				
-				romListModel.addElement(new JRadioButton("Rom #1"));
-				romListModel.addElement(new JRadioButton("Rom #2"));
-				romListModel.addElement(new JRadioButton("Rom #3"));
-				romListModel.addElement(new JRadioButton("Rom #4"));
-				romListModel.addElement(new JRadioButton("Rom #5"));
-				romListModel.addElement(new JRadioButton("Rom #6"));
-				romListModel.addElement(new JRadioButton("Rom #7"));
-				romListModel.addElement(new JRadioButton("Rom #8"));
-				romListModel.addElement(new JRadioButton("Rom #9"));
+				romListModel.addElement("Rom #1");
+				romListModel.addElement("Rom #2");
+				romListModel.addElement("Rom #3");
+				romListModel.addElement("Rom #4");
+				romListModel.addElement("Rom #5");
+				romListModel.addElement("Rom #6");
+				romListModel.addElement("Rom #7");
+				romListModel.addElement("Rom #8");
+				romListModel.addElement("Rom #9");
+				romListModel.addElement("Rom #10");
+				romListModel.addElement("Rom #11");
+				romListModel.addElement("Rom #12");
 				
-				
-				JList<JRadioButton> romList = new JList<JRadioButton>(romListModel);
+				JList<String> romList = new JList<String>(romListModel);
 				JScrollPane romListScroller = new JScrollPane(romList);
-				romListScroller.setPreferredSize(new Dimension(300, 200));
+				romListScroller.setPreferredSize(new Dimension(300, 150));
 
 				romList.setCellRenderer(new DefaultListCellRenderer());
 				romList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -179,16 +181,6 @@ public class KalenderView extends JPanel {
 				ButtonGroup group = new ButtonGroup();
 				group.add(velgMotested);
 				group.add(velgMoterom);
-				
-				
-				velgMoterom.addActionListener(new ActionListener() {
-					
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						// TODO Auto-generated method stub
-						
-					}
-				});
 				
 				romFrame.setModal(true);
 				romFrame.setMinimumSize(new Dimension(350, 350));
@@ -249,7 +241,7 @@ public class KalenderView extends JPanel {
 		header.add(ukeNr, gbcH);
 		
 		gbcH.gridx=2;
-		gbcH.insets = new Insets(4, 4, 4, 570);
+		gbcH.insets = new Insets(4, 4, 4, 330);
 		header.add(nesteUke, gbcH);
 		
 		gbcH.gridx=3;
