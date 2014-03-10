@@ -18,7 +18,7 @@ public class Database {
 		//Load driver and connect
 		Class.forName("com.mysql.jdbc.Driver");
 		connect = DriverManager.getConnection("jdbc:mysql://mysql.stud.ntnu.no/audunlib_calendar", "audunlib_group28", "gruppe28allerallerbest");
-		System.out.println("jippi");
+		//System.out.println("");
 	}
   
 	public ArrayList<Rom> loadRooms() throws Exception{
