@@ -35,7 +35,7 @@ public class romValgGUI extends JPanel implements ActionListener{
 	JButton lagreRom;
 	JLabel antDeltagereLabel;
 	JRadioButton velgMotested;
-	
+	JRadioButton velgMoterom;
 	
 	public romValgGUI() {
 
