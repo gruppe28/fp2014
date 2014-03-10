@@ -3,16 +3,21 @@ package GUI;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class LoginGUI extends JPanel {
 	
 	private GridBagConstraints gbc;
+	private JPasswordField passwordField;
+	private JTextField usernameField;
 	
 	public LoginGUI(){
 		this.setLayout(new GridBagLayout());
@@ -23,23 +28,33 @@ public class LoginGUI extends JPanel {
 		
 		JLabel usernameLabel = new JLabel("Username: ");
 		JLabel passwordLabel = new JLabel("Password: ");
-		JTextField username = new JTextField("",15);
-		JTextField password = new JTextField("",15);
+		usernameField = new JTextField("",15);
+		passwordField = new JPasswordField("",15);
 		JButton loginButton = new JButton("Login");
 		
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		add(usernameLabel,gbc);
 		gbc.gridx=1;
-		add(username,gbc);
+		add(usernameField,gbc);
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		add(passwordLabel,gbc);
 		gbc.gridx = 1;
-		add(password,gbc);
+		add(passwordField,gbc);
 		gbc.gridx = 1;
 		gbc.gridy = 2;
 		add(loginButton,gbc);
+		
+		loginButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String pw = new String(passwordField.getPassword());
+				String un = usernameField.getText();
+				
+				// DO LOG IN SHIT
+			}
+		});
 	}
 	
 public static void main(String[] args) {
