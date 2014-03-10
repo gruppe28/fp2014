@@ -1,8 +1,9 @@
-package GUI;
+package fp2014.GUI;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListCellRenderer;
@@ -21,7 +22,13 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import database.Database;
+
+import fp2014.Rom;
 import fp2014.RomListCellRenderer;
+
+
+
 
 @SuppressWarnings("serial")
 public class romValgGUI extends JPanel implements ActionListener{
@@ -30,7 +37,7 @@ public class romValgGUI extends JPanel implements ActionListener{
 	JTextField motested;
 	JButton lagreSted;
 	JSlider antDeltagere;
-	JList romList;
+	JList<Rom> romList;
 	JScrollPane romListScroller;
 	JButton lagreRom;
 	JLabel antDeltagereLabel;
@@ -75,21 +82,21 @@ public class romValgGUI extends JPanel implements ActionListener{
 		});
 		antDeltagereLabel = new JLabel(Integer.toString(antDeltagere.getValue()));
 		
-		DefaultListModel romListModel = new DefaultListModel();
 		
-		//Test-elementer
-		romListModel.addElement("Rom #1");
-		romListModel.addElement("Rom #2");
-		romListModel.addElement("Rom #3");
-		romListModel.addElement("Rom #4");
-		romListModel.addElement("Rom #5");
-		romListModel.addElement("Rom #6");
-		romListModel.addElement("Rom #7");
-		romListModel.addElement("Rom #8");
-		romListModel.addElement("Rom #9");
-		romListModel.addElement("Rom #10");
-		romListModel.addElement("Rom #11");
-		romListModel.addElement("Rom #12");
+		DefaultListModel<Rom> romListModel = new DefaultListModel();
+
+		try {
+			Database db = new Database();
+			ResultSet rs = db.query("select * from Rom");
+		    while (rs.next()) { romListModel.addElement(new Rom(rs.getInt("romNr"), rs.getString("sted"), rs.getInt("antPlasser"), rs.getString("Beskrivelse"))); }
+	    	System.out.println("waaaa");
+	    	db.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	
 		
 		romList = new JList(romListModel);
 		romListScroller = new JScrollPane(romList);

@@ -18,7 +18,7 @@ public class RomListCellRenderer implements ListCellRenderer{
 		ImageIcon radioSelected = new ImageIcon(getClass().getResource("images/SelectedRadioButton.png"));
 		ImageIcon radioNotSelected = new ImageIcon(getClass().getResource("images/NonSelectedRadioButton.png"));
 		
-		JLabel label = new JLabel((String) value);
+		JLabel label = new JLabel(((Rom) value).getSted());
 		
 		if (isSelected) {
 			label.setIcon(radioSelected);
