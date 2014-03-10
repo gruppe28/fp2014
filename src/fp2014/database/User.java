@@ -49,12 +49,14 @@ public class User extends Database {
 	}
 
 	public void logout() {
-
 		/*
 		 * Logger ut bruker, avslutter alle connections, og vise login vindu for
 		 * en ny okt. Viktig a fjerne alle tidligere permissions.
 		 */
-
+	}
+	
+	public void loadAppointments(){
+		// laster inn en brukers avtaler
 	}
 
 }
