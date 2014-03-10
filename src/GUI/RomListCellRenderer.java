@@ -1,4 +1,4 @@
-package fp2014;
+package GUI;
 
 import java.awt.Component;
 
@@ -6,6 +6,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+
+import fp2014.Rom;
 
 //Vil ta inn et rom etter hvert, n�r det er laget ferdig.
 

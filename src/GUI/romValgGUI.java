@@ -1,4 +1,4 @@
-package fp2014.GUI;
+package GUI;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -23,9 +23,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import database.Database;
-
 import fp2014.Rom;
-import fp2014.RomListCellRenderer;
 
 
 

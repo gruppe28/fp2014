@@ -1,4 +1,4 @@
-package fp2014;
+package GUI;
 
 import java.awt.Dimension;
 
