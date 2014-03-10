@@ -10,6 +10,13 @@ public class Rom {
 	private int antPlasser;
 	private String beskrivelse;
 	
+	public Rom(int romNr, String sted, int antPlasser, String beskrivelse){
+		this.romNr = romNr;
+		this.sted = sted;
+		this.antPlasser = antPlasser;
+		this.beskrivelse = beskrivelse;
+	}
+	
 	public int getRomNr() {
 		return romNr;
 	}

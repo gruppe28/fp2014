@@ -1,4 +1,4 @@
-package fp2014;
+package fp2014.database;
 
 public class Autentifikasjon {
 	
@@ -12,7 +12,7 @@ public class Autentifikasjon {
 		
 		/*
 		 * Logger ut bruker, avslutter alle connections, og
-		 * vise login vindu for en ny økt. Viktig å fjerne
+		 * vise login vindu for en ny ï¿½kt. Viktig ï¿½ fjerne
 		 * alle tidligere permissions.
 		 */
 		

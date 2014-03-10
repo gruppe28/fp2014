@@ -1,4 +1,4 @@
-package fp2014;
+package fp2014.GUI;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,6 +11,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import fp2014.Avtale;
+
+
 
 
 /*

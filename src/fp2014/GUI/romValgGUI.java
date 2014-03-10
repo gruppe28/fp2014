@@ -1,4 +1,4 @@
-package fp2014;
+package fp2014.GUI;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -21,6 +21,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import fp2014.RomListCellRenderer;
+
 @SuppressWarnings("serial")
 public class romValgGUI extends JPanel implements ActionListener{
 	
@@ -32,7 +34,6 @@ public class romValgGUI extends JPanel implements ActionListener{
 	JScrollPane romListScroller;
 	JButton lagreRom;
 	JLabel antDeltagereLabel;
-	JRadioButton velgMoterom;
 	JRadioButton velgMotested;
 	
 	
@@ -41,8 +42,8 @@ public class romValgGUI extends JPanel implements ActionListener{
 		JDialog romFrame = new JDialog();
 		JPanel romPanel = new JPanel();
 		
-		velgMoterom = new JRadioButton("Velg m�terom", true);
-		velgMotested = new JRadioButton("Velg m�tested");
+		velgMoterom = new JRadioButton("Velg moterom", true);
+		velgMotested = new JRadioButton("Velg motested");
 		
 		velgMoterom.addActionListener(this);
 		velgMotested.addActionListener(this);
@@ -52,16 +53,16 @@ public class romValgGUI extends JPanel implements ActionListener{
 		romPanel.add(velgMotested);
 		
 		/*
-		 * M�tested-komponenter
+		 * Motested-komponenter
 		 */
 		
-		stedLabel = new JLabel("Skriv inn m�tested:");
+		stedLabel = new JLabel("Skriv inn motested:");
 		motested = new JTextField(20);
 		lagreSted = new JButton("Lagre");
 		
 		
 		/*
-		 * M�terom-komponenter
+		 * Moterom-komponenter
 		 */
 		
 		antDeltagere = new JSlider(1, 40, 10);
