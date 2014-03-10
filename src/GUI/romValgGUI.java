@@ -38,9 +38,9 @@ public class romValgGUI extends JPanel implements ActionListener{
 	DefaultListModel<Rom> roomList;
 	
 	public romValgGUI() {
-
 		JDialog romFrame = new JDialog();
 		JPanel romPanel = new JPanel();
+		romFrame.setTitle("Select location");
 		
 		velgMoterom = new JRadioButton("Velg moterom", true);
 		velgMotested = new JRadioButton("Velg motested");
@@ -125,14 +125,38 @@ public class romValgGUI extends JPanel implements ActionListener{
 			roomList.clear(); // Clears list in case room criteria has changed
 			Database db = new Database();
 			int minPlass = antDeltagere.getValue();
+			boolean validRoom;
+			String from = "10:00";
+			String to = "11:00";
+			
 			ResultSet rs = db.query("select * from Rom WHERE antPlasser >= " + minPlass + "");
 		    while (rs.next()) {
-		    	roomList.addElement(new Rom(rs.getInt("romNr"), rs.getString("sted"), rs.getInt("antPlasser"), rs.getString("Beskrivelse")));
+		    	validRoom = true;
+		    	ResultSet avtaleRes = db.query("select * from Avtale WHERE romNr = " + rs.getInt("romNr") + "");
+		    	
+		    	while (avtaleRes.next()) {
+		    		if(checkOverlap(from, to, avtaleRes.getString("starttidspunkt"), avtaleRes.getString("sluttidspunkt"))) { validRoom = false; }
+		    	}
+		    	
+		    	
+		    	
+		    	if(validRoom) { roomList.addElement(new Rom(rs.getInt("romNr"), rs.getString("sted"), rs.getInt("antPlasser"), rs.getString("Beskrivelse"))); }
 		    	}
 	    	db.close();
 
 		}
 		catch (Exception e) { e.printStackTrace(); }
+	}
+	
+	private boolean checkOverlap(String from1, String to1, String from2, String to2){
+		// Convert strings to floats
+		float from1float = Float.parseFloat(from1.replace(":", "."));
+		float from2float = Float.parseFloat(from2.replace(":", "."));
+		float to1float = Float.parseFloat(to1.replace(":", "."));
+		float to2float = Float.parseFloat(to2.replace(":", "."));
+		
+		// Check for overlap
+		return (from2float > from1float && from2float < to1float) || (to2float > from1float && to2float < to1float) || (from2float <= from1float && to2float >= to1float);
 	}
 
 	// Listeners switching between meeting room/place
