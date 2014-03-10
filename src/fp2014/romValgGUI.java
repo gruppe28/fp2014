@@ -28,7 +28,7 @@ public class romValgGUI extends JPanel implements ActionListener{
 	JTextField motested;
 	JButton lagreSted;
 	JSlider antDeltagere;
-	JList<String> romList;
+	JList romList;
 	JScrollPane romListScroller;
 	JButton lagreRom;
 	JLabel antDeltagereLabel;
@@ -41,8 +41,8 @@ public class romValgGUI extends JPanel implements ActionListener{
 		JDialog romFrame = new JDialog();
 		JPanel romPanel = new JPanel();
 		
-		velgMoterom = new JRadioButton("Velg møterom", true);
-		velgMotested = new JRadioButton("Velg møtested");
+		velgMoterom = new JRadioButton("Velg mï¿½terom", true);
+		velgMotested = new JRadioButton("Velg mï¿½tested");
 		
 		velgMoterom.addActionListener(this);
 		velgMotested.addActionListener(this);
@@ -52,16 +52,16 @@ public class romValgGUI extends JPanel implements ActionListener{
 		romPanel.add(velgMotested);
 		
 		/*
-		 * Møtested-komponenter
+		 * Mï¿½tested-komponenter
 		 */
 		
-		stedLabel = new JLabel("Skriv inn møtested:");
+		stedLabel = new JLabel("Skriv inn mï¿½tested:");
 		motested = new JTextField(20);
 		lagreSted = new JButton("Lagre");
 		
 		
 		/*
-		 * Møterom-komponenter
+		 * Mï¿½terom-komponenter
 		 */
 		
 		antDeltagere = new JSlider(1, 40, 10);
@@ -74,7 +74,7 @@ public class romValgGUI extends JPanel implements ActionListener{
 		});
 		antDeltagereLabel = new JLabel(Integer.toString(antDeltagere.getValue()));
 		
-		DefaultListModel<String> romListModel = new DefaultListModel<String>();
+		DefaultListModel romListModel = new DefaultListModel();
 		
 		//Test-elementer
 		romListModel.addElement("Rom #1");
@@ -90,7 +90,7 @@ public class romValgGUI extends JPanel implements ActionListener{
 		romListModel.addElement("Rom #11");
 		romListModel.addElement("Rom #12");
 		
-		romList = new JList<String>(romListModel);
+		romList = new JList(romListModel);
 		romListScroller = new JScrollPane(romList);
 		romListScroller.setPreferredSize(new Dimension(300, 150));
 

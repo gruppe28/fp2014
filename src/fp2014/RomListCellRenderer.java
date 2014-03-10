@@ -7,18 +7,18 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-//Vil ta inn et rom etter hvert, når det er laget ferdig.
+//Vil ta inn et rom etter hvert, nï¿½r det er laget ferdig.
 
-public class RomListCellRenderer implements ListCellRenderer<String>{
+public class RomListCellRenderer implements ListCellRenderer{
 
 	@Override
-	public Component getListCellRendererComponent(JList<? extends String> list,
-			String value, int index, boolean isSelected, boolean cellHasFocus) {
+	public Component getListCellRendererComponent(JList list,
+			Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		
 		ImageIcon radioSelected = new ImageIcon(getClass().getResource("images/SelectedRadioButton.png"));
 		ImageIcon radioNotSelected = new ImageIcon(getClass().getResource("images/NonSelectedRadioButton.png"));
 		
-		JLabel label = new JLabel(value);
+		JLabel label = new JLabel((String) value);
 		
 		if (isSelected) {
 			label.setIcon(radioSelected);
