@@ -1,5 +1,11 @@
 package fp2014;
 
-public class Kalender {
+import javax.swing.JPanel;
 
+public class Kalender extends JPanel{
+	
+	public Kalender(){
+		
+	}
+	
 }
