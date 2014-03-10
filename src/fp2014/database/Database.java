@@ -10,66 +10,33 @@ import java.util.ArrayList;
 import fp2014.Rom;
 
 public class Database {
-  private Connection connect = null;
-  private Statement statement = null;
-  private ResultSet rs = null;
+	private Connection connect = null;
+	private Statement statement = null;
+	private ResultSet rs = null;
 
-  public void readDataBase() throws Exception {
-    try {
-      // This will load the MySQL driver, each DB has its own driver
-      Class.forName("com.mysql.jdbc.Driver");
-      // Setup the connection with the DB	
-      
-
-      connect = DriverManager.getConnection("jdbc:mysql://mysql.stud.ntnu.no/audunlib_calendar", "audunlib_group28", "gruppe28allerallerbest");
-              	 
-      
-      System.out.println("jippi");
-      // Statements allow to issue SQL queries to the database
-      statement = connect.createStatement();
-      // Result set get the result of the SQL query
-      rs = statement.executeQuery("select * from Ansatt");
-      writeResultSet(rs);
-      ArrayList<Rom> rooms = loadRooms();
-      
-      for(int i = 0; i < rooms.size(); i++){
-    	  System.out.println(rooms.get(i).getSted());
-      }
-     
-      
-    } catch (Exception e) {
-      throw e;
-    } finally {
-      close();
-    }
-
-  }
-
-  private void writeResultSet(ResultSet resultSet) throws SQLException {
-    // ResultSet is initially before the first data set
-    while (resultSet.next()) {
-      // It is possible to get the columns via name
-      // also possible to get the columns via the column number
-      // which starts at 1
-      // e.g. resultSet.getSTring(2);
-      String user = resultSet.getString("fornavn");
-      System.out.println("Bruker: " + user);
-    }
-  }
+	public Database() throws Exception {
+		//Load driver and connect
+		Class.forName("com.mysql.jdbc.Driver");
+		connect = DriverManager.getConnection("jdbc:mysql://mysql.stud.ntnu.no/audunlib_calendar", "audunlib_group28", "gruppe28allerallerbest");
+		System.out.println("jippi");
+	}
   
-  	public ArrayList<Rom> loadRooms() throws SQLException{
-        rs = statement.executeQuery("select * from Rom");
+	public ArrayList<Rom> loadRooms() throws Exception{
+		Database db = new Database();
+        ResultSet r = db.query("select * from Rom");
         ArrayList<Rom> rooms = new ArrayList<Rom>();
 
-        while (rs.next()) {
+        while (r.next()) {
         	Rom newRoom = new Rom(rs.getInt("romNr"), rs.getString("sted"), rs.getInt("antPlasser"), rs.getString("Beskrivelse"));
         	rooms.add(newRoom);
         }
         
+        db.close();
+        
         return rooms;
   	}
-
-	private void close() {
+	
+	public void close() {
 		try {
 			if (rs != null) { rs.close(); }
 
@@ -79,10 +46,23 @@ public class Database {
 		} catch (Exception e) { }
 	}
 	
+	public void update(String sql) throws SQLException {
+		Statement st = connect.createStatement();
+		st.executeUpdate(sql);
+	}
+	
+	public ResultSet query(String sql) throws SQLException {
+		Statement st = connect.createStatement();
+		return st.executeQuery(sql);
+	}
+	
 	public static void main(String[] args) throws Exception {
-	    Database dao = new Database();
-    	System.out.println("waaaa");
-		dao.readDataBase();
+	    //Database db = new Database();
+	    //db.singleQuery("insert into Rom(sted, antPlasser, beskrivelse) values ('stedet', 88, 'fint sted as')");
+	    //ResultSet r = db.query("select * from Rom");
+	    //while (r.next()) { System.out.println(r.getInt("romNr")); }
+    	//System.out.println("waaaa");
+    	//db.close();
 	}
 
 }
