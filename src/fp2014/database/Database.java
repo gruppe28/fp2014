@@ -1,4 +1,4 @@
-package fp2014;
+package fp2014.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
 
 
+
 @SuppressWarnings("serial")
 public class AvtaleGUI extends JPanel {
 	

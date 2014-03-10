@@ -1,4 +1,4 @@
-package fp2014;
+package fp2014.database;
 
 public class Autentifikasjon {
 	
