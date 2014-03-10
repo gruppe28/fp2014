@@ -13,8 +13,10 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 
 		Main main = new Main();
-		System.out.println(main.usr.userExists("JanMann"));
-		System.out.println(main.usr.checkLogin("JanMann", "janjanjanjanjan"));
+		
+		// Tester:
+		System.out.println(main.usr.userExists("admin"));
+		System.out.println(main.usr.checkLogin("admin", "adminpw"));
 	}
 
 }
