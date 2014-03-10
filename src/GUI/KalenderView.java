@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import fp2014.Avtale;
+import fp2014.Appointment;
 
 
 
@@ -25,7 +25,8 @@ import fp2014.Avtale;
 @SuppressWarnings("serial")
 public class KalenderView extends JPanel {
 	
-	private ArrayList<Avtale> avtaler;
+	protected ArrayList<Appointment> avtaler;
+
 	private GridBagConstraints gbc;
 	
 	

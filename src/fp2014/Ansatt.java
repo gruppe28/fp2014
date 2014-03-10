@@ -8,6 +8,9 @@ public class Ansatt {
 	private String etternavn;
 	private String email;
 	
+	public Ansatt() {
+	}
+	
 	/*
 	 * Husk listeners ved endring av egenskaper til ansatt, viktig for å holde
 	 * databasen oppdatert og synkronisert med kalenderklienten.

@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -13,24 +14,30 @@ import javax.swing.JTextField;
 
 import com.toedter.calendar.JDateChooser;
 
+import fp2014.Ansatt;
+import fp2014.Appointment;
+
 @SuppressWarnings("serial")
 public class AvtaleGUI extends JPanel {
 	
-	JButton nyAvtale;
-	JTextField avtaleNavn;
-	JTextField avtaleBeskrivelse;
-	JLabel startTid;
-	JLabel sluttTid;
-	JTextField startTidspunkt;
-	JTextField sluttTidspunkt;
-	JDateChooser datoVelgerFra;
-	JDateChooser datoVelgerTil;
-	JButton moterom;
-	JTextField visRom;
-	JButton deltakere;
-	JButton alarm;
-	JButton slettAvtale;
-	JButton lagre;
+	private ArrayList appointments = new ArrayList();
+	
+	private JButton nyAvtale;
+	private JTextField avtaleNavn;
+	private JTextField avtaleBeskrivelse;
+	private JLabel startTid;
+	private JLabel sluttTid;
+	private JTextField startTidspunkt;
+	private JTextField sluttTidspunkt;
+	private JDateChooser datoVelgerFra;
+	private JDateChooser datoVelgerTil;
+	private JButton moterom;
+	private JTextField visRom;
+	private JButton deltakere;
+	private JButton alarm;
+	private JButton slettAvtale;
+	private JButton lagre;
+	private Appointment appointment;
 	
 	public AvtaleGUI() {
 		
@@ -80,6 +87,36 @@ public class AvtaleGUI extends JPanel {
 		alarm = new JButton("Opprett alarm");
 		slettAvtale = new JButton("Slett avtale");
 		lagre = new JButton("Lagre");
+		
+		lagre.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				appointments.add(new Appointment(avtaleNavn.getText(), startTidspunkt.getText(), 
+						sluttTidspunkt.getText(), avtaleBeskrivelse.getText(), visRom.getText(), 
+						datoVelgerFra.getDateFormatString(), datoVelgerTil.getDateFormatString(), new Ansatt()));
+				
+				System.out.println(appointments);
+				
+				nyAvtale.setVisible(true);
+				avtaleNavn.setVisible(false);
+				avtaleBeskrivelse.setVisible(false);
+				startTid.setVisible(false);
+				sluttTid.setVisible(false);
+				startTidspunkt.setVisible(false);
+				sluttTidspunkt.setVisible(false);
+				datoVelgerFra.setVisible(false);
+				datoVelgerTil.setVisible(false);
+				moterom.setVisible(false);
+				visRom.setVisible(false);
+				deltakere.setVisible(false);
+				alarm.setVisible(false);
+				slettAvtale.setVisible(false);
+				lagre.setVisible(false);
+				
+			}
+		});
 		
 		gbcA.insets = new Insets(4, 2, 4, 2);
 		gbcA.anchor = GridBagConstraints.NORTH;
