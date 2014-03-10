@@ -4,9 +4,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
-
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -21,14 +19,10 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
 import database.Database;
 import fp2014.Rom;
 
-
-
-
-@SuppressWarnings("serial")
+@SuppressWarnings({"serial", "unchecked"})
 public class romValgGUI extends JPanel implements ActionListener{
 	
 	JLabel stedLabel;
@@ -41,6 +35,7 @@ public class romValgGUI extends JPanel implements ActionListener{
 	JLabel antDeltagereLabel;
 	JRadioButton velgMotested;
 	JRadioButton velgMoterom;
+	DefaultListModel<Rom> roomList;
 	
 	public romValgGUI() {
 
@@ -57,9 +52,7 @@ public class romValgGUI extends JPanel implements ActionListener{
 		romPanel.add(velgMoterom);
 		romPanel.add(velgMotested);
 		
-		/*
-		 * Motested-komponenter
-		 */
+		// Møtested-kompo
 		
 		stedLabel = new JLabel("Skriv inn motested:");
 		motested = new JTextField(20);
@@ -76,40 +69,25 @@ public class romValgGUI extends JPanel implements ActionListener{
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				antDeltagereLabel.setText(Integer.toString(antDeltagere.getValue()));
+				showAvailableRooms();
+				
 			}
 		});
 		antDeltagereLabel = new JLabel(Integer.toString(antDeltagere.getValue()));
 		
 		
-		DefaultListModel<Rom> romListModel = new DefaultListModel();
 
-		try {
-			Database db = new Database();
-			ResultSet rs = db.query("select * from Rom");
-		    while (rs.next()) { romListModel.addElement(new Rom(rs.getInt("romNr"), rs.getString("sted"), rs.getInt("antPlasser"), rs.getString("Beskrivelse"))); }
-	    	System.out.println("waaaa");
-	    	db.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	
-		
-		romList = new JList(romListModel);
+		// List of available rooms
+		roomList = new DefaultListModel<Rom>();
+		showAvailableRooms(); // Fills list
+		romList = new JList<Rom>(roomList);
 		romListScroller = new JScrollPane(romList);
 		romListScroller.setPreferredSize(new Dimension(300, 150));
-
 		romList.setCellRenderer(new RomListCellRenderer());
 		romList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
 		lagreRom = new JButton("Lagre");
 		
-		
-		/*
-		 * 
-		 */
-		
+		// Add elements to window
 		romPanel.add(stedLabel);
 		romPanel.add(motested);
 		romPanel.add(lagreSted);
@@ -139,8 +117,25 @@ public class romValgGUI extends JPanel implements ActionListener{
 		romFrame.pack();
 		
 	}
+	
+	
+	// Call this method to update list of available rooms
+	private void showAvailableRooms(){
+		try {
+			roomList.clear(); // Clears list in case room criteria has changed
+			Database db = new Database();
+			int minPlass = antDeltagere.getValue();
+			ResultSet rs = db.query("select * from Rom WHERE antPlasser >= " + minPlass + "");
+		    while (rs.next()) {
+		    	roomList.addElement(new Rom(rs.getInt("romNr"), rs.getString("sted"), rs.getInt("antPlasser"), rs.getString("Beskrivelse")));
+		    	}
+	    	db.close();
 
-	@Override
+		}
+		catch (Exception e) { e.printStackTrace(); }
+	}
+
+	// Listeners switching between meeting room/place
 	public void actionPerformed(ActionEvent e) {
 		
 		if (e.getSource() == velgMoterom) {
@@ -164,7 +159,5 @@ public class romValgGUI extends JPanel implements ActionListener{
 			romList.setVisible(false);
 			lagreRom.setVisible(false);
 		}
-		
 	}
-
 }

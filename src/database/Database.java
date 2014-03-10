@@ -5,64 +5,50 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 
-import fp2014.Rom;
+/* 
+How to run a database query:
+	1. Create a new Database object
+	2. Run query through update() or query()
+	3. Close connection with close()
+*/
 
 public class Database {
 	private Connection connect = null;
-	private Statement statement = null;
-	private ResultSet rs = null;
 
-	public Database() throws Exception {
-		//Load driver and connect
-		Class.forName("com.mysql.jdbc.Driver");
-		connect = DriverManager.getConnection("jdbc:mysql://mysql.stud.ntnu.no/audunlib_calendar", "audunlib_group28", "gruppe28allerallerbest");
-		//System.out.println("");
-	}
-  
-	public ArrayList<Rom> loadRooms() throws Exception{
-		Database db = new Database();
-        ResultSet r = db.query("select * from Rom");
-        ArrayList<Rom> rooms = new ArrayList<Rom>();
-
-        while (r.next()) {
-        	Rom newRoom = new Rom(rs.getInt("romNr"), rs.getString("sted"), rs.getInt("antPlasser"), rs.getString("Beskrivelse"));
-        	rooms.add(newRoom);
-        }
-        
-        db.close();
-        
-        return rooms;
-  	}
-	
-	public void close() {
+	public Database(){
 		try {
-			if (rs != null) { rs.close(); }
-
-			if (statement != null) { statement.close(); }
-
-			if (connect != null) { connect.close(); }
-		} catch (Exception e) { }
+			//Load driver and connect
+			Class.forName("com.mysql.jdbc.Driver");
+			connect = DriverManager.getConnection("jdbc:mysql://mysql.stud.ntnu.no/audunlib_calendar", "audunlib_group28", "gruppe28allerallerbest");
+		}
+		catch (ClassNotFoundException | SQLException e) { e.printStackTrace(); }
+	}
+ 
+	// Call this method to execute queries without output (insert, update, etc.)
+	public void update(String sql){
+		try {
+			Statement st = connect.createStatement();
+			st.executeUpdate(sql);
+		}
+		catch (SQLException e) { e.printStackTrace(); }
 	}
 	
-	public void update(String sql) throws SQLException {
-		Statement st = connect.createStatement();
-		st.executeUpdate(sql);
+	// Call this method to execute queries with output
+	public ResultSet query(String sql){
+		try {
+			Statement st = connect.createStatement();
+			return st.executeQuery(sql);
+			}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
-	public ResultSet query(String sql) throws SQLException {
-		Statement st = connect.createStatement();
-		return st.executeQuery(sql);
+	// After a query, close connection by calling this
+	public void close() {
+		try { connect.close(); }
+		catch (Exception e) { e.printStackTrace(); }
 	}
-	
-	public static void main(String[] args) throws Exception {
-	    //Database db = new Database();
-	    //db.singleQuery("insert into Rom(sted, antPlasser, beskrivelse) values ('stedet', 88, 'fint sted as')");
-	    //ResultSet r = db.query("select * from Rom");
-	    //while (r.next()) { System.out.println(r.getInt("romNr")); }
-    	//System.out.println("waaaa");
-    	//db.close();
-	}
-
 }
