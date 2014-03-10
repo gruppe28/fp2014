@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 
 import com.toedter.calendar.JDateChooser;
 
+
 @SuppressWarnings("serial")
 public class AvtaleGUI extends JPanel {
 	
@@ -64,7 +65,7 @@ public class AvtaleGUI extends JPanel {
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints gbcA = new GridBagConstraints();
 		
-		avtaleNavn = new JTextField("Navn p��� avtale");
+		avtaleNavn = new JTextField("Navn paa avtale");
 		avtaleBeskrivelse = new JTextField("Beskrivelse av avtalen");
 		
 		startTid = new JLabel("Fra:");
@@ -74,7 +75,7 @@ public class AvtaleGUI extends JPanel {
 		datoVelgerFra = new JDateChooser();
 		datoVelgerTil = new JDateChooser();
 		
-		moterom = new JButton("Velg M���terom");
+		moterom = new JButton("Velg Moterom");
 		visRom = new JTextField("Rom ikke valgt");
 		deltakere = new JButton("Administrer deltakere");
 		alarm = new JButton("Opprett alarm");

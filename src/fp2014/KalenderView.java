@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 
+
 /*
  * Tenker dette som GUI for programmet.
  */
