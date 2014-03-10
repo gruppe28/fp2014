@@ -1,11 +1,9 @@
 package fp2014;
 
 import java.awt.Dimension;
-import java.awt.Rectangle;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JList;
@@ -46,7 +44,8 @@ public class CalendarGUI extends JPanel{
 			column.setPreferredWidth(114);
 		}
 		
-		this.add(table);
+		this.add(listScroller);
+		
 	}
 	
 	public static void main(String[] args) {
