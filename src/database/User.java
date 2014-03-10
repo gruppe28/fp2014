@@ -1,4 +1,4 @@
-package fp2014.database;
+package database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

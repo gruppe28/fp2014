@@ -1,4 +1,4 @@
-package fp2014.GUI;
+package GUI;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

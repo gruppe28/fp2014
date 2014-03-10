@@ -1,4 +1,4 @@
-package fp2014.GUI;
+package GUI;
 
 import java.awt.Color;
 import java.awt.Dimension;

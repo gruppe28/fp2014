@@ -1,6 +1,6 @@
 package fp2014;
 
-import fp2014.database.User;
+import database.User;
 
 public class Main {
 
