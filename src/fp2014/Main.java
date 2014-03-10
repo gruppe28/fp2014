@@ -1,13 +1,20 @@
 package fp2014;
 
+import fp2014.database.User;
+
 public class Main {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+	private User usr;
 
+	public Main() throws Exception {
+		usr = new User();
+	}
+
+	public static void main(String[] args) throws Exception {
+
+		Main main = new Main();
+		System.out.println(main.usr.userExists("JanMann"));
+		System.out.println(main.usr.checkLogin("JanMann", "janjanjanjanjan"));
 	}
 
 }
