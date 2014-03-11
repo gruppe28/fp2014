@@ -1,5 +1,15 @@
 package fp2014;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import database.Database;
+
+/*
+ * AUDUN!!
+ */
+
 public class Ansatt {
 
 	private String brukernavn;
@@ -7,8 +17,15 @@ public class Ansatt {
 	private String fornavn;
 	private String etternavn;
 	private String email;
+	private ArrayList<Appointment> appointments;
 	
-	public Ansatt() {
+
+	public Ansatt(String brukernavn, String passord, String fornavn, String etternavn, String email) {
+		this.setBrukernavn(brukernavn);
+		this.setPassord(passord);
+		this.setFornavn(fornavn);
+		this.setEtternavn(etternavn);
+		this.setEmail(email);
 	}
 	
 	/*
@@ -16,6 +33,26 @@ public class Ansatt {
 	 * databasen oppdatert og synkronisert med kalenderklienten.
 	 */
 	
+	public void setBrukernavn(String brukernavn) {
+		this.brukernavn = brukernavn;
+	}
+
+	public void setPassord(String passord) {
+		this.passord = passord;
+	}
+
+	public void setFornavn(String fornavn) {
+		this.fornavn = fornavn;
+	}
+
+	public void setEtternavn(String etternavn) {
+		this.etternavn = etternavn;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public String getBrukernavn() {
 		return brukernavn;
 	}
@@ -37,6 +74,10 @@ public class Ansatt {
 		return email;
 	}
 
+	public ArrayList<Appointment> getAppointments() {
+		return appointments;
+	}
+	
 	public void visKalender(){
 		/*
 		 * Kalles som standardmetode for fremvisning av logget inn ansatt sine avtaler.
@@ -47,5 +88,4 @@ public class Ansatt {
 		 * 
 		 */
 	}
-	
 }

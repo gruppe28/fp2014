@@ -1,5 +1,11 @@
 package fp2014;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import database.Database;
+
 public class Appointment {
 	
 	/*
@@ -16,8 +22,10 @@ public class Appointment {
 	private String endDate;
 	private Ansatt madeBy;
 	private Rom rom;
+	private ArrayList<Ansatt> participants;
 	
-	public Appointment(String name, String startTime, String endTime, String description, String place, String startDate, String endDate, Ansatt madeBy) {
+	public Appointment(int appointmentNr, String name, String startTime, String endTime, String description, String place, String startDate, String endDate, Ansatt madeBy) {
+		this.setAppointmentNr(appointmentNr);
 		this.setName(name);
 		this.setStartTime(startTime);
 		this.setEndTime(endTime);
@@ -101,24 +109,47 @@ public class Appointment {
 		
 	}
 	
-	public void addParticipant(Ansatt ansatt){
+	public void addParticipant(Ansatt ansatt, Appointment appointment){
 		/*
 		 * Legger til ansatte som deltagere, opprettet avtaler hos disse med gitt tidspunkt etc.
 		 */
+		// TODO: Legg til at ansatt blir varslet om sin invitasjon, en ny instans av denne avtalen blir lagt til der også.
+		
+		Database db = new Database();
+		
+		//Adding a AnsattAvtale-relation
+		db.update("Insert into AnsattAvtale values("+appointment.getAppointmentNr()+", "+"'"+ansatt.getBrukernavn()+"'"+", null)");
+		db.close();
+		
+		//
 	}
 	
-	public void changeStatus(Ansatt ansatt, boolean status){
+	public void changeStatus(Ansatt ansatt, boolean status, Appointment appointment){
 		/*
 		 * setter deltagelsesstatus til hver enkelt deltager.
 		 * Hver deltager kan kanskje ha tilgang til denne metoden for seg selv, 
 		 * vet ikke hvordan vi skal implementere det.
 		 */
+		
+		int intstatus;
+		if (status) {
+			intstatus = 1;
+		}else {
+			intstatus = 0;
+		}
+		
+		Database db = new Database();
+		db.update("Update AnsattAvtale Set deltar='"+intstatus+"' Where avtaleNr = " + "'" + appointment.getAppointmentNr() + "' And brukernavn = '"+ ansatt.getBrukernavn() +"'");
+		db.close();
 	}
 	
-	public void removeParticipant(Ansatt ansatt){
+	public void removeParticipant(Ansatt ansatt, Appointment appointment){
 		/*
 		 * fjerner alle relasjoner ansatt har med denne avtalen, kaller opp databasen, kan løses fint vha cascade spørringer.
 		 */
+		
+		//TODO: Fjerne relasjoner mellom ansatt og avtalen, samt evt varsler som er opprettet
+		
 	}
 	
 	public void changeTime(String start, String end){
@@ -134,4 +165,17 @@ public class Appointment {
 		 * Oppretter en romreservasjon-relasjon mellom rommet og avtalen, må kalle sjekkReservasjon etc.
 		 */
 	}
+	
+	public static void main(String[] args) {
+		Appointment appointment = new Appointment(6, "Viktig avtale", "10:30", "13:00", "viktig!", null, "18.04.2014", "18.04.2014", new Ansatt("audunlib", null, null, null, null));
+		Ansatt ansatt = appointment.getAnsatt("admin");
+
+		appointment.changeStatus(ansatt, true, appointment);
+	}
+
+	public void setAppointmentNr(int appointmentNr) {
+		this.appointmentNr = appointmentNr;
+	}
+	
+	
 }
