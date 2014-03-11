@@ -173,7 +173,13 @@ public class AvtaleGUI extends JPanel {
 		gbcA.gridy = 6;
 		gbcA.gridwidth = 3;
 		this.add(deltakere, gbcA);
-		
+		deltakere.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				ManageParticipants manageParticipants = new ManageParticipants();
+			}
+		});
 		gbcA.gridy = 7;
 		gbcA.gridwidth = 3;
 		this.add(alarm, gbcA);
