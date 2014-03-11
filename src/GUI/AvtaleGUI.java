@@ -173,9 +173,7 @@ public class AvtaleGUI extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
 		if (s == lagre){
-			appointments.add(new Appointment(avtaleNavn.getText(), startTidspunkt.getText(), 
-					sluttTidspunkt.getText(), avtaleBeskrivelse.getText(), visRom.getText(), 
-					datoVelgerFra.getDateFormatString(), datoVelgerTil.getDateFormatString(), new Ansatt()));
+
 			System.out.println(appointments);
 			changeState(true);
 		}else if (s == avbryt){

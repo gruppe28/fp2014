@@ -1,10 +1,9 @@
 package fp2014;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import database.Database;
+import database.User;
 
 public class Appointment {
 	
@@ -18,21 +17,21 @@ public class Appointment {
 	private String endTime;
 	private String description;
 	private String place;
-	private String startDate;
-	private String endDate;
+	private String Date;
 	private Ansatt madeBy;
 	private Rom rom;
 	private ArrayList<Ansatt> participants;
 	
-	public Appointment(int appointmentNr, String name, String startTime, String endTime, String description, String place, String startDate, String endDate, Ansatt madeBy) {
-		this.setAppointmentNr(appointmentNr);
+	//int appointmentNr, 
+	public Appointment(String name, String startTime, String endTime, String description, String place, Rom room, String startDate, Ansatt madeBy) {
+//		this.setAppointmentNr(appointmentNr);
 		this.setName(name);
 		this.setStartTime(startTime);
 		this.setEndTime(endTime);
 		this.setDescription(description);
 		this.setPlace(place);
-		this.setStartDate(startDate);
-		this.setEndDate(endDate);
+		this.setRom(room);
+		this.setDate(startDate);
 		this.setMadeBy(madeBy);
 	}
 	
@@ -78,35 +77,64 @@ public class Appointment {
 	public void setPlace(String place) {
 		this.place = place;
 	}
-	public String getStartDate() {
-		return startDate;
+	public String getDate() {
+		return Date;
 	}
 
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
+	public void setDate(String Date) {
+		this.Date = Date;
+	}
+	
+	public Rom getRom() {
+		return rom;
+	}
+	
+	public void setRom(Rom rom) {
+		this.rom = rom;
 	}
 
-	public String getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
-	}
 	
 		/*
 		 * Kun tilgjengelig for den som har en opprettetAv-relasjon, og gir tilgang til alle setterne. 
 		 */
 	
 	
-	public void newAppointment(){
+	public void sendAppoinmentToDatabase(Appointment appointment){
+		
 		/*
-		 * Oppretter en ny avtale, hvorpå den bruker som er innlogget blir satt som "eier" til denne avtalen.
-		 * 
-		 * møteleder må settes som deltager, svare at han/hun kommer, avtalen må bli lagret til gitt bruker
+		 * Oppretter en ny avtale, som sendes til databasen, får et avtalenummer.
+		 * 		db.update("Insert Into Avtale(navn, starttidspunkt, sluttidspunkt, beskrivelse, sted, dato, romNr, opprettetAv) Values('" + appointment.getName() 
+				+ "', '" + appointment.getStartTime()
+				+ "', '" + appointment.getEndTime() 
+				+ "', '" + appointment.getDescription() 
+				+ "', '" + appointment.getPlace() 
+				+ "', '" + appointment.getDate() 
+				+ "', '" + appointment.getRom().getRomNr() 
+				+ "', '" + appointment.getMadeBy().getBrukernavn() + "')");
 		 */
 		
-		
+		Database db = new Database();
+		if (appointment.getRom() == null) {
+			db.update("Insert Into Avtale(navn, starttidspunkt, sluttidspunkt, beskrivelse, sted, dato, opprettetAv) Values('" + appointment.getName() 
+					+ "', '" + appointment.getStartTime()
+					+ "', '" + appointment.getEndTime() 
+					+ "', '" + appointment.getDescription() 
+					+ "', '" + appointment.getPlace() 
+					+ "', '" + appointment.getDate() 
+					+ "', '" + appointment.getMadeBy().getBrukernavn() + "')");
+
+		} else {
+			db.update("Insert Into Avtale(navn, starttidspunkt, sluttidspunkt, beskrivelse, dato, romNr, opprettetAv) Values('" + appointment.getName() 
+					+ "', '" + appointment.getStartTime()
+					+ "', '" + appointment.getEndTime() 
+					+ "', '" + appointment.getDescription() 
+					+ "', '" + appointment.getDate() 
+					+ "', '" + appointment.getRom().getRomNr() 
+					+ "', '" + appointment.getMadeBy().getBrukernavn() + "')");
+
+		}
+		db.close();
+				
 	}
 	
 	public void addParticipant(Ansatt ansatt, Appointment appointment){
@@ -149,7 +177,9 @@ public class Appointment {
 		 */
 		
 		//TODO: Fjerne relasjoner mellom ansatt og avtalen, samt evt varsler som er opprettet
-		
+		Database db = new Database();
+		db.update("Delete from AnsattAvtale Where avtaleNr = '" + appointment.getAppointmentNr() + "' And brukernavn = '" + ansatt.getBrukernavn() + "'");
+		db.close();
 	}
 	
 	public void changeTime(String start, String end){
@@ -167,8 +197,11 @@ public class Appointment {
 	}
 	
 	public static void main(String[] args) {
-		Appointment appointment = new Appointment(6, "Viktig avtale", "10:30", "13:00", "viktig!", null, "18.04.2014", "18.04.2014", new Ansatt("audunlib", null, null, null, null));
-		Ansatt ansatt = appointment.getAnsatt("admin");
+		
+		User usr = new User();
+		
+		Appointment appointment = new Appointment("Viktig avtale", "10:30", "13:00", "viktig!", null, null, "18.04.2014", new Ansatt("audunlib", null, null, null, null));
+		Ansatt ansatt = usr.getAnsatt("admin");
 
 		appointment.changeStatus(ansatt, true, appointment);
 	}

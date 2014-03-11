@@ -69,7 +69,7 @@ public class LoginGUI extends JPanel {
 					Ansatt you = newUser.getAnsatt(un);
 					
 					JFrame frame = new JFrame(you.getFornavn() + " " + you.getEtternavn() + "'s calendar");
-					KalenderView mainPanel = new KalenderView(you);
+					KalenderView mainPanel = new KalenderView(you, frame);
 					
 					frame.setContentPane(mainPanel);
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

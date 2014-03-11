@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -13,27 +15,22 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
 import fp2014.Ansatt;
 import fp2014.Appointment;
 
-
-
-
-/*
- * Tenker dette som GUI for programmet.
- */
-
-
 @SuppressWarnings("serial")
-public class KalenderView extends JPanel {
+public class KalenderView extends JPanel  {
 	
 	protected ArrayList<Appointment> avtaler;
 
 	private GridBagConstraints gbc;
 	
+	private JFrame activeWindow;
 	
-	public KalenderView(Ansatt user) {
+	
+	public KalenderView(Ansatt user, JFrame activeWindow) {
+		
+		this.activeWindow = activeWindow;
 		
 		try {
 			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -47,25 +44,30 @@ public class KalenderView extends JPanel {
 		gbc = new GridBagConstraints();
 		
 		JPanel kalender = new JPanel();
-		JPanel header = new JPanel();
+		JPanel headerLeft = new JPanel();
+		JPanel headerRight = new JPanel();
 		JPanel avtale = new AvtaleGUI();
 		
 		kalender.setPreferredSize(new Dimension(804, 500));
-		header.setPreferredSize(new Dimension(1024, 100));
+		headerLeft.setPreferredSize(new Dimension(804, 100));
+		headerRight.setPreferredSize(new Dimension(220, 100));
 		avtale.setPreferredSize(new Dimension(220, 500));
 		
 		/*
 		 * Header
 		 */
 		
-		header.setLayout(new GridBagLayout());
+		headerLeft.setLayout(new GridBagLayout());
 		GridBagConstraints gbcH = new GridBagConstraints();
 		
 		JButton forrigeUke = new JButton("<--");
-		JTextField ukeNr = new JTextField("Uke X", 15);
+		JTextField ukeNr = new JTextField("Week X", 15);
 		JButton nesteUke = new JButton("-->");
-		JButton logUt = new JButton("Logg ut " + user.getBrukernavn());
-		JButton varsler = new JButton("Varsler: X");
+		JButton logUt = new JButton("Log off " + user.getBrukernavn());
+		
+		logUt.addActionListener(new logOffListener());
+		
+		JButton varsler = new JButton("Alerts: X");
 		
 		gbcH.anchor = GridBagConstraints.CENTER;
 		gbcH.fill = GridBagConstraints.HORIZONTAL;
@@ -73,24 +75,29 @@ public class KalenderView extends JPanel {
 		gbcH.gridx=0;
 		gbcH.gridheight = 2;
 		gbcH.insets = new Insets(4, 330, 4, 40);
-		header.add(forrigeUke, gbcH);
+		headerLeft.add(forrigeUke, gbcH);
 
 		gbcH.gridx=1;
 		gbcH.insets = new Insets(4, 4, 4, 40);
-		header.add(ukeNr, gbcH);
+		headerLeft.add(ukeNr, gbcH);
 		
 		gbcH.gridx=2;
 		gbcH.insets = new Insets(4, 4, 4, 330);
-		header.add(nesteUke, gbcH);
+		headerLeft.add(nesteUke, gbcH);
+		
+		
+		// Gridbag, right header
+		
+		headerRight.setLayout(new GridBagLayout());
 		
 		gbcH.gridx=3;
 		gbcH.gridheight = 1;
 		gbcH.insets = new Insets(4, 4, 4, 0);
-		header.add(logUt, gbcH);
+		headerRight.add(logUt, gbcH);
 		
 		gbcH.gridx=3;
 		gbcH.gridy=1;
-		header.add(varsler, gbcH);
+		headerRight.add(varsler, gbcH);
 		
 		
 		/*
@@ -113,15 +120,31 @@ public class KalenderView extends JPanel {
 		
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.gridwidth = 2;
-		header.setBackground(Color.GREEN);
-		this.add(header, gbc);
+		headerLeft.setBackground(Color.GREEN);
+		this.add(headerLeft, gbc);
+		
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		headerRight.setBackground(Color.GREEN);
+		this.add(headerRight, gbc);
 		
 		gbc.gridx = 1;
 		gbc.gridy = 1;
 		avtale.setBackground(Color.WHITE);
 		this.add(avtale, gbc);
 		
+	}
+	
+	private void logOff(){
+		String[] args = {};
+		LoginGUI.main(args);
+		activeWindow.dispose();
+	}
+
+	class logOffListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			logOff();
+		}
 	}
 
 }
