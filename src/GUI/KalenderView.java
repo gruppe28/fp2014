@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import fp2014.Ansatt;
 import fp2014.Appointment;
 
 
@@ -32,7 +33,7 @@ public class KalenderView extends JPanel {
 	private GridBagConstraints gbc;
 	
 	
-	public KalenderView() {
+	public KalenderView(Ansatt user) {
 		
 		try {
 			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -63,7 +64,7 @@ public class KalenderView extends JPanel {
 		JButton forrigeUke = new JButton("<--");
 		JTextField ukeNr = new JTextField("Uke X", 15);
 		JButton nesteUke = new JButton("-->");
-		JButton logUt = new JButton("Logg ut 'brukernavn'");
+		JButton logUt = new JButton("Logg ut " + user.getBrukernavn());
 		JButton varsler = new JButton("Varsler: X");
 		
 		gbcH.anchor = GridBagConstraints.CENTER;
@@ -122,16 +123,5 @@ public class KalenderView extends JPanel {
 		this.add(avtale, gbc);
 		
 	}
-	public static void main(String[] args) {
-		
-		JFrame frame = new JFrame("TestGUI");
-		KalenderView mainPanel = new KalenderView();
-		
-		frame.setContentPane(mainPanel);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
-		frame.setResizable(false);
-		frame.setVisible(true);
-		
-	}
+
 }
