@@ -1,6 +1,8 @@
 package GUI;
 
 import java.awt.Dimension;
+
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -13,13 +15,19 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import database.User;
+import fp2014.Ansatt;
+
+@SuppressWarnings("serial")
 public class LoginGUI extends JPanel {
 	
 	private GridBagConstraints gbc;
 	private JPasswordField passwordField;
 	private JTextField usernameField;
 	
-	public LoginGUI(){
+	public LoginGUI(final JFrame loginFrame){
+
+		
 		this.setLayout(new GridBagLayout());
 		gbc = new GridBagConstraints();
 		
@@ -52,7 +60,26 @@ public class LoginGUI extends JPanel {
 				String pw = new String(passwordField.getPassword());
 				String un = usernameField.getText();
 				
-				// DO LOG IN SHIT
+				User newUser = new User();
+				
+				if(newUser.checkLogin(un, pw)){
+					
+					loginFrame.dispose();
+					
+					Ansatt you = newUser.getAnsatt(un);
+					
+					JFrame frame = new JFrame(you.getFornavn() + " " + you.getEtternavn() + "'s calendar");
+					KalenderView mainPanel = new KalenderView(you);
+					
+					frame.setContentPane(mainPanel);
+					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					frame.pack();
+					frame.setResizable(false);
+					frame.setVisible(true);
+
+
+
+				}
 			}
 		});
 	}
@@ -60,7 +87,7 @@ public class LoginGUI extends JPanel {
 public static void main(String[] args) {
 		
 		JFrame frame = new JFrame("Login");
-		LoginGUI mainPanel = new LoginGUI();
+		LoginGUI mainPanel = new LoginGUI(frame);
 		
 		frame.setContentPane(mainPanel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
