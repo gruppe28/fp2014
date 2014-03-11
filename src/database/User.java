@@ -2,31 +2,24 @@ package database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import fp2014.Ansatt;
 
 public class User{
 
-	public User(){
-		super();
-		// TODO Auto-generated constructor stub
-	}
+	public String feedback;
 	
+	// Checks the existence of a username with the database
 	public boolean userExists(String inputUsername){
 		try {
 			Database db = new Database();
 		    ResultSet rs = db.query("SELECT brukernavn FROM Ansatt WHERE brukernavn ='"+inputUsername+"'");
 			
-			if (rs.next()) {
-				return true;
-			}
-			
-		} catch (Exception e) {
-			System.out.println(e);
-		}
+			if(rs.next()) { db.close(); return true; } //If there were any results, the user exists.
+		} catch (Exception e) { }
 		return false;
 	}
 	
+	// Check if a username/password combination is valid. Proper feedback is written to the feedback field
 	public boolean checkLogin(String inputUsername, String inputPassword){
 		
 		String password = null;
@@ -35,31 +28,15 @@ public class User{
 			Database db = new Database();
 		    ResultSet rs = db.query("SELECT * FROM Ansatt WHERE brukernavn ='"+inputUsername+"'");
 		    if(rs.next()) { password = rs.getString("passord"); }
-			
-		}catch (Exception e){
-			System.out.println(e);
-		}
+		} catch (Exception e){ feedback = "Could not connect to the database."; return false; }
 		
-		if (userExists(inputUsername) && (inputPassword.equals(password))) {
-			System.out.println("truuu");
-			return true;
-		} else {
-			System.out.println("fake ass gangsta");
-			return false;
-		}
+		if (userExists(inputUsername) && (inputPassword.equals(password))) { return true; }
+		else if (userExists(inputUsername)) { feedback = "Incorrect password."; }
+		else { feedback = "Username does not exist."; }
+		return false;
 	}
 
-	public void logout() {
-		/*
-		 * Logger ut bruker, avslutter alle connections, og vise login vindu for
-		 * en ny okt. Viktig a fjerne alle tidligere permissions.
-		 */
-	}
-	
-	public void loadAppointments(){
-		// laster inn en brukers avtaler
-	}
-	
+	// Fetches an Ansatt from the database based on username and returns it as an Ansatt object
 	public Ansatt getAnsatt(String brukernavn) {
 		
 		Ansatt user = new Ansatt(null, null, null, null, null);
