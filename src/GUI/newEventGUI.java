@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 
 import com.toedter.calendar.JDateChooser;
 
+@SuppressWarnings("serial")
 public class newEventGUI extends JPanel implements ActionListener {
 
 	private JTextField avtaleNavn;
@@ -143,7 +144,7 @@ public class newEventGUI extends JPanel implements ActionListener {
 		}else if (s == avbryt){
 			parent.addNewPanel("avtale", new AvtaleGUI(parent));
 		}else if(s == moterom){
-			romValgGUI romValg = new romValgGUI();
+			romValgGUI romValg = new romValgGUI("19.04.2014", "10:00", "11:00");
 		}else if(s == deltakere){
 			ManageParticipants manageParticipants = new ManageParticipants();
 		}else if(s == slettAvtale){

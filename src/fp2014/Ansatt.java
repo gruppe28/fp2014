@@ -1,14 +1,8 @@
 package fp2014;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import database.DBHandler;
 
-import database.Database;
-
-/*
- * AUDUN!!
- */
 
 public class Ansatt {
 
@@ -90,12 +84,6 @@ public class Ansatt {
 	}
 	
 	public int getNumberOfUnseenNotifications(){
-	    try {		
-	    	Database db = new Database();
-	    	ResultSet rs = db.query("SELECT * FROM Varsel WHERE brukernavn ='"+brukernavn+"' AND sett='0'");
-			rs.last();
-			return rs.getRow();
-		} catch (SQLException e) { e.printStackTrace(); }
-		return -1; // Only to satisfy try/catch. Should not actually happen.
+		return DBHandler.numberOfUnseenNotifications(brukernavn);
 	}
 }

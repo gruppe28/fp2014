@@ -3,7 +3,7 @@ package GUI;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
+import java.util.ArrayList;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import database.Database;
+import database.DBHandler;
 import fp2014.Rom;
 
 @SuppressWarnings({"serial", "unchecked"})
@@ -36,8 +36,19 @@ public class romValgGUI extends JPanel implements ActionListener{
 	JRadioButton velgMotested;
 	JRadioButton velgMoterom;
 	DefaultListModel<Rom> roomList;
+	ArrayList<Rom> availableRooms;
 	
-	public romValgGUI() {
+	String date;
+	String from;
+	String to;
+	
+	public romValgGUI(String date, String from, String to) {
+		
+		this.date = date;
+		this.from = from;
+		this.to = to;
+		
+		
 		JDialog romFrame = new JDialog();
 		JPanel romPanel = new JPanel();
 		romFrame.setTitle("Select location");
@@ -78,6 +89,7 @@ public class romValgGUI extends JPanel implements ActionListener{
 		
 
 		// List of available rooms
+		availableRooms = DBHandler.getAvailableRooms(date, from, to); //Fetch rooms available that date and time from database
 		roomList = new DefaultListModel<Rom>();
 		showAvailableRooms(); // Fills list
 		romList = new JList<Rom>(roomList);
@@ -121,43 +133,20 @@ public class romValgGUI extends JPanel implements ActionListener{
 	
 	// Call this method to update list of available rooms
 	private void showAvailableRooms(){
-		try {
-			roomList.clear(); // Clears list in case room criteria has changed
-			Database db = new Database();
-			int minPlass = antDeltagere.getValue();
-			boolean validRoom;
-			String from = "10:00";
-			String to = "11:00";
-			
-			ResultSet rs = db.query("select * from Rom WHERE antPlasser >= " + minPlass + "");
-		    while (rs.next()) {
-		    	validRoom = true;
-		    	ResultSet avtaleRes = db.query("select * from Avtale WHERE romNr = " + rs.getInt("romNr") + "");
-		    	
-		    	while (avtaleRes.next()) {
-		    		if(checkOverlap(from, to, avtaleRes.getString("starttidspunkt"), avtaleRes.getString("sluttidspunkt"))) { validRoom = false; }
-		    	}
-		    	
-		    	
-		    	
-		    	if(validRoom) { roomList.addElement(new Rom(rs.getInt("romNr"), rs.getString("sted"), rs.getInt("antPlasser"), rs.getString("Beskrivelse"))); }
-		    	}
-	    	db.close();
-
-		}
-		catch (Exception e) { e.printStackTrace(); }
-	}
-	
-	private boolean checkOverlap(String from1, String to1, String from2, String to2){
-		// Convert strings to floats
-		float from1float = Float.parseFloat(from1.replace(":", "."));
-		float from2float = Float.parseFloat(from2.replace(":", "."));
-		float to1float = Float.parseFloat(to1.replace(":", "."));
-		float to2float = Float.parseFloat(to2.replace(":", "."));
+		roomList.clear(); // Clears list in case room criteria has changed
 		
-		// Check for overlap
-		return (from2float > from1float && from2float < to1float) || (to2float > from1float && to2float < to1float) || (from2float <= from1float && to2float >= to1float);
+		ArrayList<Rom> capableRooms = DBHandler.getRoomsWithCapacity(antDeltagere.getValue());
+		ArrayList<Integer> roomNumbers = new ArrayList<Integer>();
+
+		for(int i = 0; i < availableRooms.size(); i++){
+			roomNumbers.add(availableRooms.get(i).getRomNr());
+		}
+		
+		for(int i = 0; i < capableRooms.size(); i++){
+			if(roomNumbers.contains(capableRooms.get(i).getRomNr())){ roomList.addElement(capableRooms.get(i)); }
+		}
 	}
+
 
 	// Listeners switching between meeting room/place
 	public void actionPerformed(ActionEvent e) {
