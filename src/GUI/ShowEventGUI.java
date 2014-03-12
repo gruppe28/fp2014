@@ -113,6 +113,7 @@ public class ShowEventGUI extends JPanel implements ChangeListener{
 		c.gridy++;
 		add(attending, c);
 		
+		c.anchor = GridBagConstraints.WEST;
 		c.gridwidth = 2;
 		c.gridx++;
 		add(yes, c);
@@ -120,6 +121,7 @@ public class ShowEventGUI extends JPanel implements ChangeListener{
 		c.gridx+=2;
 		add(no, c);
 		
+		c.anchor = GridBagConstraints.EAST;
 		c.insets = new Insets(0, 0, 80, 0);
 		c.gridy++;
 		c.gridx=1;
