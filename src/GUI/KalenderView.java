@@ -10,12 +10,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
 import fp2014.Ansatt;
 import fp2014.Appointment;
 
@@ -24,7 +26,7 @@ public class KalenderView extends JPanel {
 	
 	protected ArrayList<Appointment> avtaler;
 	private GridBagConstraints gbc;
-	private JFrame activeWindow;
+	protected JFrame activeWindow;
 	private int week;
 	private int year;
 	private JLabel weekNumberLabel;
@@ -32,6 +34,7 @@ public class KalenderView extends JPanel {
 	private JButton nextWeek;
 	private JButton alerts;
 	private JButton logOut;
+	private JPanel kalender, headerLeft, headerRight, avtale;
 	
 	
 	public KalenderView(Ansatt user, JFrame activeWindow) {
@@ -47,11 +50,13 @@ public class KalenderView extends JPanel {
 		// Create and set size of various panels
 		this.setLayout(new GridBagLayout());
 		gbc = new GridBagConstraints();
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.fill = GridBagConstraints.VERTICAL;
 		
-		JPanel kalender = new JPanel();
-		JPanel headerLeft = new JPanel();
-		JPanel headerRight = new JPanel();
-		JPanel avtale = new AvtaleGUI();
+		kalender = new JPanel();
+		headerLeft = new JPanel();
+		headerRight = new JPanel();
+		avtale = new AvtaleGUI(this);
 		
 		kalender.setPreferredSize(new Dimension(804, 500));
 		headerLeft.setPreferredSize(new Dimension(804, 100));
@@ -109,28 +114,26 @@ public class KalenderView extends JPanel {
 		headerRight.add(alerts, gbcH);
 		
 		// GridBag, whole calendar window
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.fill = GridBagConstraints.VERTICAL;
-		
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		kalender.setBackground(Color.BLUE);
-		this.add(kalender, gbc);
-		
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		headerLeft.setBackground(Color.GREEN);
-		this.add(headerLeft, gbc);
-		
-		gbc.gridx = 1;
-		gbc.gridy = 0;
-		headerRight.setBackground(Color.GREEN);
-		this.add(headerRight, gbc);
-		
-		gbc.gridx = 1;
-		gbc.gridy = 1;
-		avtale.setBackground(Color.WHITE);
-		this.add(avtale, gbc);
+			gbc.gridx = 0;
+			gbc.gridy = 1;
+			kalender.setBackground(Color.BLUE);
+			this.add(kalender, gbc);
+			
+			gbc.gridx = 0;
+			gbc.gridy = 0;
+			headerLeft.setBackground(Color.GREEN);
+			this.add(headerLeft, gbc);
+			
+			gbc.gridx = 1;
+			gbc.gridy = 0;
+			headerRight.setBackground(Color.GREEN);
+			this.add(headerRight, gbc);
+			
+			gbc.gridx = 1;
+			gbc.gridy = 1;
+			avtale.setBackground(Color.WHITE);
+			this.add(avtale, gbc);
+			
 		
 	}
 	
@@ -160,7 +163,7 @@ public class KalenderView extends JPanel {
 	    int ordinalDay = c.get(Calendar.DAY_OF_YEAR);
 	    int weekDay = c.get(Calendar.DAY_OF_WEEK) - 1;
 	    int numberOfWeeks = (ordinalDay - weekDay + 10) / 7;
-	    return numberOfWeeks;
+	    return numberOfWeeks; //return 52; There are always 52 weeks in a year.
 	}
 	
 	private void logOff(){
@@ -169,8 +172,53 @@ public class KalenderView extends JPanel {
 		activeWindow.dispose(); // Close the calendar window
 	}
 
-	// Listener classes below
+	public void addNewPanel(String panel, JPanel newPanel){
 	
+		if (panel.equals("kalender")){
+			remove(kalender);
+			kalender = newPanel;
+			kalender.setPreferredSize(new Dimension(804, 500));
+			gbc.gridx = 0;
+			gbc.gridy = 1;
+			newPanel.setBackground(Color.BLUE);
+		}else if(panel.equals("headerLeft")){
+			remove(headerLeft);
+			headerLeft = newPanel;
+			headerLeft.setPreferredSize(new Dimension(804, 100));
+			gbc.gridx = 0;
+			gbc.gridy = 0;
+			newPanel.setBackground(Color.GREEN);
+		}else if(panel.equals("headerRight")){
+			remove(headerRight);
+			headerRight = newPanel;
+			headerRight.setPreferredSize(new Dimension(220, 100));
+			gbc.gridx = 1;
+			gbc.gridy = 0;
+			newPanel.setBackground(Color.GREEN);
+		}else if(panel.equals("avtale")){
+			remove(avtale);
+			avtale = newPanel;
+			avtale.setPreferredSize(new Dimension(220, 500));
+			gbc.gridx = 1;
+			gbc.gridy = 1;
+			newPanel.setBackground(Color.WHITE);
+		}
+		this.add(newPanel, gbc);
+		
+		revalidate();
+		repaint();
+	}
+	
+	public JPanel getAvtale() {
+		return avtale;
+	}
+
+	public void setAvtale(JPanel avtale) {
+		this.avtale = avtale;
+	}
+	
+	// Listener classes below
+
 	class logOffListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			logOff();
