@@ -53,7 +53,7 @@ public class KalenderView extends JPanel {
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.VERTICAL;
 		
-		kalender = new JPanel();
+		kalender = new CalendarPanel(activeWindow);
 		headerLeft = new JPanel();
 		headerRight = new JPanel();
 		avtale = new AvtaleGUI(this);
