@@ -163,7 +163,7 @@ public class KalenderView extends JPanel {
 	    int ordinalDay = c.get(Calendar.DAY_OF_YEAR);
 	    int weekDay = c.get(Calendar.DAY_OF_WEEK) - 1;
 	    int numberOfWeeks = (ordinalDay - weekDay + 10) / 7;
-	    return numberOfWeeks; //return 52; There are always 52 weeks in a year.
+	    return numberOfWeeks;
 	}
 	
 	private void logOff(){
