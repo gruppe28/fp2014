@@ -22,7 +22,7 @@ public class Database {
 			Class.forName("com.mysql.jdbc.Driver");
 			connect = DriverManager.getConnection("jdbc:mysql://mysql.stud.ntnu.no/audunlib_calendar", "audunlib_group28", "gruppe28allerallerbest");
 		}
-		catch (ClassNotFoundException | SQLException e) { e.printStackTrace(); }
+		catch (ClassNotFoundException | SQLException e) {  } // Does not print exceptions. Error handling is taken care of at login
 	}
  
 	// Call this method to execute queries without output (insert, update, etc.)
@@ -31,7 +31,7 @@ public class Database {
 			Statement st = connect.createStatement();
 			st.executeUpdate(sql);
 		}
-		catch (SQLException e) { e.printStackTrace(); }
+		catch (SQLException e) {  }
 	}
 	
 	// Call this method to execute queries with output
