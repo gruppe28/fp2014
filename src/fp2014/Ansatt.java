@@ -88,4 +88,14 @@ public class Ansatt {
 		 * 
 		 */
 	}
+	
+	public int getNumberOfUnseenNotifications(){
+	    try {		
+	    	Database db = new Database();
+	    	ResultSet rs = db.query("SELECT * FROM Varsel WHERE brukernavn ='"+brukernavn+"' AND sett='0'");
+			rs.last();
+			return rs.getRow();
+		} catch (SQLException e) { e.printStackTrace(); }
+		return -1; // Only to satisfy try/catch. Should not actually happen.
+	}
 }
