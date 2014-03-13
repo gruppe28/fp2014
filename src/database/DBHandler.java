@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import fp2014.Ansatt;
+import fp2014.Appointment;
 import fp2014.Rom;
 
 public final class DBHandler {
@@ -88,12 +90,81 @@ public final class DBHandler {
 
 				ResultSet rs = db.query("select * from Rom WHERE antPlasser >= " + capacity + "");
 			    while (rs.next()) {
-			    	satisfyingRooms.add(new Rom(rs.getInt("romNr"), rs.getString("sted"), rs.getInt("antPlasser"), rs.getString("Beskrivelse")));
+			    	satisfyingRooms.add(new Rom(rs.getInt("romNr"), rs.getString("sted"), rs.getInt("antPlasser"), rs.getString("beskrivelse")));
 			    }
 			}
 			catch (Exception e) { e.printStackTrace(); }
 	
 		return satisfyingRooms;
+	}
+	
+	public static ArrayList<Appointment> getAppointmentsInInterval(ArrayList<Ansatt> users, ArrayList<String> days){
+		ArrayList<Appointment> appointments = new ArrayList<>();
+		String daysSQL;
+		String usersSQL;
+		daysSQL = "dato = '" + days.get(0) + "' ";
+		usersSQL = "brukernavn = '" + users.get(0).getBrukernavn() + "' ";
+		
+		for (int i = 1; i < days.size(); i++) {
+			daysSQL += " or dato = '" + days.get(i) + "'";
+		}
+		
+		for (int i = 1; i < users.size(); i++) {
+			usersSQL += " or brukernavn = '" + users.get(i).getBrukernavn() + "'";
+		}
+		
+		try {
+			Database db = new Database();
+
+			ResultSet rs = db.query("select * from Avtale, AnsattAvtale WHERE Avtale.avtaleNr = AnsattAvtale.avtaleNr and (" + usersSQL + ") and (" + daysSQL + ")");
+		    while (rs.next()) {
+		    	appointments.add(new Appointment(rs.getString("navn"), rs.getString("starttidspunkt"), rs.getString("sluttidspunkt"), rs.getString("beskrivelse"), rs.getString("sted"), getRom(rs.getInt("romNr")), rs.getString("dato"), getAnsatt(rs.getString("opprettetAv"))));
+		    }
+		}
+		catch (Exception e) { e.printStackTrace(); }
+		
+		return appointments;
+	}
+	
+	// Fetches an Ansatt from the database based on username and returns it as an Ansatt object
+	public static Ansatt getAnsatt(String brukernavn) {
+		
+		Ansatt user = new Ansatt(null, null, null, null, null);
+		
+		Database db = new Database();
+		
+		ResultSet rs = db.query("Select * from Ansatt Where brukernavn = " + "'" + brukernavn + "'" + "");
+		
+		try {
+			if (rs.next()) {
+				user = new Ansatt(rs.getString("brukernavn"), rs.getString("passord"), rs.getString("fornavn"), rs.getString("etternavn"), rs.getString("email"));
+				return user;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return user;
+	}
+	
+	public static Rom getRom(int romNr) {
+		
+		Rom room = new Rom(0, null, 0, null);
+		
+		Database db = new Database();
+		
+		ResultSet rs = db.query("Select * from Rom Where romNr = " + "'" +romNr + "'" + "");
+		
+		try {
+			if (rs.next()) {
+				room = new Rom(rs.getInt("romNr"), rs.getString("sted"), rs.getInt("antPlasser"), rs.getString("beskrivelse"));
+				return room;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return room;
 	}
 	
 }

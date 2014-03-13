@@ -11,6 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import database.DBHandler;
 import database.User;
 import fp2014.Ansatt;
 
@@ -70,7 +72,7 @@ public class LoginGUI extends JPanel {
 				
 				if(newUser.checkLogin(un, pw)){
 					loginFrame.dispose(); // Close the login form before opening the calendar
-					Ansatt you = newUser.getAnsatt(un); // Fetch an Ansatt object based on username. Will be used throughout the session in order to identify logged in user.
+					Ansatt you = DBHandler.getAnsatt(un); // Fetch an Ansatt object based on username. Will be used throughout the session in order to identify logged in user.
 					
 					// Create new calendar window
 					JFrame frame = new JFrame(you.getFornavn() + " " + you.getEtternavn() + "'s calendar");

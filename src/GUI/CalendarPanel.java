@@ -3,16 +3,19 @@ package GUI;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Rectangle;
+import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
+
+import database.DBHandler;
+
+import fp2014.Ansatt;
+import fp2014.Appointment;
 
 @SuppressWarnings("serial")
 public class CalendarPanel extends JPanel {
@@ -25,9 +28,33 @@ public class CalendarPanel extends JPanel {
 	private ArrayList<Component> existingAppointments = new ArrayList<Component>();
 	private JPanel panel;
 	private KalenderView parent;
+	private int week;
+	private int year;
+	private ArrayList<String> daySpan;
+	private JScrollPane s;
+	private ArrayList<Ansatt> users;
+	ArrayList<Appointment> appointments;
 	
-	public CalendarPanel(KalenderView parent){
+	public CalendarPanel(KalenderView parent, ArrayList<Ansatt> users, int week, int year){
+		
+		
+		daySpan = new ArrayList<>();
+		
+		this.setBackground(Color.LIGHT_GRAY);
+		
+		
 		this.parent = parent;
+		this.week = week;
+		this.year = year;
+		this.users = users;
+		
+		setDaySpan();
+		
+		
+		appointments = DBHandler.getAppointmentsInInterval(users, daySpan);
+	
+		
+		setLayout(new FlowLayout(FlowLayout.CENTER, 53, 0));
 		
 		JSeparator hSep, vSep;
 		JLabel label = null;
@@ -46,8 +73,9 @@ public class CalendarPanel extends JPanel {
 		
 		String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 		
+		
 		for (int i = 0; i < days.length; i++) {
-			this.addDay(days[i], CALENDAR_X_START + 30 +(i*CalendarPanel.DAY_WIDTH), CALENDAR_Y_START, 100, 40, panel);
+			this.addDay(days[i], i, CALENDAR_X_START + 30 +(i*CalendarPanel.DAY_WIDTH), CALENDAR_Y_START, 100, 40, panel);
 		}
 		
 		for (int i = 0; i <= hours; i++) {
@@ -62,7 +90,7 @@ public class CalendarPanel extends JPanel {
 			panel.add(vSep);			
 		}
 		
-		JScrollPane s = new JScrollPane(panel, 
+		s = new JScrollPane(panel, 
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		s.setPreferredSize(new Dimension(804, 500));
@@ -71,10 +99,15 @@ public class CalendarPanel extends JPanel {
 		
 		doImportantStuff();
 		
+		// Scroll 
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			   public void run() { s.getVerticalScrollBar().setValue(245); }
+		});
+		
 	}
 	
-	public void addDay(String day, int x, int y, int width, int height, JPanel panel){
-		JLabel label = new JLabel(day);
+	public void addDay(String day, int i, int x, int y, int width, int height, JPanel panel){
+		JLabel label = new JLabel("<html>" + day + "<br>" + daySpan.get(i) + "</html>");
 		label.setForeground(Color.WHITE);
 		label.setBounds(x, y, width, height);
 		add(label);
@@ -84,36 +117,6 @@ public class CalendarPanel extends JPanel {
 		c.setBounds(x, y, width, height);
 		panel.panel.add(c);
 	}
-	
-	private void addAppointmentWithCollision(ArrayList<Component> existingAppointments, Component c, CalendarPanel panel) {
-		// TODO Adds component to the CalendarGUI if it is intersecting existing appointments.
-		
-		ArrayList<Boolean> intersect = new ArrayList<Boolean>();
-		ArrayList<Component> intersectingComponents = new ArrayList<Component>();
-		
-		//Gets the intersecting components
-		for (int i = 0; i < this.existingAppointments.size(); i++) {
-			intersect.add(c.getBounds().intersects(existingAppointments.get(i).getBounds()));
-		}
-		
-		//Adds the intersecting components to an array
-		for (int i = 0; i < intersect.size(); i++) {
-			if (intersect.get(i)) {
-				intersectingComponents.add(existingAppointments.get(i));
-			}
-		}
-		
-		//Removes the conflicting appointments from the existing appointments
-		for (int i = 0; i < intersectingComponents.size(); i++) {
-			for (int j = 0; j < existingAppointments.size(); j++) {
-				if (intersectingComponents.get(i) == existingAppointments.get(j)) {
-					this.removeAppointmentFromCalendar(existingAppointments.get(j), panel);
-				}
-			}
-		}
-		
-		intersectingComponents.add(c);
-	}
 
 	public void removeAppointmentFromCalendar(Component c, CalendarPanel panel){
 		if (this.existingAppointments.contains(c)) {
@@ -122,64 +125,24 @@ public class CalendarPanel extends JPanel {
 		}
 	}
 	
-	/*
-	 * Checks if component to be added is within bounds of any other appointments in the view
-	 */
-	
-	public boolean checkBounds(ArrayList<Component> existingAppointments, Rectangle incomingAppointment){
-	
-	ArrayList<Boolean> intersect = new ArrayList<Boolean>();
-	
-	for (int i = 0; i < this.existingAppointments.size(); i++) {
-		intersect.add(incomingAppointment.getBounds().intersects(existingAppointments.get(i).getBounds()));
-	}
-	
-	for (int i = 0; i < intersect.size(); i++) {
-		if (intersect.get(i)) {
-			return false;
-		}
-	}
-	
-	return true;
-	}
-	
 	public void doImportantStuff(){
 		
 		
 		ArrayList<String[]> intervalWidth = new ArrayList<>();
-		class Avtale{
-			public String start, end, date;
-			
-			
-			public Avtale(String start, String end, String date){
-				this.start = start;
-				this.end = end;
-				this.date = date;
-			}
-		}
-		
-		ArrayList<Avtale> avtaler = new ArrayList<>();
-		avtaler.add(new Avtale("10:00", "12:00", "13.03.2014"));
-		avtaler.add(new Avtale("13:00", "15:00", "13.03.2014"));
-		avtaler.add(new Avtale("11:00", "14:00", "13.03.2014"));
-		avtaler.add(new Avtale("16:00", "17:00", "14.03.2014"));
-		avtaler.add(new Avtale("11:00", "12:00", "13.03.2014"));
-		avtaler.add(new Avtale("11:00", "12:00", "16.03.2014"));
 
 		
-		
 		String aStart, aEnd;
-		for (int i = 0; i < avtaler.size(); i++){
-			aStart = avtaler.get(i).start;
-			aEnd = avtaler.get(i).end;
+		for (int i = 0; i < appointments.size(); i++){
+			aStart = appointments.get(i).getStartTime();
+			aEnd = appointments.get(i).getEndTime();
 			
 			boolean overlap = false;
 			for (int j = 0; j < intervalWidth.size(); j++){
 				
 				String iStart = intervalWidth.get(j)[0];
 				String iEnd = intervalWidth.get(j)[1];
-				
-				if(checkOverlap(aStart, aEnd, iStart, iEnd) && (Integer.parseInt(intervalWidth.get(j)[4]) == dateToDayNumber(avtaler.get(i).date))){
+
+				if(checkOverlap(aStart, aEnd, iStart, iEnd) && (Integer.parseInt(intervalWidth.get(j)[4]) == dateToDayNumber(appointments.get(i).getDate()))){
 					overlap = true;
 					intervalWidth.get(j)[2] = String.valueOf((Integer.parseInt(intervalWidth.get(j)[2])+1));
 					if(isLater(aEnd, iEnd)) { intervalWidth.get(j)[1] = aEnd; }
@@ -189,7 +152,7 @@ public class CalendarPanel extends JPanel {
 			}
 			
 			if(!overlap) {
-				String[] newInterval = {aStart, aEnd, "1", "0", String.valueOf(dateToDayNumber(avtaler.get(i).date))};
+				String[] newInterval = {aStart, aEnd, "1", "0", String.valueOf(dateToDayNumber(appointments.get(i).getDate()))};
 				intervalWidth.add(newInterval); }
 		
 		}
@@ -203,7 +166,7 @@ public class CalendarPanel extends JPanel {
 			for (int j = i+1; j < intervalWidth.size(); j++){
 				iocStart = intervalWidth.get(j)[0];
 				iocEnd = intervalWidth.get(j)[1];
-				if(checkOverlap(ioStart, ioEnd, iocStart, iocEnd) && (Integer.parseInt(intervalWidth.get(j)[4]) == dateToDayNumber(avtaler.get(i).date))){
+				if(checkOverlap(ioStart, ioEnd, iocStart, iocEnd) && (Integer.parseInt(intervalWidth.get(j)[4]) == dateToDayNumber(appointments.get(i).getDate()))){
 					deleteThese.add(j);
 					if(isLater(iocEnd, ioEnd)) { intervalWidth.get(i)[1] = iocEnd; }
 					else if(isLater(ioStart, iocStart)) { intervalWidth.get(i)[0] = iocStart; }
@@ -217,22 +180,20 @@ public class CalendarPanel extends JPanel {
 			intervalWidth.remove((int)deleteThese.get(i));
 		}
 		
-
-		
-	
-		
 		int width = CalendarPanel.DAY_WIDTH;
 		int xPos, eventWidth;
 		
-		for (int i = 0; i < avtaler.size(); i++){
+		for (int i = 0; i < appointments.size(); i++){
 			for (int j = 0; j < intervalWidth.size(); j++){
-				if(checkOverlap(avtaler.get(i).start, avtaler.get(i).end, intervalWidth.get(j)[0], intervalWidth.get(j)[1])){
+				if(checkOverlap(appointments.get(i).getStartTime(), appointments.get(i).getEndTime(), intervalWidth.get(j)[0], intervalWidth.get(j)[1]) && (Integer.parseInt(intervalWidth.get(j)[4]) == dateToDayNumber(appointments.get(i).getDate()))){
 					xPos = Integer.parseInt(intervalWidth.get(j)[3]);	
 					eventWidth = width/Integer.parseInt(intervalWidth.get(j)[2]);
 					
-					JTextArea currentEvent = new JTextArea(avtaler.get(i).start + " - " + avtaler.get(i).end);
+					JTextArea currentEvent = new JTextArea(appointments.get(i).getName());
 					currentEvent.setEditable(false);
-					this.addAppointmentToCalendar(currentEvent, CALENDAR_X_START + dateToDayNumber(avtaler.get(i).date) * width + xPos * eventWidth, (int)(HOUR_HEIGHT * hourToX(avtaler.get(i).start) + CALENDAR_Y_START), eventWidth, CalendarPanel.HOUR_HEIGHT * (int)durance(avtaler.get(i).start, avtaler.get(i).end), this);
+					currentEvent.setBackground(Color.GRAY);
+					currentEvent.setForeground(Color.WHITE);
+					this.addAppointmentToCalendar(currentEvent, CALENDAR_X_START + dateToDayNumber(appointments.get(i).getDate()) * width + xPos * eventWidth, (int)(HOUR_HEIGHT * hourToX(appointments.get(i).getStartTime()) + CALENDAR_Y_START), eventWidth, (int)(CalendarPanel.HOUR_HEIGHT * durance(appointments.get(i).getStartTime(), appointments.get(i).getEndTime())), this);
 					intervalWidth.get(j)[3] = String.valueOf((Integer.parseInt(intervalWidth.get(j)[3])+1));
 					break;
 				}
@@ -287,9 +248,26 @@ public class CalendarPanel extends JPanel {
 	    c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parts[0]));
 	    int weekDay = (c.get(Calendar.DAY_OF_WEEK) + 3);
 	    if(weekDay > 7) { weekDay -= 7; }
-	    return weekDay;
-
+	    return weekDay - 1;
+	}
+	
+	private void setDaySpan(){
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.WEEK_OF_YEAR, week);
+		c.set(Calendar.YEAR, year); 
 		
+		int[] days = {Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY, Calendar.SUNDAY};
+		int day, month;
+		
+		
+		for (int i = 0; i < days.length; i++) {
+			c.set(Calendar.DAY_OF_WEEK, days[i]);
+			day = c.get(Calendar.DAY_OF_MONTH);
+		    month = c.get(Calendar.MONTH) + 1;
+		    year = c.get(Calendar.YEAR);
+		    String dateEnd = "." + month + "." + year;
+			daySpan.add(day + dateEnd);
+		}
 	}
 
 }

@@ -36,10 +36,14 @@ public class KalenderView extends JPanel implements ActionListener {
 	private JButton logOut;
 	private JPanel kalender, headerLeft, headerRight, avtale;
 	private Ansatt user;
+	private ArrayList<Ansatt> showUsers;
 	
 	
 	public KalenderView(Ansatt user, JFrame activeWindow) {
 		this.user = user;
+		
+		showUsers = new ArrayList<>();
+		showUsers.add(user);
 		
 		this.activeWindow = activeWindow; // Binds argument JFrame to the JFrame field. Makes it possible for the window to close itself on logout.
 		
@@ -49,13 +53,18 @@ public class KalenderView extends JPanel implements ActionListener {
 		} catch (ClassNotFoundException | InstantiationException
 				| IllegalAccessException | UnsupportedLookAndFeelException e) { e.printStackTrace(); }
 		
+		// Find current week and year
+		Calendar calendar = Calendar.getInstance();
+		week = calendar.get(Calendar.WEEK_OF_YEAR);
+		year = calendar.get(Calendar.YEAR);
+		
 		// Create and set size of various panels
 		this.setLayout(new GridBagLayout());
 		gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.VERTICAL;
 		
-		kalender = new CalendarPanel(this);
+		kalender = new CalendarPanel(this, showUsers, week, year);
 		headerLeft = new JPanel();
 		headerRight = new JPanel();
 		avtale = new AvtaleGUI(this, user);
@@ -64,12 +73,7 @@ public class KalenderView extends JPanel implements ActionListener {
 		headerLeft.setPreferredSize(new Dimension(804, 100));
 		headerRight.setPreferredSize(new Dimension(220, 100));
 		avtale.setPreferredSize(new Dimension(220, 500));
-		
-		// Find current week and year
-		Calendar calendar = Calendar.getInstance();
-		week = calendar.get(Calendar.WEEK_OF_YEAR);
-		year = calendar.get(Calendar.YEAR);
-		
+	
 		// Create Swing elements
 		previousWeek = new JButton("<");
 		weekNumberLabel = new JLabel("WEEK " + week + " - " + year);
@@ -121,7 +125,6 @@ public class KalenderView extends JPanel implements ActionListener {
 		// GridBag, whole calendar window
 			gbc.gridx = 0;
 			gbc.gridy = 1;
-			kalender.setBackground(Color.LIGHT_GRAY);
 			this.add(kalender, gbc);
 			
 			gbc.gridx = 0;
@@ -156,6 +159,10 @@ public class KalenderView extends JPanel implements ActionListener {
 		week = newWeek;
 		year = newYear;
 		weekNumberLabel.setText("WEEK " + newWeek + " - " + newYear);
+		
+		// Update the calendar panel
+		CalendarPanel newCalendar = new CalendarPanel(this, showUsers, week, year);
+		addNewPanel("kalender", newCalendar);
 	}
 	
 	
@@ -185,7 +192,6 @@ public class KalenderView extends JPanel implements ActionListener {
 			kalender.setPreferredSize(new Dimension(804, 500));
 			gbc.gridx = 0;
 			gbc.gridy = 1;
-			newPanel.setBackground(Color.BLUE);
 		}else if(panel.equals("headerLeft")){
 			remove(headerLeft);
 			headerLeft = newPanel;

@@ -1,8 +1,6 @@
 package database;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import fp2014.Ansatt;
 
 public class User{
 	
@@ -38,25 +36,6 @@ public class User{
 		return false;
 	}
 
-	// Fetches an Ansatt from the database based on username and returns it as an Ansatt object
-	public Ansatt getAnsatt(String brukernavn) {
-		
-		Ansatt user = new Ansatt(null, null, null, null, null);
-		
-		Database db = new Database();
-		
-		ResultSet rs = db.query("Select * from Ansatt Where brukernavn = " + "'" + brukernavn + "'" + "");
-		
-		try {
-			if (rs.next()) {
-				user = new Ansatt(rs.getString("brukernavn"), rs.getString("passord"), rs.getString("fornavn"), rs.getString("etternavn"), rs.getString("email"));
-				return user;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return user;
-	}
+
 
 }

@@ -2,8 +2,8 @@ package fp2014;
 
 import java.util.ArrayList;
 
+import database.DBHandler;
 import database.Database;
-import database.User;
 
 public class Appointment {
 	
@@ -214,10 +214,8 @@ public class Appointment {
 	
 	public static void main(String[] args) {
 		
-		User usr = new User();
-		
 		Appointment appointment = new Appointment("Viktig avtale", "10:30", "13:00", "viktig!", null, null, "18.04.2014", new Ansatt("audunlib", null, null, null, null));
-		Ansatt ansatt = usr.getAnsatt("admin");
+		Ansatt ansatt = DBHandler.getAnsatt("admin");
 
 		appointment.changeStatus(ansatt, true, appointment);
 	}
