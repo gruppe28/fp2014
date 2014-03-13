@@ -55,7 +55,7 @@ public class KalenderView extends JPanel implements ActionListener {
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.VERTICAL;
 		
-		kalender = new CalendarPanel(activeWindow);
+		kalender = new CalendarPanel(this);
 		headerLeft = new JPanel();
 		headerRight = new JPanel();
 		avtale = new AvtaleGUI(this);
@@ -121,7 +121,7 @@ public class KalenderView extends JPanel implements ActionListener {
 		// GridBag, whole calendar window
 			gbc.gridx = 0;
 			gbc.gridy = 1;
-			kalender.setBackground(Color.BLUE);
+			kalender.setBackground(Color.LIGHT_GRAY);
 			this.add(kalender, gbc);
 			
 			gbc.gridx = 0;
