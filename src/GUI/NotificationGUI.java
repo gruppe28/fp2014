@@ -116,7 +116,7 @@ public class NotificationGUI extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
 		if (s == exit){
-			parent.addNewPanel("avtale", new AvtaleGUI(parent));
+			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
 			
 		}
 	}

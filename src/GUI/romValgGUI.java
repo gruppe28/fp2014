@@ -20,6 +20,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import database.DBHandler;
+import fp2014.Appointment;
 import fp2014.Rom;
 
 @SuppressWarnings({"serial", "unchecked"})
@@ -37,33 +38,33 @@ public class romValgGUI extends JPanel implements ActionListener{
 	JRadioButton velgMoterom;
 	DefaultListModel<Rom> roomList;
 	ArrayList<Rom> availableRooms;
+	newEventGUI parent;
+	JDialog romFrame;
 	
 	String date;
 	String from;
 	String to;
 	
-	public romValgGUI(String date, String from, String to) {
+	public romValgGUI(newEventGUI parent, String date, String from, String to) {
 		
 		this.date = date;
 		this.from = from;
 		this.to = to;
 		
+		this.parent = parent;
 		
-		JDialog romFrame = new JDialog();
+		romFrame = new JDialog();
 		JPanel romPanel = new JPanel();
 		romFrame.setTitle("Select location");
 		
 		velgMoterom = new JRadioButton("Velg moterom", true);
 		velgMotested = new JRadioButton("Velg motested");
 		
-		velgMoterom.addActionListener(this);
-		velgMotested.addActionListener(this);
-		
 		
 		romPanel.add(velgMoterom);
 		romPanel.add(velgMotested);
 		
-		// Møtested-kompo
+		// Mï¿½tested-kompo
 		
 		stedLabel = new JLabel("Skriv inn motested:");
 		motested = new JTextField(20);
@@ -121,13 +122,17 @@ public class romValgGUI extends JPanel implements ActionListener{
 		group.add(velgMotested);
 		group.add(velgMoterom);
 		
+		velgMoterom.addActionListener(this);
+		velgMotested.addActionListener(this);
+		lagreRom.addActionListener(this);
+		lagreSted.addActionListener(this);
+		
 		romFrame.setModal(true);
 		romFrame.setMinimumSize(new Dimension(350, 350));
 		romFrame.setContentPane(romPanel);
 		romFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		romFrame.setVisible(true);
 		romFrame.pack();
-		
 	}
 	
 	
@@ -171,6 +176,18 @@ public class romValgGUI extends JPanel implements ActionListener{
 			romListScroller.setVisible(false);
 			romList.setVisible(false);
 			lagreRom.setVisible(false);
+		} 
+		if (e.getSource() == lagreSted){
+			parent.visRom.setText(motested.getText());
+			parent.getAppointment().setPlace(motested.getText());
+			parent.getAppointment().setRom(null);
+			romFrame.dispose();
+		} else if (e.getSource() == lagreRom){
+			parent.visRom.setText(romList.getSelectedValue().getSted());
+			parent.getAppointment().setRom(romList.getSelectedValue());
+			parent.getAppointment().setPlace(null);
+			romFrame.dispose();
+			
 		}
 	}
 }

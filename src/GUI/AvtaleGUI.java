@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 
 import com.toedter.calendar.JDateChooser;
 
+import fp2014.Ansatt;
 import fp2014.Appointment;
 
 @SuppressWarnings("serial")
@@ -25,9 +26,11 @@ public class AvtaleGUI extends JPanel implements ActionListener {
 	private JButton nyAvtale;
 	private Appointment appointment;
 	private KalenderView parent;
+	private Ansatt user;
 	
-	public AvtaleGUI(KalenderView parent) {
+	public AvtaleGUI(KalenderView parent, Ansatt ansatt) {
 		
+		this.user = ansatt;
 		this.parent = parent;
 		
 		nyAvtale = new JButton("Ny avtale");
@@ -43,8 +46,8 @@ public class AvtaleGUI extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
 		if (s == nyAvtale){
-			parent.addNewPanel("avtale", new newEventGUI(parent));
-			
+			Appointment newAppointment = new Appointment();
+			parent.addNewPanel("avtale", new newEventGUI(parent, user, newAppointment));
 		}
 	}
 }

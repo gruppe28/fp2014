@@ -58,7 +58,7 @@ public class KalenderView extends JPanel implements ActionListener {
 		kalender = new CalendarPanel(this);
 		headerLeft = new JPanel();
 		headerRight = new JPanel();
-		avtale = new AvtaleGUI(this);
+		avtale = new AvtaleGUI(this, user);
 		
 		kalender.setPreferredSize(new Dimension(804, 500));
 		headerLeft.setPreferredSize(new Dimension(804, 100));

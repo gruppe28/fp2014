@@ -8,7 +8,7 @@ import database.User;
 public class Appointment {
 	
 	/*
-	 * muligens best å ha en metode som ser på alle endringer som er gjort i avtale, og deretter endrer dette i databasen???? Koble dette til lagre knappen elns.
+	 * muligens best ï¿½ ha en metode som ser pï¿½ alle endringer som er gjort i avtale, og deretter endrer dette i databasen???? Koble dette til lagre knappen elns.
 	 */
 
 	private int appointmentNr;
@@ -23,6 +23,10 @@ public class Appointment {
 	private ArrayList<Ansatt> participants;
 	
 	//int appointmentNr, 
+	
+	public Appointment (){
+		
+	}
 	public Appointment(String name, String startTime, String endTime, String description, String place, Rom room, String startDate, Ansatt madeBy) {
 //		this.setAppointmentNr(appointmentNr);
 		this.setName(name);
@@ -31,6 +35,16 @@ public class Appointment {
 		this.setDescription(description);
 		this.setPlace(place);
 		this.setRom(room);
+		this.setDate(startDate);
+		this.setMadeBy(madeBy);
+	}
+	
+	public void edit(String name, String startTime, String endTime, String description, String startDate, Ansatt madeBy) {
+//		this.setAppointmentNr(appointmentNr);
+		this.setName(name);
+		this.setStartTime(startTime);
+		this.setEndTime(endTime);
+		this.setDescription(description);
 		this.setDate(startDate);
 		this.setMadeBy(madeBy);
 	}
@@ -99,10 +113,10 @@ public class Appointment {
 		 */
 	
 	
-	public void sendAppoinmentToDatabase(Appointment appointment){
+	public void sendAppoinmentToDatabase(){
 		
 		/*
-		 * Oppretter en ny avtale, som sendes til databasen, får et avtalenummer.
+		 * Oppretter en ny avtale, som sendes til databasen, fï¿½r et avtalenummer.
 		 * 		db.update("Insert Into Avtale(navn, starttidspunkt, sluttidspunkt, beskrivelse, sted, dato, romNr, opprettetAv) Values('" + appointment.getName() 
 				+ "', '" + appointment.getStartTime()
 				+ "', '" + appointment.getEndTime() 
@@ -114,23 +128,25 @@ public class Appointment {
 		 */
 		
 		Database db = new Database();
-		if (appointment.getRom() == null) {
-			db.update("Insert Into Avtale(navn, starttidspunkt, sluttidspunkt, beskrivelse, sted, dato, opprettetAv) Values('" + appointment.getName() 
-					+ "', '" + appointment.getStartTime()
-					+ "', '" + appointment.getEndTime() 
-					+ "', '" + appointment.getDescription() 
-					+ "', '" + appointment.getPlace() 
-					+ "', '" + appointment.getDate() 
-					+ "', '" + appointment.getMadeBy().getBrukernavn() + "')");
+		if (this.getRom() == null) {
+			db.update("Insert Into Avtale(navn, starttidspunkt, sluttidspunkt, beskrivelse, sted, dato, opprettetAv) Values('" + this.getName() 
+					+ "', '" + this.getStartTime()
+					+ "', '" + this.getEndTime() 
+					+ "', '" + this.getDescription() 
+					+ "', '" + this.getPlace() 
+					+ "', '" + this.getDate() 
+					+ "', '" + this.getMadeBy().getBrukernavn() + "')");
 
 		} else {
-			db.update("Insert Into Avtale(navn, starttidspunkt, sluttidspunkt, beskrivelse, dato, romNr, opprettetAv) Values('" + appointment.getName() 
-					+ "', '" + appointment.getStartTime()
-					+ "', '" + appointment.getEndTime() 
-					+ "', '" + appointment.getDescription() 
-					+ "', '" + appointment.getDate() 
-					+ "', '" + appointment.getRom().getRomNr() 
-					+ "', '" + appointment.getMadeBy().getBrukernavn() + "')");
+			db.update("Insert Into Avtale(navn, starttidspunkt, sluttidspunkt, beskrivelse, dato, romNr, opprettetAv) Values('" 
+					+ this.getName() 
+					+ "', '" + this.getStartTime()
+					+ "', '" + this.getEndTime() 
+					+ "', '" + this.getDescription() 
+					+ "', '" + this.getDate() 
+					+ "', '" + this.getRom().getRomNr() 
+					+ "', '" + this.getMadeBy().getBrukernavn() 
+					+ "')");
 
 		}
 		db.close();
@@ -141,7 +157,7 @@ public class Appointment {
 		/*
 		 * Legger til ansatte som deltagere, opprettet avtaler hos disse med gitt tidspunkt etc.
 		 */
-		// TODO: Legg til at ansatt blir varslet om sin invitasjon, en ny instans av denne avtalen blir lagt til der også.
+		// TODO: Legg til at ansatt blir varslet om sin invitasjon, en ny instans av denne avtalen blir lagt til der ogsï¿½.
 		
 		Database db = new Database();
 		
@@ -173,7 +189,7 @@ public class Appointment {
 	
 	public void removeParticipant(Ansatt ansatt, Appointment appointment){
 		/*
-		 * fjerner alle relasjoner ansatt har med denne avtalen, kaller opp databasen, kan løses fint vha cascade spørringer.
+		 * fjerner alle relasjoner ansatt har med denne avtalen, kaller opp databasen, kan lï¿½ses fint vha cascade spï¿½rringer.
 		 */
 		
 		//TODO: Fjerne relasjoner mellom ansatt og avtalen, samt evt varsler som er opprettet
@@ -184,7 +200,7 @@ public class Appointment {
 	
 	public void changeTime(String start, String end){
 		/*
-		 * Endrer tidspunktet til denne avtalen, må finne en måte å skille mellom nyopprettet avtale, og endring på tidspunkt fra en eksisterende avatle.
+		 * Endrer tidspunktet til denne avtalen, mï¿½ finne en mï¿½te ï¿½ skille mellom nyopprettet avtale, og endring pï¿½ tidspunkt fra en eksisterende avatle.
 		 */
 		this.setStartTime(start);
 		this.setEndTime(end);
@@ -192,7 +208,7 @@ public class Appointment {
 	
 	public void changeRoom(Rom rom, String start, String end, String date){
 		/*
-		 * Oppretter en romreservasjon-relasjon mellom rommet og avtalen, må kalle sjekkReservasjon etc.
+		 * Oppretter en romreservasjon-relasjon mellom rommet og avtalen, mï¿½ kalle sjekkReservasjon etc.
 		 */
 	}
 	
@@ -208,6 +224,19 @@ public class Appointment {
 
 	public void setAppointmentNr(int appointmentNr) {
 		this.appointmentNr = appointmentNr;
+	}
+	
+	public String toString(){
+		return ("Avtalenavn: " + this.getName() +
+				"\nAvtalebeskrivelse: " + this.getDescription() +
+				"\nStarttid: " + this.getStartTime() +
+				"\nSluttid: " + this.getEndTime() +
+				"\nDato: " + this.getDate().toString() +
+				"\nSted: " + this.getPlace() +
+				"\nRom: " + this.getRom().getSted() +
+				"\nOpprettet av: " + this.getMadeBy().getBrukernavn() +
+				"");
+		
 	}
 	
 	
