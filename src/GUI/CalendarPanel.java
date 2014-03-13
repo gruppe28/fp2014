@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -109,15 +110,37 @@ public class CalendarPanel extends JPanel {
 			}
 		}
 		
-		intersectingComponents.add(c);
 		System.out.println(intersectingComponents.size());
 		
 		//Adds the intersecting component and the other components that collide with it back to the calendar
 		
-		//Need to find a way to determine the new X-coordinate for each of the components 
-
-		//Need to find out how many collisions there is on the x-pane, and how many there is on the y-pane
 		
+		//Need to find a way to determine the new X-coordinate for each of the components 
+//		for (Component i : intersectingComponents) {
+//			
+//			//Makes a list of components conflicting this component
+//			ArrayList<Component> temp = new ArrayList<Component>();
+//			
+//			for (Component j : intersectingComponents) {
+//				if (!i.equals(j) && j.getb) {
+//					
+//				}
+//			}
+//			
+//			for (Component comp : temp) {
+//				
+//			}
+//			
+//		}
+		
+		//Need to find out how many collisions there is on the x-pane, and how many there is on the y-pane
+//		for (Component temp : intersectingComponents) {
+//			int h = temp.getBounds().height;
+//			int w = temp.getBounds().width;
+//			int x = temp.getBounds().x;
+//			int y = temp.getBounds().y;
+//			this.addAppointmentToCalendar(temp, x, y, w, h, panel);
+//		}
 		
 
 	}
@@ -165,7 +188,7 @@ public class CalendarPanel extends JPanel {
 		frame.setVisible(true);
 		
 		for (int i = 0; i < 12; i++) {
-			cp.addAppointmentToCalendar(new JTextArea("test"), CalendarPanel.CALENDAR_X_START, 30+(i*CalendarPanel.HOUR_HEIGHT), CalendarPanel.DAY_WIDTH, CalendarPanel.HOUR_HEIGHT, cp);
+			cp.addAppointmentToCalendar(new JTextArea("test" + i), CalendarPanel.CALENDAR_X_START, 30+(i*CalendarPanel.HOUR_HEIGHT), CalendarPanel.DAY_WIDTH, CalendarPanel.HOUR_HEIGHT, cp);
 		}
 		
 //		cp.addAppointmentToCalendar(new JTextArea("Skal ikke bli lagt til"), CalendarPanel.CALENDAR_X_START, 150, CalendarPanel.DAY_WIDTH, CalendarPanel.HOUR_HEIGHT, cp);
