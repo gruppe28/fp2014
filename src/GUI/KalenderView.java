@@ -22,7 +22,7 @@ import fp2014.Ansatt;
 import fp2014.Appointment;
 
 @SuppressWarnings("serial")
-public class KalenderView extends JPanel {
+public class KalenderView extends JPanel implements ActionListener {
 	
 	protected ArrayList<Appointment> avtaler;
 	private GridBagConstraints gbc;
@@ -35,9 +35,11 @@ public class KalenderView extends JPanel {
 	private JButton alerts;
 	private JButton logOut;
 	private JPanel kalender, headerLeft, headerRight, avtale;
+	private Ansatt user;
 	
 	
 	public KalenderView(Ansatt user, JFrame activeWindow) {
+		this.user = user;
 		
 		this.activeWindow = activeWindow; // Binds argument JFrame to the JFrame field. Makes it possible for the window to close itself on logout.
 		
@@ -53,7 +55,7 @@ public class KalenderView extends JPanel {
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.VERTICAL;
 		
-		kalender = new JPanel();
+		kalender = new CalendarPanel(activeWindow);
 		headerLeft = new JPanel();
 		headerRight = new JPanel();
 		avtale = new AvtaleGUI(this);
@@ -69,17 +71,20 @@ public class KalenderView extends JPanel {
 		year = calendar.get(Calendar.YEAR);
 		
 		// Create Swing elements
-		previousWeek = new JButton("<--");
+		previousWeek = new JButton("<");
 		weekNumberLabel = new JLabel("WEEK " + week + " - " + year);
 		weekNumberLabel.setFont(new Font("Arial", Font.PLAIN, 26)); // Larger font for the week header
-		alerts = new JButton("Alerts: X");
-		nextWeek = new JButton("-->");
+		int unseenNotifications = user.getNumberOfUnseenNotifications();
+		alerts = new JButton("Notifications: " + unseenNotifications);
+		if(unseenNotifications > 0) { alerts.setForeground(Color.RED); }
+		nextWeek = new JButton(">");
 		logOut = new JButton("Log off " + user.getBrukernavn());
 		
 		// Create listeners
 		logOut.addActionListener(new logOffListener());
 		previousWeek.addActionListener(new changeWeekListener());
 		nextWeek.addActionListener(new changeWeekListener());
+		alerts.addActionListener(this);
 		
 		// GridBag, left header
 		headerLeft.setLayout(new GridBagLayout());
@@ -163,7 +168,7 @@ public class KalenderView extends JPanel {
 	    int ordinalDay = c.get(Calendar.DAY_OF_YEAR);
 	    int weekDay = c.get(Calendar.DAY_OF_WEEK) - 1;
 	    int numberOfWeeks = (ordinalDay - weekDay + 10) / 7;
-	    return numberOfWeeks; //return 52; There are always 52 weeks in a year.
+	    return numberOfWeeks;
 	}
 	
 	private void logOff(){
@@ -229,6 +234,13 @@ public class KalenderView extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == previousWeek) { changeWeek(-1); }
 			else if (e.getSource() == nextWeek) { changeWeek(1); }
+		}
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		Object s = e.getSource();
+		if (s == alerts){
+			addNewPanel("avtale", new NotificationGUI(this, user));
 		}
 	}
 

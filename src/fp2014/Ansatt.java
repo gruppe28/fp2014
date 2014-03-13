@@ -1,14 +1,8 @@
 package fp2014;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import database.DBHandler;
 
-import database.Database;
-
-/*
- * AUDUN!!
- */
 
 public class Ansatt {
 
@@ -87,5 +81,9 @@ public class Ansatt {
 		/*
 		 * 
 		 */
+	}
+	
+	public int getNumberOfUnseenNotifications(){
+		return DBHandler.numberOfUnseenNotifications(brukernavn);
 	}
 }
