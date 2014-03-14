@@ -38,7 +38,7 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 	private Ansatt user;
 	private boolean isOwner;
 	
-	public ShowEventGUI(KalenderView parent, Appointment appointment, Ansatt user){
+	public ShowEventGUI(KalenderView parent, Ansatt user, Appointment appointment){
 		
 		this.parent = parent;
 		this.appointment = appointment;
@@ -193,6 +193,14 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 				yes.setSelected(false);
 			}
 		}else if(s == cancel){
+			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
+			
+		}else if(s == edit){
+			parent.addNewPanel("avtale", new newEventGUI(parent, user, appointment));
+			
+		}else if(s == save){
+			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
+		}else if(s == delete){
 			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
 		}
 		

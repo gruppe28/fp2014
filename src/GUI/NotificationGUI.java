@@ -139,7 +139,7 @@ public class NotificationGUI extends JPanel implements ActionListener, FocusList
 		if(name.charAt(0) == 'u') { active = (unseenNotifications.get(Integer.parseInt(String.valueOf(name.charAt(1))))).getAppointment(); }
 		else { active = (seenNotifications.get(Integer.parseInt(String.valueOf(name.charAt(1))))).getAppointment(); }
 		
-		parent.addNewPanel("avtale", new ShowEventGUI(parent, active, user));
+		parent.addNewPanel("avtale", new ShowEventGUI(parent, user, active));
 		
 	}
 
