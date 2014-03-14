@@ -64,7 +64,7 @@ public class KalenderView extends JPanel implements ActionListener {
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.VERTICAL;
 		
-		kalender = new CalendarPanel(this, showUsers, week, year);
+		kalender = new CalendarPanel(this, user, showUsers, week, year);
 		headerLeft = new JPanel();
 		headerRight = new JPanel();
 		avtale = new AvtaleGUI(this, user);
@@ -149,11 +149,13 @@ public class KalenderView extends JPanel implements ActionListener {
 	private void changeWeek(int value){
 		int newWeek = week;
 		int newYear = year;
+		int weeksInYear = weeksInYear(newYear);
+		System.out.println(weeksInYear);
 		
 		// Check if the change has taken us into a new year. Apply changes.
-		if(week + value > 0 && week + value <= 52) { newWeek = week + value; }
-		else if(week + value <= 0) { newWeek = 52; newYear--; }
-		else if(week + value > 52) { newWeek = 1; newYear++; }
+		if(week + value > 0 && week + value <= weeksInYear) { newWeek = week + value; }
+		else if(week + value <= 0) { newYear--; newWeek = weeksInYear(newYear);  }
+		else if(week + value > weeksInYear) { newYear++; newWeek = 1;  }
 		
 		// Update fields and labels accordingly
 		week = newWeek;
@@ -161,21 +163,19 @@ public class KalenderView extends JPanel implements ActionListener {
 		weekNumberLabel.setText("WEEK " + newWeek + " - " + newYear);
 		
 		// Update the calendar panel
-		CalendarPanel newCalendar = new CalendarPanel(this, showUsers, week, year);
+		CalendarPanel newCalendar = new CalendarPanel(this, user, showUsers, week, year);
 		addNewPanel("kalender", newCalendar);
 	}
 	
 	
-	// Supposed to calculate number of weeks in year. Does not work :(
+	// Calculates the number of weeks in a year. Used to detect years with 53 weeks.
 	private int weeksInYear(int year){
 	    Calendar c = Calendar.getInstance();
 	    c.set(Calendar.YEAR, year);
 	    c.set(Calendar.MONTH, Calendar.DECEMBER);
 	    c.set(Calendar.DAY_OF_MONTH, 31);
-	    int ordinalDay = c.get(Calendar.DAY_OF_YEAR);
-	    int weekDay = c.get(Calendar.DAY_OF_WEEK) - 1;
-	    int numberOfWeeks = (ordinalDay - weekDay + 10) / 7;
-	    return numberOfWeeks;
+	    if(c.get(Calendar.WEEK_OF_YEAR) == 53) { return 53; }
+	    else { return 52; }
 	}
 	
 	private void logOff(){
