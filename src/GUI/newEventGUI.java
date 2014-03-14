@@ -8,6 +8,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.util.ArrayList;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -24,6 +25,7 @@ import com.toedter.calendar.JDateChooser;
 
 import fp2014.Ansatt;
 import fp2014.Appointment;
+import fp2014.Mail;
 import fp2014.Rom;
 
 @SuppressWarnings("serial")
@@ -39,8 +41,8 @@ public class newEventGUI extends JPanel implements ActionListener {
 	private JDateChooser datoVelgerFra;
 	private JButton moterom;
 	public JTextField visRom;
+	private JButton inviteViaEmailBtn;
 	private JButton deltakere;
-	private JButton alarm;
 	private JButton slettAvtale;
 	private JButton lagre;
 	private JButton avbryt;
@@ -48,16 +50,18 @@ public class newEventGUI extends JPanel implements ActionListener {
 	private Ansatt user;
 	protected Appointment appointment;
 	private MaskFormatter formatter;
+	public ArrayList<String> emailParticipants;
 
-	public newEventGUI(KalenderView parent, Ansatt ansatt,
-			Appointment appointment) {
+	public newEventGUI(KalenderView parent, Ansatt ansatt, Appointment appointment) {
 
 		this.appointment = appointment;
 		this.parent = parent;
 		this.user = ansatt;
 
 		setPreferredSize(new Dimension(220, 500));
-
+		
+		emailParticipants = new ArrayList();
+		
 		avtaleNavn = new JTextField("Navn paa avtale");
 		avtaleBeskrivelse = new JTextField("Beskrivelse av avtalen");
 		try {
@@ -78,11 +82,12 @@ public class newEventGUI extends JPanel implements ActionListener {
 		moterom = new JButton("Velg Moterom");
 		visRom = new JTextField("Rom ikke valgt");
 		deltakere = new JButton("Administrer deltakere");
-		alarm = new JButton("Opprett alarm");
 		slettAvtale = new JButton("Slett avtale");
 		lagre = new JButton("Lagre");
 		avbryt = new JButton("Avbryt");
-
+		inviteViaEmailBtn = new JButton("Invite participants via email");
+		inviteViaEmailBtn.addActionListener(this);
+		
 		lagre.addActionListener(this);
 		avbryt.addActionListener(this);
 		slettAvtale.addActionListener(this);
@@ -139,10 +144,9 @@ public class newEventGUI extends JPanel implements ActionListener {
 		gbcA.gridwidth = 3;
 		this.add(deltakere, gbcA);
 		deltakere.addActionListener(this);
-
+		
 		gbcA.gridy = 7;
-		gbcA.gridwidth = 3;
-		this.add(alarm, gbcA);
+		this.add(inviteViaEmailBtn, gbcA);
 
 		gbcA.gridy = 8;
 		this.add(feedback, gbcA);
@@ -180,9 +184,16 @@ public class newEventGUI extends JPanel implements ActionListener {
 				appointment.sendAppoinmentToDatabase();
 				parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
 				System.out.println("Appointment saved to database.");
+				
+				sendMailInvitations();
+				
 			}
 
-		} else if (s == avbryt) {
+		} else if (s == inviteViaEmailBtn){
+			SendEmailPanel mailPanel = new SendEmailPanel(this, emailParticipants);
+		}
+		
+		else if (s == avbryt) {
 			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
 		} else if (s == moterom) {
 
@@ -210,6 +221,14 @@ public class newEventGUI extends JPanel implements ActionListener {
 	public void setAppointment(Appointment appointment) {
 		this.appointment = appointment;
 	}
+	
+	public void setEmailParticipants(ArrayList<String> participantsList){
+		this.emailParticipants = participantsList;
+	}
+	
+	public ArrayList<String> getEmailParticipants(){
+			return emailParticipants;
+	}
 
 	public String checkDate() {
 		if (startTidspunkt.getText().contains("_") || sluttTidspunkt.getText().contains("_")) {
@@ -217,12 +236,12 @@ public class newEventGUI extends JPanel implements ActionListener {
 			return ("Skriv inn et gyldig tidspunkt.");
 		} else {
 			String[] start = startTidspunkt.getText().split(":");
-			int startM = Integer.parseInt(start[0]);
-			int startH = Integer.parseInt(start[1]);
+			int startH = Integer.parseInt(start[0]);
+			int startM = Integer.parseInt(start[1]);
 
 			String[] end = sluttTidspunkt.getText().split(":");
-			int endM = Integer.parseInt(end[0]);
-			int endH = Integer.parseInt(end[1]);
+			int endH = Integer.parseInt(end[0]);
+			int endM = Integer.parseInt(end[1]);
 			
 			if (new DateTime(datoVelgerFra.getDate()).toLocalDate().compareTo(
 					new LocalDate()) < 0) {
@@ -231,23 +250,40 @@ public class newEventGUI extends JPanel implements ActionListener {
 			} else if (datoVelgerFra.getDate() == null) {
 				System.out.println("Velg en dato først");
 				return ("Choose a date first.");
-			} else if ((startM > 59) || (endM > 59) || (startH > 23)
-					|| (endH > 23) || (startM < 0) || (endM < 0)
-					|| (startH < 0) || (endH < 0)) {
+			} else if ((startM > 59) || (endM > 59) || (startH > 23) || (endH > 23) || (startM < 0) || (endM < 0) || (startH < 0) || (endH < 0)) {
 				System.out.println("Skriv inn et gyldig tidspunkt");
 				return ("Skriv inn gydlig tidspunkt.");
-			} else if (startH > endH || (startH == endH && startM > endM)) {
+			} else if (startH > endH || (startH == endH && startM > endM) ) {
 				System.out.println("Sluttidspunkt er før starttidspunkt.");
 				return ("Sluttidspunkt er før starttidspunkt.");
 			}
 		}
 		return null;
 	}
+	
+	public void sendMailInvitations(){
+		String destination = "ukjent";
+		
+		if (appointment.getPlace() != null){
+			destination = appointment.getPlace();
+		} else if (appointment.getRom() != null) {
+			destination = appointment.getRom().getSted();
+		}
+		
+		String content = "You have been invited to the appointment "+ appointment.getName() 
+				+ ". The meeting is about \"" + appointment.getDescription() 
+				+ "\", and takes place " + appointment.getDate() + " " + appointment.getStartTime() + "-" + appointment.getEndTime()
+				+ " at " + destination
+				+ "\n\n Best Regards, \n\n" + user.getFornavn() + " " + user.getEtternavn() + "\n" + user.getEmail();
+		
+		for (String mail : emailParticipants){
+			Mail mailsender = new Mail(mail,user.getEmail(),user.getFornavn()+" "+user.getEtternavn(), "Meeting invitation to "+ appointment.getName(), content);
+		}
+	}
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame();
-		Ansatt user = new Ansatt("brukernavn", "passord", "fornavn",
-				"etternavn", "epost");
+		Ansatt user = new Ansatt("brukernavn", "passord", "fornavn", "etternavn", "epost");
 		Appointment appointment = new Appointment();
 		KalenderView view = new KalenderView(user, frame);
 		newEventGUI test = new newEventGUI(view, user, appointment);
