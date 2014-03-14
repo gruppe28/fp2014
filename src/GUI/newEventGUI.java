@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -26,7 +27,6 @@ import com.toedter.calendar.JDateChooser;
 import fp2014.Ansatt;
 import fp2014.Appointment;
 import fp2014.Mail;
-import fp2014.Rom;
 
 @SuppressWarnings("serial")
 public class newEventGUI extends JPanel implements ActionListener {
@@ -51,23 +51,24 @@ public class newEventGUI extends JPanel implements ActionListener {
 	protected Appointment appointment;
 	private MaskFormatter formatter;
 	public ArrayList<String> emailParticipants;
+	private HashMap<Ansatt, Integer> participants;
 
 	public newEventGUI(KalenderView parent, Ansatt ansatt, Appointment appointment) {
 
 		this.appointment = appointment;
 		this.parent = parent;
 		this.user = ansatt;
+		this.participants = appointment.getParticipants();
 
 		setPreferredSize(new Dimension(220, 500));
 		
-		emailParticipants = new ArrayList();
+		emailParticipants = new ArrayList<String>();
 		
 		avtaleNavn = new JTextField("Navn paa avtale");
 		avtaleBeskrivelse = new JTextField("Beskrivelse av avtalen");
 		try {
 			formatter = new MaskFormatter("##:##");
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		formatter.setPlaceholderCharacter('_');
@@ -179,11 +180,13 @@ public class newEventGUI extends JPanel implements ActionListener {
 			}
 			else {
 				LocalDate appointmentDate = new DateTime(datoVelgerFra.getDate()).toLocalDate();
-				this.appointment.edit(avtaleNavn.getText(),startTidspunkt.getText(), sluttTidspunkt.getText(),avtaleBeskrivelse.getText(),appointmentDate.toString(), user);
+				this.appointment.edit(avtaleNavn.getText(),startTidspunkt.getText(), sluttTidspunkt.getText(),avtaleBeskrivelse.getText(),appointmentDate.toString(), user, this.participants);
 				System.out.println(this.appointment.toString());
 				appointment.sendAppoinmentToDatabase();
 				parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
 				System.out.println("Appointment saved to database.");
+				
+				//Opprett/Endre AnsattAvtaler
 				
 				sendMailInvitations();
 				
@@ -202,7 +205,7 @@ public class newEventGUI extends JPanel implements ActionListener {
 			}
 
 		} else if (s == deltakere) {
-			ManageParticipants manageParticipants = new ManageParticipants();
+			ManageParticipants manageParticipants = new ManageParticipants(this, this.participants);
 		} else if (s == slettAvtale) {
 			
 			// her må vi slette gjeldende avtale fra databasen
@@ -227,7 +230,15 @@ public class newEventGUI extends JPanel implements ActionListener {
 	}
 	
 	public ArrayList<String> getEmailParticipants(){
-			return emailParticipants;
+		return emailParticipants;
+	}
+	
+	public HashMap<Ansatt, Integer> getParticipants(){
+		return this.participants;
+	}
+	
+	public void setParticipants(HashMap<Ansatt, Integer> participants){
+		this.participants = participants;
 	}
 
 	public String checkDate() {

@@ -1,6 +1,7 @@
 package fp2014;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import database.DBHandler;
 import database.Database;
@@ -20,13 +21,12 @@ public class Appointment {
 	private String Date;
 	private Ansatt madeBy;
 	private Rom rom;
-	private ArrayList<Ansatt> participants;
-	
-	//int appointmentNr, 
+	private HashMap<Ansatt, Integer> participants = new HashMap<Ansatt, Integer>();
+//	private ArrayList<Ansatt> participants = new ArrayList<Ansatt>();
 	
 	public Appointment (){
-		
 	}
+	
 	public Appointment(String name, String startTime, String endTime, String description, String place, Rom room, String startDate, Ansatt madeBy) {
 //		this.setAppointmentNr(appointmentNr);
 		this.setName(name);
@@ -39,7 +39,7 @@ public class Appointment {
 		this.setMadeBy(madeBy);
 	}
 	
-	public void edit(String name, String startTime, String endTime, String description, String startDate, Ansatt madeBy) {
+	public void edit(String name, String startTime, String endTime, String description, String startDate, Ansatt madeBy, HashMap<Ansatt, Integer> participants) {
 //		this.setAppointmentNr(appointmentNr);
 		this.setName(name);
 		this.setStartTime(startTime);
@@ -47,6 +47,7 @@ public class Appointment {
 		this.setDescription(description);
 		this.setDate(startDate);
 		this.setMadeBy(madeBy);
+		this.setParticipants(participants);
 	}
 	
 	public Ansatt getMadeBy() {
@@ -187,7 +188,7 @@ public class Appointment {
 		db.close();
 	}
 	
-	public void removeParticipant(Ansatt ansatt, Appointment appointment){
+	public void removeParticipantDB(Ansatt ansatt, Appointment appointment){
 		/*
 		 * fjerner alle relasjoner ansatt har med denne avtalen, kaller opp databasen, kan l�ses fint vha cascade sp�rringer.
 		 */
@@ -211,14 +212,6 @@ public class Appointment {
 		 * Oppretter en romreservasjon-relasjon mellom rommet og avtalen, m� kalle sjekkReservasjon etc.
 		 */
 	}
-	
-	public static void main(String[] args) {
-		
-		Appointment appointment = new Appointment("Viktig avtale", "10:30", "13:00", "viktig!", null, null, "18.04.2014", new Ansatt("audunlib", null, null, null, null));
-		Ansatt ansatt = DBHandler.getAnsatt("admin");
-
-		appointment.changeStatus(ansatt, true, appointment);
-	}
 
 	public void setAppointmentNr(int appointmentNr) {
 		this.appointmentNr = appointmentNr;
@@ -236,6 +229,32 @@ public class Appointment {
 				"");
 		
 	}
+
+	public HashMap<Ansatt, Integer> getParticipants() {
+		return participants;
+	}
+
+	public void setParticipants(HashMap<Ansatt, Integer> participants) {
+		this.participants = participants;
+	}
+	
+	public void editParticipant(Ansatt username, Integer status){
+		this.participants.put(username, status);
+	}
+	
+	public void removeParticipant(Ansatt user){
+		this.participants.remove(user);
+	}
+	
+	public int getParticipantStatus(Ansatt user){
+		if (this.participants.containsKey(user)) {
+			return this.participants.get(user);			
+		} else {
+			return (Integer) null;
+		}
+	}
+	
+	
 	
 	
 }
