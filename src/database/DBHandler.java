@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import fp2014.Notification;
 import fp2014.Ansatt;
 import fp2014.Appointment;
 import fp2014.Rom;
@@ -24,25 +25,25 @@ public final class DBHandler {
 		return -1; // Only to satisfy try/catch. Should not actually happen.
 	}
 	
-	public static ArrayList<String> getUnseenNotifications(String username){
-		ArrayList<String> notificationList = new ArrayList<String>();
+	public static ArrayList<Notification> getUnseenNotifications(String username){
+		ArrayList<Notification> notificationList = new ArrayList<Notification>();
 	    try {
 	    	Database db = new Database();
 	    	ResultSet rs = db.query("SELECT * FROM Varsel WHERE brukernavn ='"+username+"' AND sett='0' ORDER BY id DESC");
 			while(rs.next()){
-				notificationList.add(rs.getString("tekst"));
+				notificationList.add(new Notification(rs.getString("brukernavn"), rs.getString("tekst"), getAppointment(rs.getInt("avtaleNr"))));
 			}
 		} catch (SQLException e) { e.printStackTrace(); }
 		return notificationList;
 	}
 	
-	public static ArrayList<String> getSeenNotifications(String username){
-		ArrayList<String> notificationList = new ArrayList<String>();
+	public static ArrayList<Notification> getSeenNotifications(String username){
+		ArrayList<Notification> notificationList = new ArrayList<Notification>();
 	    try {
 	    	Database db = new Database();
 	    	ResultSet rs = db.query("SELECT * FROM Varsel WHERE brukernavn ='"+username+"' AND sett='1' ORDER BY id DESC");
 			while(rs.next()){
-				notificationList.add(rs.getString("tekst"));
+				notificationList.add(new Notification(rs.getString("brukernavn"), rs.getString("tekst"), getAppointment(rs.getInt("avtaleNr"))));
 			}
 		} catch (SQLException e) { e.printStackTrace(); }
 		return notificationList;
@@ -165,6 +166,28 @@ public final class DBHandler {
 			return null;
 		}
 		return room;
+	}
+	
+	// Get appointment from "avtaleNr"
+	public static Appointment getAppointment(int avtaleNr) {
+		
+		Appointment appointment = new Appointment();
+		
+		Database db = new Database();
+		
+		ResultSet rs = db.query("Select * from Avtale where avtaleNr = " + "'" +avtaleNr + "'" + "");
+		
+		try {
+			if (rs.next()) {
+		    	appointment = new Appointment(rs.getString("navn"), rs.getString("starttidspunkt"), rs.getString("sluttidspunkt"), rs.getString("beskrivelse"), rs.getString("sted"), getRom(rs.getInt("romNr")), rs.getString("dato"), getAnsatt(rs.getString("opprettetAv")));
+				return appointment;
+			}
+			db.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return appointment;
 	}
 	
 	public static ArrayList<Ansatt> getAllUsers(){
