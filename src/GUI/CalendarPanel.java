@@ -293,7 +293,6 @@ public class CalendarPanel extends JPanel implements FocusListener {
 		appointments.get(x);
 		existingTextAreas.get(x).setBackground(Color.red);
 		
-		parent.addNewPanel("avtale", new ShowEventGUI(appointments.get(x), (appointments.get(x).getMadeBy().getBrukernavn().equals(user.getBrukernavn()))));
 	}
 
 	@Override

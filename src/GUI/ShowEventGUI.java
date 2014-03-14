@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -18,6 +19,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import fp2014.Ansatt;
 import fp2014.Appointment;
 
 @SuppressWarnings("serial")
@@ -30,12 +32,20 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 	private JScrollPane scrollDescription, scrollParticipants;
 	private JRadioButton yes, no;
 	private JComboBox<String> alertBox;
-	private JButton edit, delete, save;
+	private JButton edit, delete, save, cancel;
 	private Appointment appointment;
+	private KalenderView parent;
+	private Ansatt user;
+	private boolean isOwner;
 	
-	public ShowEventGUI(Appointment appointment, boolean isOwner){
+	public ShowEventGUI(KalenderView parent, Appointment appointment, Ansatt user){
 		
+		this.parent = parent;
 		this.appointment = appointment;
+		this.user = user;
+		
+		isOwner = (appointment.getMadeBy().getBrukernavn().equals(user.getBrukernavn()));
+		
 		this.setPreferredSize(new Dimension(220, 500));
 		
 		name = new JLabel(appointment.getName());
@@ -91,6 +101,12 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		edit = new JButton("Edit");
 		delete = new JButton("Delete");
 		save = new JButton("Save");
+		cancel = new JButton("Cancel");
+		
+		edit.addActionListener(this);
+		delete.addActionListener(this);
+		save.addActionListener(this);
+		cancel.addActionListener(this);
 		
 		
 		this.setLayout(new GridBagLayout());
@@ -176,6 +192,8 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 			if (yes.isSelected()){
 				yes.setSelected(false);
 			}
+		}else if(s == cancel){
+			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
 		}
 		
 	}
