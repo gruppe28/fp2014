@@ -167,4 +167,24 @@ public final class DBHandler {
 		return room;
 	}
 	
+	public static ArrayList<Ansatt> getAllUsers(){
+		
+		ArrayList<Ansatt> allUsers = new ArrayList<Ansatt>();
+		
+		Database db = new Database();
+		
+		ResultSet rs = db.query("Select * from Ansatt");
+		
+		try {
+			while (rs.next()) {
+				allUsers.add(new Ansatt(rs.getString("brukernavn"), rs.getString("passord"), rs.getString("fornavn"), rs.getString("etternavn"), rs.getString("email")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		return allUsers;
+	}
+	
 }
