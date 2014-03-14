@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -25,7 +26,7 @@ import fp2014.Appointment;
 @SuppressWarnings("serial")
 public class ShowEventGUI extends JPanel implements ActionListener{
 
-	private JLabel name, time, place, attending, alert;
+	private JLabel name, time, place, attending, alert, hide;
 	private JTextArea description;
 	private DefaultListModel<String> participantListModel;
 	private JList<String> participants;
@@ -33,6 +34,7 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 	private JRadioButton yes, no;
 	private JComboBox<String> alertBox;
 	private JButton edit, delete, save, cancel;
+	private JCheckBox hideBox;
 	private Appointment appointment;
 	private KalenderView parent;
 	private Ansatt user;
@@ -60,6 +62,7 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		}
 		attending = new JLabel("Attending:");
 		alert = new JLabel("Alert:");
+		hide = new JLabel("Hide:");
 		
 		description = new JTextArea(appointment.getDescription());
 		description.setEditable(false);
@@ -85,6 +88,7 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		yes.addActionListener(this);
 		no = new JRadioButton("no");
 		no.addActionListener(this);
+		hideBox = new JCheckBox("yes");
 		
 		alertBox = new JComboBox<String>();
 		alertBox.setPrototypeDisplayValue("xx minutes "); // Set JComboBox size 
@@ -133,12 +137,10 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		c.gridy++;
 		add(scrollParticipants, c);
 		
-		c.anchor = GridBagConstraints.EAST;
 		c.gridwidth = 1;
 		c.gridy++;
 		add(attending, c);
 		
-		c.anchor = GridBagConstraints.WEST;
 		c.gridwidth = 2;
 		c.gridx++;
 		add(yes, c);
@@ -146,7 +148,6 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		c.gridx+=2;
 		add(no, c);
 		
-		c.anchor = GridBagConstraints.EAST;
 		c.insets = new Insets(0, 0, 80, 0);
 		c.gridy++;
 		c.gridx=1;
@@ -158,23 +159,34 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		c.gridwidth = 4;
 		add(alertBox, c);
 		
+		c.insets = new Insets(-80, 0, 60, 0);
+		c.gridy++;
+		c.gridx=1;
+		c.gridwidth = 1;
+		add(hide, c);
+		
+		c.gridx++;
+		c.gridwidth = 4;
+		add(hideBox, c);
+		
 		c.insets = new Insets(0, 0, 0, 0);
-		c.gridwidth = 5;
+		c.gridwidth = 2;
 		c.gridx--;
 		c.gridy++;
 		add(edit, c);
 		
-		if (isOwner){
-			c.insets = new Insets(0, 0, 0, 0);
-		}else{
-			edit.setVisible(false);
-			edit.setEnabled(false);
-			c.insets = new Insets(30, 0, 0, 0);
-		}
-		
-		c.gridwidth = 2;
-		c.gridy++;
+		c.gridx+=3;
 		add(delete, c);
+		
+		if (!isOwner){
+			edit.setEnabled(false);
+			edit.setVisible(false);
+		}
+			
+		c.insets = new Insets(30, 0, 0, 0);
+		c.gridx-=3;
+		c.gridy++;
+		add(cancel, c);
 		
 		c.gridx+=3;
 		add(save, c);
@@ -195,13 +207,28 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		}else if(s == cancel){
 			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
 			
+			// Oppdaterer kalenderen til aa vise ingen valgt avtale
+			((CalendarPanel) parent.kalender).unSelectAllAppointments();
+			
 		}else if(s == edit){
 			parent.addNewPanel("avtale", new newEventGUI(parent, user, appointment));
 			
 		}else if(s == save){
+			//save attending status
+			//save alert
 			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
+			
+			// Oppdaterer kalenderen til aa vise ingen valgt avtale
+			((CalendarPanel) parent.kalender).unSelectAllAppointments();
+			
 		}else if(s == delete){
+			//appointment.getParticipants().put(user, 0);------------ Endrer lokalt
+			//appointment.changeStatus(user, false, appointment);---- Endrer database
+			
 			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
+			
+			// Oppdaterer kalenderen til aa vise ingen valgt avtale
+			((CalendarPanel) parent.kalender).unSelectAllAppointments();
 		}
 		
 	}

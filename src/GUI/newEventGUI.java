@@ -190,6 +190,9 @@ public class newEventGUI extends JPanel implements ActionListener {
 				
 				sendMailInvitations();
 				
+				// Oppdaterer kalenderen til å vise ingen valgt avtale
+				((CalendarPanel) parent.kalender).unSelectAllAppointments();
+				
 			}
 
 		} else if (s == inviteViaEmailBtn){
@@ -198,6 +201,10 @@ public class newEventGUI extends JPanel implements ActionListener {
 		
 		else if (s == avbryt) {
 			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
+			
+			// Oppdaterer kalenderen til å vise ingen valgt avtale
+			((CalendarPanel) parent.kalender).unSelectAllAppointments();
+			
 		} else if (s == moterom) {
 
 			if (checkDate() == null) {

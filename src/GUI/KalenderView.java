@@ -34,7 +34,7 @@ public class KalenderView extends JPanel implements ActionListener {
 	private JButton nextWeek;
 	private JButton alerts;
 	private JButton logOut;
-	private JPanel kalender, headerLeft, headerRight, avtale;
+	protected JPanel kalender, headerLeft, headerRight, avtale;
 	private Ansatt user;
 	private ArrayList<Ansatt> showUsers;
 	

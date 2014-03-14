@@ -204,6 +204,7 @@ public class CalendarPanel extends JPanel implements FocusListener {
 					eventWidth = width/Integer.parseInt(intervalWidth.get(j)[2]);
 					
 					JTextArea currentEvent = new JTextArea(appointments.get(i).getName());
+					currentEvent.setName("");
 					existingTextAreas.add(currentEvent);
 					currentEvent.setEditable(false);
 					currentEvent.addFocusListener(this);
@@ -285,22 +286,37 @@ public class CalendarPanel extends JPanel implements FocusListener {
 			daySpan.add(day + dateEnd);
 		}
 	}
+	
+	public void unSelectAllAppointments(){
+		for (JTextArea eta: existingTextAreas){
+			eta.setName("");
+			eta.setBackground(Color.GRAY);
+		}
+	}
 
 	@Override
 	public void focusGained(FocusEvent e) {
 		
-		int x = existingTextAreas.indexOf(e.getSource());
-		appointments.get(x);
-		existingTextAreas.get(x).setBackground(Color.red);
+		int index = existingTextAreas.indexOf(e.getSource());
 		
-		parent.addNewPanel("avtale", new ShowEventGUI(parent, user, appointments.get(x)));
+		for (JTextArea eta: existingTextAreas){
+			if (eta.getName().equals("focused") && existingTextAreas.indexOf(eta) != index){
+				eta.setName("");
+				eta.setBackground(Color.GRAY);
+			}
+		}
+		
+		//appointments.get(x);
+		existingTextAreas.get(index).setName("focused");
+		existingTextAreas.get(index).setBackground(Color.red);
+		
+		parent.addNewPanel("avtale", new ShowEventGUI(parent, user, appointments.get(index)));
 	}
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		// TODO Auto-generated method stub
-		int x = existingTextAreas.indexOf(e.getSource());
-		existingTextAreas.get(x).setBackground(Color.BLUE);
+		//int x = existingTextAreas.indexOf(e.getSource());
+		//existingTextAreas.get(x).setBackground(Color.GRAY);
 		
 	}
 
