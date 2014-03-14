@@ -5,14 +5,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -60,7 +57,11 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		attend = new JRadioButton("Attends");
 		notattend = new JRadioButton("Does not attend");
 		attend.addActionListener(this);
+		attend.addItemListener(this);
+		attend.setEnabled(false);
 		notattend.addActionListener(this);
+		notattend.addItemListener(this);
+		notattend.setEnabled(false);
 		
 		// Create lists
 		employeeListModel = new DefaultListModel<Ansatt>();
@@ -125,19 +126,16 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		gb.gridy = 3;
 		romPanel.add(save, gb);
 		
-		attend.addItemListener(this);
-		notattend.addItemListener(this);
-		
-//		ButtonGroup group = new ButtonGroup();
-//		group.add(attend);
-//		group.add(notattend);
-		
+		attend.addActionListener(this);
+		notattend.addActionListener(this);
+			
 		romFrame.setModal(true);
+		romFrame.setAlwaysOnTop(true);
 		romFrame.setMinimumSize(new Dimension(450, 230));
 		romFrame.setContentPane(romPanel);
 		romFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		romFrame.setVisible(true);
 		romFrame.pack();
+		romFrame.setVisible(true);
 	}
 	
 	public void getUsers(HashMap<Ansatt, Integer> participants){
@@ -162,8 +160,28 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 }
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		if (arg0.getSource() == add) {
+	public void actionPerformed(ActionEvent e) {
+		
+		if (participantsList.isSelectionEmpty()){
+			attend.setEnabled(false);
+			notattend.setEnabled(false);
+		}else{
+			attend.setEnabled(true);
+			notattend.setEnabled(true);
+		}
+		Object s = e.getSource();
+		
+		if (s == attend){
+			if (notattend.isSelected()){
+				notattend.setSelected(false);
+			}
+			
+		}else if(s == notattend){
+			if (attend.isSelected()){
+				attend.setSelected(false);
+			}
+			
+		}else if (s == add) {
 			if (employeeList.getSelectedValue() == null) {
 				
 			} else {
@@ -172,7 +190,7 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 				employeeListModel.removeElement(employeeList.getSelectedValue());
 				System.out.println(parent.getParticipants());
 			}
-		} else if (arg0.getSource() == remove) {
+		} else if (s == remove) {
 				if (participantsList.getSelectedValue() == null) {
 				
 			} else {
@@ -180,8 +198,9 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 				parent.appointment.removeParticipant(participantsList.getSelectedValue());
 				participantsListModel.removeElement(participantsList.getSelectedValue());
 			}
-		} else if (arg0.getSource() == save) {
-			romFrame.dispose();
+		} else if (s == save) {
+			System.out.println("----------------");
+			//romFrame.dispose();
 		} 
 		
 	}
@@ -189,7 +208,20 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 
 	@Override
 	public void valueChanged(ListSelectionEvent arg0) {
-		int status = parent.appointment.getParticipantStatus(participantsList.getSelectedValue());
+		
+		int status;
+		if (!participantsList.isSelectionEmpty()){
+			status = parent.appointment.getParticipantStatus(participantsList.getSelectedValue());
+			attend.setEnabled(true);
+			notattend.setEnabled(true);
+		}else{
+			status = 2;
+			attend.setEnabled(false);
+			notattend.setEnabled(false);
+		}
+		
+		System.out.println(status);
+		
 		if (arg0.getSource() == participantsList) {
 			if (status == 1) {
 				attend.setSelected(true);
@@ -221,24 +253,25 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 //	public void focusLost(FocusEvent e) {
 //		
 //	}
-
+	
 	@Override
 	public void itemStateChanged(ItemEvent e) {
+		
 		if (e.getSource().equals(attend)) {
 			if (attend.isSelected()) {
 				parent.appointment.editParticipant(participantsList.getSelectedValue(), 1);				
 			} else {
-				parent.appointment.editParticipant(participantsList.getSelectedValue(), 2);								
+				parent.appointment.editParticipant(participantsList.getSelectedValue(), 2);	
+				System.out.println("kall 1");
 			}
-			notattend.setSelected(false);
 		} else if (e.getSource().equals(notattend)) {
 			if (notattend.isSelected()) {
 				parent.appointment.editParticipant(participantsList.getSelectedValue(), 0);				
 			} else {
 				parent.appointment.editParticipant(participantsList.getSelectedValue(), 2);				
+				System.out.println("kall 2");
 			}
-			attend.setSelected(false);
-		}		
+		}
 	}
 }
 	

@@ -70,11 +70,23 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		
 		participantListModel = new DefaultListModel<String>();
 		// TODO Appointment trenger liste over deltagere
+		
+		for (Ansatt a: appointment.getParticipants().keySet()){
+			String tmp = a.getBrukernavn() + " - ";
+			if (appointment.getParticipantStatus(a) == 1){
+				tmp += "attending";
+			}else if (appointment.getParticipantStatus(a) == 1){
+				tmp += "not attending";
+			}
+			participantListModel.addElement(tmp);
+		}
+		/*
 		participantListModel.addElement("Participant 1 - attending");
 		participantListModel.addElement("Participant 2 - not attending");
 		participantListModel.addElement("Participant 3 - ");
 		participantListModel.addElement("Participant 4 - attending");
 		participantListModel.addElement("Participant 5 - ");
+		*/
 		
 		participants = new JList<String>(participantListModel);
 		
@@ -224,6 +236,8 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		}else if(s == delete){
 			//appointment.getParticipants().put(user, 0);------------ Endrer lokalt
 			//appointment.changeStatus(user, false, appointment);---- Endrer database
+			
+			//Hvis user er admin for avtalen, slett avtalen for alle
 			
 			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
 			
