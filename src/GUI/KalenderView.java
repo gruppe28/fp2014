@@ -150,7 +150,6 @@ public class KalenderView extends JPanel implements ActionListener {
 		int newWeek = week;
 		int newYear = year;
 		int weeksInYear = weeksInYear(newYear);
-		System.out.println(weeksInYear);
 		
 		// Check if the change has taken us into a new year. Apply changes.
 		if(week + value > 0 && week + value <= weeksInYear) { newWeek = week + value; }

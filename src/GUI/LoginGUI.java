@@ -81,6 +81,7 @@ public class LoginGUI extends JPanel {
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					frame.pack();
 					frame.setResizable(false);
+					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
 				}
 				else{ feedback.setText(newUser.feedback); } // Show feedback message from the login attempt
@@ -95,6 +96,7 @@ public class LoginGUI extends JPanel {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1024,600);
 		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 }
