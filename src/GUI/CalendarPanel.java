@@ -4,8 +4,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -21,7 +24,7 @@ import fp2014.Ansatt;
 import fp2014.Appointment;
 
 @SuppressWarnings("serial")
-public class CalendarPanel extends JPanel {
+public class CalendarPanel extends JPanel implements FocusListener {
 	
 	public static final int HOUR_HEIGHT = 40;
 	public static final int DAY_WIDTH = 105;
@@ -29,16 +32,18 @@ public class CalendarPanel extends JPanel {
 	public static final int CALENDAR_Y_START = 10;
 	
 	private ArrayList<Component> existingAppointments = new ArrayList<Component>();
+	private ArrayList<JTextArea> existingTextAreas = new ArrayList<JTextArea>();
 	private JLayeredPane panel;
 	private KalenderView parent;
 	private int week;
 	private int year;
 	private ArrayList<String> daySpan;
 	private JScrollPane s;
+	private Ansatt user;
 	private ArrayList<Ansatt> users;
 	ArrayList<Appointment> appointments;
 	
-	public CalendarPanel(KalenderView parent, ArrayList<Ansatt> users, int week, int year){
+	public CalendarPanel(KalenderView parent, Ansatt user, ArrayList<Ansatt> users, int week, int year){
 		
 		
 		daySpan = new ArrayList<>();
@@ -50,7 +55,7 @@ public class CalendarPanel extends JPanel {
 		this.week = week;
 		this.year = year;
 		this.users = users;
-		
+		this.user = user;
 		setDaySpan();
 		
 		
@@ -199,7 +204,9 @@ public class CalendarPanel extends JPanel {
 					eventWidth = width/Integer.parseInt(intervalWidth.get(j)[2]);
 					
 					JTextArea currentEvent = new JTextArea(appointments.get(i).getName());
+					existingTextAreas.add(currentEvent);
 					currentEvent.setEditable(false);
+					currentEvent.addFocusListener(this);
 					currentEvent.setBackground(Color.GRAY);
 					currentEvent.setForeground(Color.WHITE);
 					this.addAppointmentToCalendar(currentEvent, CALENDAR_X_START + dateToDayNumber(appointments.get(i).getDate()) * width + xPos * eventWidth, (int)(HOUR_HEIGHT * hourToX(appointments.get(i).getStartTime()) + CALENDAR_Y_START), eventWidth, (int)(CalendarPanel.HOUR_HEIGHT * durance(appointments.get(i).getStartTime(), appointments.get(i).getEndTime())), this);
@@ -261,13 +268,13 @@ public class CalendarPanel extends JPanel {
 	}
 	
 	private void setDaySpan(){
-		Calendar c = Calendar.getInstance();
+		//Locale.UK fikser at datoen vises riktig uansett maskin
+		Calendar c = Calendar.getInstance(Locale.UK);
 		c.set(Calendar.WEEK_OF_YEAR, week);
 		c.set(Calendar.YEAR, year); 
 		
 		int[] days = {Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY, Calendar.SUNDAY};
 		int day, month;
-		
 		
 		for (int i = 0; i < days.length; i++) {
 			c.set(Calendar.DAY_OF_WEEK, days[i]);
@@ -277,6 +284,24 @@ public class CalendarPanel extends JPanel {
 		    String dateEnd = "." + month + "." + year;
 			daySpan.add(day + dateEnd);
 		}
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		
+		int x = existingTextAreas.indexOf(e.getSource());
+		appointments.get(x);
+		existingTextAreas.get(x).setBackground(Color.red);
+		
+		parent.addNewPanel("avtale", new ShowEventGUI(appointments.get(x), (appointments.get(x).getMadeBy().getBrukernavn().equals(user.getBrukernavn()))));
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		// TODO Auto-generated method stub
+		int x = existingTextAreas.indexOf(e.getSource());
+		existingTextAreas.get(x).setBackground(Color.BLUE);
+		
 	}
 
 }

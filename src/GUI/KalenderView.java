@@ -64,7 +64,7 @@ public class KalenderView extends JPanel implements ActionListener {
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.VERTICAL;
 		
-		kalender = new CalendarPanel(this, showUsers, week, year);
+		kalender = new CalendarPanel(this, user, showUsers, week, year);
 		headerLeft = new JPanel();
 		headerRight = new JPanel();
 		avtale = new AvtaleGUI(this, user);
@@ -163,7 +163,7 @@ public class KalenderView extends JPanel implements ActionListener {
 		weekNumberLabel.setText("WEEK " + newWeek + " - " + newYear);
 		
 		// Update the calendar panel
-		CalendarPanel newCalendar = new CalendarPanel(this, showUsers, week, year);
+		CalendarPanel newCalendar = new CalendarPanel(this, user, showUsers, week, year);
 		addNewPanel("kalender", newCalendar);
 	}
 	

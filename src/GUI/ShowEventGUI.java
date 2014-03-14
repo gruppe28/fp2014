@@ -5,55 +5,65 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+
+import fp2014.Appointment;
 
 @SuppressWarnings("serial")
-public class ShowEventGUI extends JPanel implements ChangeListener{
+public class ShowEventGUI extends JPanel implements ActionListener{
 
 	private JLabel name, time, place, attending, alert;
 	private JTextArea description;
-	private DefaultListModel<String> listModel;
+	private DefaultListModel<String> participantListModel;
 	private JList<String> participants;
 	private JScrollPane scrollDescription, scrollParticipants;
 	private JRadioButton yes, no;
 	private JComboBox<String> alertBox;
 	private JButton edit, delete, save;
+	private Appointment appointment;
 	
-	public ShowEventGUI(int AvtaleID, boolean isOwner){
+	public ShowEventGUI(Appointment appointment, boolean isOwner){
 		
+		this.appointment = appointment;
 		this.setPreferredSize(new Dimension(220, 500));
 		
-		name = new JLabel("My Event");
+		name = new JLabel(appointment.getName());
 		name.setFont(new Font(name.getFont().getFontName(), Font.BOLD, 26));
-		time = new JLabel("dd.mm.yy" + "kl. " + "hh:mm" + "-" + "hh:mm");
-		place = new JLabel("Place: " + "Room 42");
+		
+		time = new JLabel(appointment.getDate() + " kl. " + appointment.getStartTime() + "-" + appointment.getEndTime());
+		
+		if (appointment.getPlace() != null){
+			place = new JLabel("Place: " + appointment.getPlace());
+		}else{
+			place = new JLabel("Room: " + appointment.getRom().getRomNr() + ", " + appointment.getRom().getSted());
+		}
 		attending = new JLabel("Attending:");
 		alert = new JLabel("Alert:");
 		
-		description = new JTextArea("This is not a text area. This is not a text area. This is not a text area.his is not a text area. This is not a text area. This is not a text area.his is not a text area. This is not a text area. This is not a text area.");
+		description = new JTextArea(appointment.getDescription());
 		description.setEditable(false);
 		description.setLineWrap(true);
 		
-		listModel = new DefaultListModel<String>();
-		listModel.addElement("Participant 1 - attending");
-		listModel.addElement("Participant 2 - not attending");
-		listModel.addElement("Participant 3 - ");
-		listModel.addElement("Participant 4 - attending");
-		listModel.addElement("Participant 5 - ");
+		participantListModel = new DefaultListModel<String>();
+		// TODO Appointment trenger liste over deltagere
+		participantListModel.addElement("Participant 1 - attending");
+		participantListModel.addElement("Participant 2 - not attending");
+		participantListModel.addElement("Participant 3 - ");
+		participantListModel.addElement("Participant 4 - attending");
+		participantListModel.addElement("Participant 5 - ");
 		
-		participants = new JList<String>(listModel);
+		participants = new JList<String>(participantListModel);
 		
 		scrollDescription = new JScrollPane(description);
 		scrollDescription.setPreferredSize(new Dimension(200, 80));
@@ -62,12 +72,12 @@ public class ShowEventGUI extends JPanel implements ChangeListener{
 		scrollParticipants.setPreferredSize(new Dimension(200, 120));
 		
 		yes = new JRadioButton("yes");
-		yes.addChangeListener(this);
+		yes.addActionListener(this);
 		no = new JRadioButton("no");
-		no.addChangeListener(this);
+		no.addActionListener(this);
 		
 		alertBox = new JComboBox<String>();
-		alertBox.setPrototypeDisplayValue("xx minutes ");
+		alertBox.setPrototypeDisplayValue("xx minutes "); // Set JComboBox size 
 		alertBox.addItem("5 minutes before");
 		alertBox.addItem("10 minutes before");
 		alertBox.addItem("15 minutes before");
@@ -95,11 +105,10 @@ public class ShowEventGUI extends JPanel implements ChangeListener{
 		c.gridy++;
 		add(time, c);
 		
-		c.insets = new Insets(0, 0, 50, 0);
+		c.insets = new Insets(0, 0, 10, 0);
 		c.gridy++;
 		add(place, c);
 		
-		c.insets = new Insets(-40, 0, 10, 0);
 		c.gridy++;
 		add(scrollDescription, c);
 		
@@ -107,7 +116,6 @@ public class ShowEventGUI extends JPanel implements ChangeListener{
 		c.gridy++;
 		add(scrollParticipants, c);
 		
-		c.insets = new Insets(0, 0, 0, 0);
 		c.anchor = GridBagConstraints.EAST;
 		c.gridwidth = 1;
 		c.gridy++;
@@ -152,30 +160,21 @@ public class ShowEventGUI extends JPanel implements ChangeListener{
 		c.gridx+=3;
 		add(save, c);
 	}
-	
-	public static void main(String[] args){
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setContentPane(new ShowEventGUI(1337, false));
-		frame.setPreferredSize(new Dimension(220, 500));
-		frame.pack();
-		frame.setResizable(false);
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-	}
 
 	@Override
-	public void stateChanged(ChangeEvent e) {
+	public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
+		
 		if (s == yes){
-			if (!yes.isSelected()){
+			if (no.isSelected()){
 				no.setSelected(false);
 			}
 		}else if(s == no){
-			if (!no.isSelected()){
+			if (yes.isSelected()){
 				yes.setSelected(false);
 			}
 		}
+		
 	}
 	
 }
