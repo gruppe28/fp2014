@@ -6,14 +6,17 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 
 import database.DBHandler;
-
 import fp2014.Ansatt;
 import fp2014.Appointment;
 
@@ -26,7 +29,7 @@ public class CalendarPanel extends JPanel {
 	public static final int CALENDAR_Y_START = 10;
 	
 	private ArrayList<Component> existingAppointments = new ArrayList<Component>();
-	private JPanel panel;
+	private JLayeredPane panel;
 	private KalenderView parent;
 	private int week;
 	private int year;
@@ -54,13 +57,13 @@ public class CalendarPanel extends JPanel {
 		appointments = DBHandler.getAppointmentsInInterval(users, daySpan);
 	
 		
-		setLayout(new FlowLayout(FlowLayout.CENTER, 53, 0));
+		setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		
 		JSeparator hSep, vSep;
 		JLabel label = null;
 		int hours = 24;
 		
-		panel = new JPanel();
+		panel = new JLayeredPane();
 		panel.setPreferredSize(new Dimension(804, 1000));
 		panel.setLayout(null);
 		
@@ -68,12 +71,14 @@ public class CalendarPanel extends JPanel {
 			label = new JLabel( String.format("%02d", i)+":00");
 			
 			label.setBounds(20, CALENDAR_Y_START - 17 +(i*40), 50, 40);
-			panel.add(label);
+			panel.add(label, 0);
 		}
 		
 		String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 		
-		
+		JLabel spacer = new JLabel("");	
+		spacer.setPreferredSize(new Dimension(60, 5));
+		this.add(spacer);
 		for (int i = 0; i < days.length; i++) {
 			this.addDay(days[i], i, CALENDAR_X_START + 30 +(i*CalendarPanel.DAY_WIDTH), CALENDAR_Y_START, 100, 40, panel);
 		}
@@ -81,13 +86,13 @@ public class CalendarPanel extends JPanel {
 		for (int i = 0; i <= hours; i++) {
 			hSep = new JSeparator(JSeparator.HORIZONTAL);
 			hSep.setBounds(CalendarPanel.CALENDAR_X_START, CALENDAR_Y_START+(i*CalendarPanel.HOUR_HEIGHT), 735, 5);			
-			panel.add(hSep);
+			panel.add(hSep, 0);
 		}
 		
 		for (int i = 0; i <= days.length; i++) {
 			vSep = new JSeparator(JSeparator.VERTICAL);
 			vSep.setBounds(CalendarPanel.CALENDAR_X_START+(i*CalendarPanel.DAY_WIDTH), CALENDAR_Y_START, 5, 960);
-			panel.add(vSep);			
+			panel.add(vSep, 0);			
 		}
 		
 		s = new JScrollPane(panel, 
@@ -106,16 +111,20 @@ public class CalendarPanel extends JPanel {
 		
 	}
 	
-	public void addDay(String day, int i, int x, int y, int width, int height, JPanel panel){
+	public void addDay(String day, int i, int x, int y, int width, int height, JLayeredPane panel){
 		JLabel label = new JLabel("<html>" + day + "<br>" + daySpan.get(i) + "</html>");
 		label.setForeground(Color.WHITE);
 		label.setBounds(x, y, width, height);
+		label.setPreferredSize(new Dimension(106, 45));
+		label.setHorizontalAlignment(SwingConstants.CENTER);
 		add(label);
 	}
 	
 	public void addAppointmentToCalendar(Component c, int x, int y, int width, int height, CalendarPanel panel){
+		((JTextArea) c).setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.CYAN));
+		((JTextArea) c).setLineWrap(true);
 		c.setBounds(x, y, width, height);
-		panel.panel.add(c);
+		panel.panel.add(c, 1);
 	}
 
 	public void removeAppointmentFromCalendar(Component c, CalendarPanel panel){
