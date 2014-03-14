@@ -46,7 +46,7 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		if (appointment.getPlace() != null){
 			place = new JLabel("Place: " + appointment.getPlace());
 		}else{
-			place = new JLabel("Room: " + appointment.getRom().getRomNr() + ", " + appointment.getRom().getSted());
+			place = new JLabel("Room: " + appointment.getRom().getSted());
 		}
 		attending = new JLabel("Attending:");
 		alert = new JLabel("Alert:");
@@ -78,6 +78,7 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		
 		alertBox = new JComboBox<String>();
 		alertBox.setPrototypeDisplayValue("xx minutes "); // Set JComboBox size 
+		alertBox.addItem("none");
 		alertBox.addItem("5 minutes before");
 		alertBox.addItem("10 minutes before");
 		alertBox.addItem("15 minutes before");
