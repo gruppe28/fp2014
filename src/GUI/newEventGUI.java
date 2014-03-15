@@ -212,7 +212,7 @@ public class newEventGUI extends JPanel implements ActionListener {
 			}
 
 		} else if (s == deltakere) {
-			ManageParticipants manageParticipants = new ManageParticipants(this, this.participants);
+			ManageParticipants manageParticipants = new ManageParticipants(this, appointment.getParticipants());
 		} else if (s == slettAvtale) {
 			
 			// her må vi slette gjeldende avtale fra databasen

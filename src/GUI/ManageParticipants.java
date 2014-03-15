@@ -24,6 +24,7 @@ import javax.swing.event.ListSelectionListener;
 
 import database.DBHandler;
 import fp2014.Ansatt;
+import fp2014.Appointment;
 
 @SuppressWarnings({"serial", "unchecked"})
 public class ManageParticipants extends JPanel implements ActionListener, ListSelectionListener, ItemListener{
@@ -42,11 +43,17 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 	newEventGUI parent;
 	JDialog romFrame;
 	HashMap<Ansatt, Integer> participants;
+	private boolean changeBlock;
+	private Appointment appointment;
 	
 	public ManageParticipants(newEventGUI parent, HashMap<Ansatt, Integer> participants) {
 		
 		this.parent = parent;
 		this.participants = participants;
+		
+		changeBlock = false;
+		
+		appointment = new Appointment(); // Creates a new appointment object to work on. If the user saves, the content of this appointment will be written to the actual appointment.
 		
 		// Create dialog window
 		romFrame = new JDialog();
@@ -54,8 +61,8 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		romFrame.setTitle("Manage participants");
 		
 		// Create radio buttons and listeners
-		attend = new JRadioButton("Attends");
-		notattend = new JRadioButton("Does not attend");
+		attend = new JRadioButton("Attending");
+		notattend = new JRadioButton("Not attending");
 		attend.addActionListener(this);
 		attend.addItemListener(this);
 		attend.setEnabled(false);
@@ -142,6 +149,7 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		
 		for (Ansatt i : participants.keySet()) {
 			participantsListModel.addElement(i);
+			appointment.editParticipant(i, participants.get(i));
 		}
 		
 		ArrayList<Ansatt> allUsers = DBHandler.getAllUsers();
@@ -161,6 +169,8 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
+		changeBlock = true; // When you change selected participant, the radio box listeners should not trigger.
 		
 		if (participantsList.isSelectionEmpty()){
 			attend.setEnabled(false);
@@ -186,22 +196,23 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 				
 			} else {
 				participantsListModel.addElement(employeeList.getSelectedValue());
-				parent.appointment.editParticipant(employeeList.getSelectedValue(), 2);
+				appointment.editParticipant(employeeList.getSelectedValue(), 2);
 				employeeListModel.removeElement(employeeList.getSelectedValue());
-				System.out.println(parent.getParticipants());
 			}
 		} else if (s == remove) {
 				if (participantsList.getSelectedValue() == null) {
 				
 			} else {
 				employeeListModel.addElement(participantsList.getSelectedValue());
-				parent.appointment.removeParticipant(participantsList.getSelectedValue());
+				appointment.removeParticipant(participantsList.getSelectedValue());
 				participantsListModel.removeElement(participantsList.getSelectedValue());
 			}
 		} else if (s == save) {
-			System.out.println("----------------");
-			//romFrame.dispose();
+			parent.appointment.setParticipants(appointment.getParticipants());
+			romFrame.dispose();
 		} 
+		
+		changeBlock = false;
 		
 	}
 	
@@ -209,9 +220,11 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 	@Override
 	public void valueChanged(ListSelectionEvent arg0) {
 		
+		changeBlock = true; // When you change selected participant, the radio box listeners should not trigger.
+		
 		int status;
 		if (!participantsList.isSelectionEmpty()){
-			status = parent.appointment.getParticipantStatus(participantsList.getSelectedValue());
+			status = appointment.getParticipantStatus(participantsList.getSelectedValue());
 			attend.setEnabled(true);
 			notattend.setEnabled(true);
 		}else{
@@ -220,7 +233,6 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 			notattend.setEnabled(false);
 		}
 		
-		System.out.println(status);
 		
 		if (arg0.getSource() == participantsList) {
 			if (status == 1) {
@@ -234,42 +246,26 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 				notattend.setSelected(false);
 			}
 		}
+		
+		changeBlock = false;
 	}
-
-//	@Override
-//	public void focusGained(FocusEvent e) {
-//		if (e.getSource().equals(attend)) {
-//			parent.appointment.editParticipant(participantsList.getSelectedValue(), 1);
-//			notattend.setSelected(false);
-//		} else if (e.getSource().equals(notattend)) {
-//			parent.appointment.editParticipant(participantsList.getSelectedValue(), 0);
-//			attend.setSelected(false);
-//		}
-//		System.out.println(attend.isSelected());
-//		System.out.println(notattend.isSelected());
-//	}
-//
-//	@Override
-//	public void focusLost(FocusEvent e) {
-//		
-//	}
 	
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		
+		if(changeBlock) { return; } // Omits status changes if true
+		
 		if (e.getSource().equals(attend)) {
 			if (attend.isSelected()) {
-				parent.appointment.editParticipant(participantsList.getSelectedValue(), 1);				
+				appointment.editParticipant(participantsList.getSelectedValue(), 1);				
 			} else {
-				parent.appointment.editParticipant(participantsList.getSelectedValue(), 2);	
-				System.out.println("kall 1");
+				appointment.editParticipant(participantsList.getSelectedValue(), 2);	
 			}
 		} else if (e.getSource().equals(notattend)) {
 			if (notattend.isSelected()) {
-				parent.appointment.editParticipant(participantsList.getSelectedValue(), 0);				
+				appointment.editParticipant(participantsList.getSelectedValue(), 0);
 			} else {
-				parent.appointment.editParticipant(participantsList.getSelectedValue(), 2);				
-				System.out.println("kall 2");
+				appointment.editParticipant(participantsList.getSelectedValue(), 2);
 			}
 		}
 	}
