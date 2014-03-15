@@ -34,6 +34,7 @@ public class KalenderView extends JPanel implements ActionListener {
 	private JButton nextWeek;
 	private JButton alerts;
 	private JButton logOut;
+	private JButton viewAs;
 	protected JPanel kalender, headerLeft, headerRight, avtale;
 	private Ansatt user;
 	private ArrayList<Ansatt> showUsers;
@@ -76,19 +77,23 @@ public class KalenderView extends JPanel implements ActionListener {
 	
 		// Create Swing elements
 		previousWeek = new JButton("<");
+		nextWeek = new JButton(">");
 		weekNumberLabel = new JLabel("WEEK " + week + " - " + year);
 		weekNumberLabel.setFont(new Font("Arial", Font.PLAIN, 26)); // Larger font for the week header
 		int unseenNotifications = user.getNumberOfUnseenNotifications();
 		alerts = new JButton("Notifications: " + unseenNotifications);
 		if(unseenNotifications > 0) { alerts.setForeground(Color.RED); }
-		nextWeek = new JButton(">");
+		
 		logOut = new JButton("Log off " + user.getBrukernavn());
+		
+		viewAs = new JButton("View calendar as");
 		
 		// Create listeners
 		logOut.addActionListener(new logOffListener());
 		previousWeek.addActionListener(new changeWeekListener());
 		nextWeek.addActionListener(new changeWeekListener());
 		alerts.addActionListener(this);
+		viewAs.addActionListener(this);
 		
 		// GridBag, left header
 		headerLeft.setLayout(new GridBagLayout());
@@ -121,6 +126,8 @@ public class KalenderView extends JPanel implements ActionListener {
 		gbcH.gridx=3;
 		gbcH.gridy=1;
 		headerRight.add(alerts, gbcH);
+		gbcH.gridy=2;
+		headerRight.add(viewAs, gbcH);
 		
 		// GridBag, whole calendar window
 			gbc.gridx = 0;
@@ -227,6 +234,16 @@ public class KalenderView extends JPanel implements ActionListener {
 		this.avtale = avtale;
 	}
 	
+	public ArrayList<Ansatt> getShowUsers(){
+		return showUsers;
+	}
+	
+	public void setShowUsers(ArrayList<Ansatt> newList){
+		showUsers = newList;
+		CalendarPanel newCalendar = new CalendarPanel(this, user, showUsers, week, year);
+		addNewPanel("kalender", newCalendar);
+	}
+	
 	// Listener classes below
 
 	class logOffListener implements ActionListener{
@@ -246,6 +263,9 @@ public class KalenderView extends JPanel implements ActionListener {
 		Object s = e.getSource();
 		if (s == alerts){
 			addNewPanel("avtale", new NotificationGUI(this, user));
+		}
+		else if(s == viewAs){
+			new ViewAsGUI(this);
 		}
 	}
 
