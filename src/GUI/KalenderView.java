@@ -20,6 +20,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import fp2014.Ansatt;
 import fp2014.Appointment;
+import fp2014.Watcher;
 
 @SuppressWarnings("serial")
 public class KalenderView extends JPanel implements ActionListener {
@@ -80,13 +81,12 @@ public class KalenderView extends JPanel implements ActionListener {
 		nextWeek = new JButton(">");
 		weekNumberLabel = new JLabel("WEEK " + week + " - " + year);
 		weekNumberLabel.setFont(new Font("Arial", Font.PLAIN, 26)); // Larger font for the week header
-		int unseenNotifications = user.getNumberOfUnseenNotifications();
-		alerts = new JButton("Notifications: " + unseenNotifications);
-		if(unseenNotifications > 0) { alerts.setForeground(Color.RED); }
-		
+		alerts = new JButton();
 		logOut = new JButton("Log off " + user.getBrukernavn());
-		
 		viewAs = new JButton("View calendar as");
+		
+		// Create watcher. This will update the announcement counter and trigger alarms regularly
+		new Watcher(this, user);
 		
 		// Create listeners
 		logOut.addActionListener(new logOffListener());
@@ -242,6 +242,12 @@ public class KalenderView extends JPanel implements ActionListener {
 		showUsers = newList;
 		CalendarPanel newCalendar = new CalendarPanel(this, user, showUsers, week, year);
 		addNewPanel("kalender", newCalendar);
+	}
+	
+	public void updateAnnounchementCounter(){
+		int unseenNotifications = user.getNumberOfUnseenNotifications();
+		alerts.setText("Notifications: " + unseenNotifications);
+		if(unseenNotifications > 0) { alerts.setForeground(Color.RED); }
 	}
 	
 	// Listener classes below

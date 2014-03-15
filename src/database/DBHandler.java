@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import fp2014.Alarm;
 import fp2014.Notification;
 import fp2014.Ansatt;
 import fp2014.Appointment;
@@ -208,6 +209,27 @@ public final class DBHandler {
 		}
 		
 		return allUsers;
+	}
+	
+	// Alarm queries
+	public static ArrayList<Alarm> getAlarms(Ansatt user){
+		
+		ArrayList<Alarm> alarms = new ArrayList<Alarm>();
+		
+		Database db = new Database();
+		
+		ResultSet rs = db.query("Select * from Alarm where brukernavn = '" + user.getBrukernavn() + "'");
+		try {
+			while (rs.next()) {
+				alarms.add(new Alarm(rs.getString("tidspunkt"), rs.getString("dato"), getAppointment(rs.getInt("avtaleNr"))));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		db.close();
+		return alarms;
 	}
 	
 }
