@@ -50,8 +50,13 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		
 		this.setPreferredSize(new Dimension(220, 500));
 		
-		name = new JLabel(appointment.getName());
-		name.setFont(new Font(name.getFont().getFontName(), Font.BOLD, 26));
+		if (appointment.getName().length() > 13){
+			name = new JLabel(appointment.getName().substring(0, 10) + "...");
+		}else{
+			name = new JLabel(appointment.getName());
+		}
+		
+		name.setFont(new Font(Font.MONOSPACED, Font.BOLD, 26));
 		
 		time = new JLabel(appointment.getDate() + " kl. " + appointment.getStartTime() + "-" + appointment.getEndTime());
 		
