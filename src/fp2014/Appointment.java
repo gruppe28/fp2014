@@ -1,9 +1,6 @@
 package fp2014;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-
-import database.DBHandler;
 import database.Database;
 
 public class Appointment {
@@ -27,8 +24,8 @@ public class Appointment {
 	public Appointment (){
 	}
 	
-	public Appointment(String name, String startTime, String endTime, String description, String place, Rom room, String startDate, Ansatt madeBy) {
-//		this.setAppointmentNr(appointmentNr);
+	public Appointment(int appointmentNr, String name, String startTime, String endTime, String description, String place, Rom room, String startDate, Ansatt madeBy) {
+		this.setAppointmentNr(appointmentNr);
 		this.setName(name);
 		this.setStartTime(startTime);
 		this.setEndTime(endTime);

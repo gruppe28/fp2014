@@ -31,7 +31,7 @@ public class Database {
 			Statement st = connect.createStatement();
 			st.executeUpdate(sql);
 		}
-		catch (SQLException e) {  }
+		catch (SQLException e) { e.printStackTrace(); }
 	}
 	
 	// Call this method to execute queries with output

@@ -1,6 +1,5 @@
 package GUI;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -8,7 +7,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -19,7 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-
+import database.DBHandler;
 import fp2014.Ansatt;
 import fp2014.Appointment;
 
@@ -118,6 +120,8 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		alertBox.addItem("2 hours before");
 		alertBox.addItem("1 day before");
 		alertBox.addItem("2 days before");
+		
+		alertBox.setSelectedIndex(DBHandler.getAlarmType(user.getBrukernavn(), appointment.getAppointmentNr())); // Set index of alert box to previously chosen option
 		
 		edit = new JButton("Edit");
 		delete = new JButton("Delete");
@@ -232,7 +236,33 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 			
 		}else if(s == save){
 			//save attending status
-			//save alert
+			
+			
+			
+			// Save alarm
+			DBHandler.deleteAlarm(user.getBrukernavn(), appointment.getAppointmentNr()); // Deletes existing alarm before creating a new one.
+			
+			if(!alertBox.getSelectedItem().equals("none")){
+				int back = 0;
+				if(alertBox.getSelectedItem().equals("5 minutes before")) { back = 5; }
+				else if(alertBox.getSelectedItem().equals("10 minutes before")) { back = 10; }
+				else if(alertBox.getSelectedItem().equals("15 minutes before")) { back = 15; }
+				else if(alertBox.getSelectedItem().equals("30 minutes before")) { back = 30; }
+				else if(alertBox.getSelectedItem().equals("1 hour before")) { back = 60; }
+				else if(alertBox.getSelectedItem().equals("2 hours before")) { back = 60 * 2; }
+				else if(alertBox.getSelectedItem().equals("1 day before")) { back = 60 * 24; }
+				else if(alertBox.getSelectedItem().equals("2 days before")) { back = 60 * 24 * 2; }
+				
+				String[] parts = timeBefore(appointment.getDate(), appointment.getStartTime(), back).split(",");
+				
+				System.out.println(alertBox.getSelectedIndex());
+				
+				DBHandler.createAlarm(parts[0], parts[1], user.getBrukernavn(), appointment.getAppointmentNr(), alertBox.getSelectedIndex());
+			}
+			
+			
+			
+			
 			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
 			
 			// Oppdaterer kalenderen til aa vise ingen valgt avtale
@@ -250,6 +280,21 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 			((CalendarPanel) parent.kalender).unSelectAllAppointments();
 		}
 		
+	}
+	
+	private String timeBefore(String date, String time, int minutesBack){
+		SimpleDateFormat format = new SimpleDateFormat("d.MM.y HH:mm");
+		Date oldDate;
+		String value = "";
+		try {
+			oldDate = format.parse(date + " " + time);
+			Date newDate = new Date(oldDate.getTime() - (minutesBack * 1000 * 60));
+			Calendar c = Calendar.getInstance();
+			c.setTime(newDate);
+			return String.format("%02d", c.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d", c.get(Calendar.MINUTE))  + "," + c.get(Calendar.DAY_OF_MONTH) + "." + (c.get(Calendar.MONTH)+1) + "." + c.get(Calendar.YEAR);
+			
+		} catch (ParseException e) { e.printStackTrace(); }
+		return value;
 	}
 	
 }

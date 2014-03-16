@@ -120,7 +120,7 @@ public final class DBHandler {
 
 			ResultSet rs = db.query("select distinct Avtale.* from Avtale, AnsattAvtale WHERE Avtale.avtaleNr = AnsattAvtale.avtaleNr and (" + usersSQL + ") and (" + daysSQL + ")");
 		    while (rs.next()) {
-		    	appointments.add(new Appointment(rs.getString("navn"), rs.getString("starttidspunkt"), rs.getString("sluttidspunkt"), rs.getString("beskrivelse"), rs.getString("sted"), getRom(rs.getInt("romNr")), rs.getString("dato"), getAnsatt(rs.getString("opprettetAv"))));
+		    	appointments.add(new Appointment(rs.getInt("avtaleNr"), rs.getString("navn"), rs.getString("starttidspunkt"), rs.getString("sluttidspunkt"), rs.getString("beskrivelse"), rs.getString("sted"), getRom(rs.getInt("romNr")), rs.getString("dato"), getAnsatt(rs.getString("opprettetAv"))));
 		    }
 		}
 		catch (Exception e) { e.printStackTrace(); }
@@ -180,7 +180,7 @@ public final class DBHandler {
 		
 		try {
 			if (rs.next()) {
-		    	appointment = new Appointment(rs.getString("navn"), rs.getString("starttidspunkt"), rs.getString("sluttidspunkt"), rs.getString("beskrivelse"), rs.getString("sted"), getRom(rs.getInt("romNr")), rs.getString("dato"), getAnsatt(rs.getString("opprettetAv")));
+		    	appointment = new Appointment(rs.getInt("avtaleNr"), rs.getString("navn"), rs.getString("starttidspunkt"), rs.getString("sluttidspunkt"), rs.getString("beskrivelse"), rs.getString("sted"), getRom(rs.getInt("romNr")), rs.getString("dato"), getAnsatt(rs.getString("opprettetAv")));
 				return appointment;
 			}
 			db.close();
@@ -230,6 +230,34 @@ public final class DBHandler {
 		
 		db.close();
 		return alarms;
+	}
+	
+	public static void createAlarm(String time, String date, String username, int appointmentNum, int type){
+		Database db = new Database();
+		db.update("INSERT INTO Alarm(tidspunkt, dato, avtaleNr, brukernavn, type) VALUES ('" + time + "', '" + date + "', " + appointmentNum + ", '" + username + "', " + type + ")");
+		db.close();
+	}
+	
+	public static void deleteAlarm(String username, int appointmentNum){
+		Database db = new Database();
+	    db.update("DELETE FROM Alarm WHERE brukernavn = '" + username + "' and avtaleNr = " + appointmentNum);
+	    db.close();
+	}
+	
+	public static int getAlarmType(String username, int appointmentNum){
+		
+		int type = 0;
+		
+		Database db = new Database();
+		
+		ResultSet rs = db.query("Select type from Alarm where brukernavn = '" + username + "' AND avtaleNr = " + appointmentNum);
+		try {
+			rs.next();
+			type = rs.getInt("type");
+		} catch (SQLException e) { e.printStackTrace(); }
+		
+		db.close();
+		return type;
 	}
 	
 }
