@@ -252,12 +252,42 @@ public final class DBHandler {
 		
 		ResultSet rs = db.query("Select type from Alarm where brukernavn = '" + username + "' AND avtaleNr = " + appointmentNum);
 		try {
-			rs.next();
-			type = rs.getInt("type");
+			if(rs.next()){ type = rs.getInt("type"); }
 		} catch (SQLException e) { e.printStackTrace(); }
 		
 		db.close();
 		return type;
+	}
+	
+	
+	// Update attendance
+	public static void updateAttendance(String username, int appointmentNum, String attendance){
+		Database db = new Database();
+		db.update("UPDATE AnsattAvtale SET deltar = '" + attendance + "' WHERE brukernavn = '" + username + "' AND avtaleNr =" + appointmentNum);
+		db.close();
+	}
+	
+	// Get attendants and their status
+	public static ArrayList<ArrayList<String>> getAttendants(int appointmentNum){
+		
+		ArrayList<String> users = new ArrayList<String>();
+		ArrayList<String> statuses = new ArrayList<String>();
+		ArrayList<ArrayList<String>> matrix = new ArrayList<ArrayList<String>>();
+		
+		Database db = new Database();
+		
+		ResultSet rs = db.query("Select * from AnsattAvtale where avtaleNr = " + appointmentNum);
+		try {
+			while (rs.next()) {
+				users.add(rs.getString("brukernavn"));
+				statuses.add(rs.getString("deltar"));
+			}
+		} catch (SQLException e) { e.printStackTrace(); }
+		
+		db.close();
+		matrix.add(users);
+		matrix.add(statuses);
+		return matrix;
 	}
 	
 }

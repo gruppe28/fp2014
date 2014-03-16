@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.DefaultListModel;
@@ -41,6 +42,7 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 	private KalenderView parent;
 	private Ansatt user;
 	private boolean isOwner;
+	private String yourStatus;
 	
 	public ShowEventGUI(KalenderView parent, Ansatt user, Appointment appointment){
 		
@@ -75,25 +77,33 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		description.setEditable(false);
 		description.setLineWrap(true);
 		
-		participantListModel = new DefaultListModel<String>();
-		// TODO Appointment trenger liste over deltagere
+		// Create Swing object
+
+		yes = new JRadioButton("yes");
+		yes.addActionListener(this);
+		no = new JRadioButton("no");
+		no.addActionListener(this);
+		hideBox = new JCheckBox("yes");
 		
-		for (Ansatt a: appointment.getParticipants().keySet()){
-			String tmp = a.getBrukernavn() + " - ";
-			if (appointment.getParticipantStatus(a) == 1){
+		// Fetch attendants and their statuses from database
+		ArrayList<ArrayList<String>> attendantsAndStatuses = DBHandler.getAttendants(appointment.getAppointmentNr());
+		ArrayList<String> attendants = attendantsAndStatuses.get(0);
+		ArrayList<String> statuses = attendantsAndStatuses.get(1);
+		
+		// Fill participant list
+		participantListModel = new DefaultListModel<String>();
+		String status;
+		
+		for (String a : attendants){
+			status = statuses.get(attendants.indexOf(a));
+			String tmp = a + " - ";
+			if (status.equals("1")){
 				tmp += "attending";
-			}else if (appointment.getParticipantStatus(a) == 1){
+			}else if (status.equals("0")){
 				tmp += "not attending";
 			}
 			participantListModel.addElement(tmp);
 		}
-		/*
-		participantListModel.addElement("Participant 1 - attending");
-		participantListModel.addElement("Participant 2 - not attending");
-		participantListModel.addElement("Participant 3 - ");
-		participantListModel.addElement("Participant 4 - attending");
-		participantListModel.addElement("Participant 5 - ");
-		*/
 		
 		participants = new JList<String>(participantListModel);
 		
@@ -103,12 +113,11 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		scrollParticipants = new JScrollPane(participants);
 		scrollParticipants.setPreferredSize(new Dimension(200, 120));
 		
-		yes = new JRadioButton("yes");
-		yes.addActionListener(this);
-		no = new JRadioButton("no");
-		no.addActionListener(this);
-		hideBox = new JCheckBox("yes");
+		// Check if you are attending or not. Update checkboxes.
+		yourStatus = statuses.get(attendants.indexOf(user.getBrukernavn()));
+		setStatus(yourStatus);
 		
+		// Generate alart combobox
 		alertBox = new JComboBox<String>();
 		alertBox.setPrototypeDisplayValue("xx minutes "); // Set JComboBox size 
 		alertBox.addItem("none");
@@ -235,9 +244,12 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 			parent.addNewPanel("avtale", new newEventGUI(parent, user, appointment));
 			
 		}else if(s == save){
-			//save attending status
 			
-			
+			String newStatus = getStatus();
+			// Save attending status
+			if(!yourStatus.equals(newStatus)){ // Only update if status has changed.
+				DBHandler.updateAttendance(user.getBrukernavn(), appointment.getAppointmentNr(), newStatus); // Updates database
+			}
 			
 			// Save alarm
 			DBHandler.deleteAlarm(user.getBrukernavn(), appointment.getAppointmentNr()); // Deletes existing alarm before creating a new one.
@@ -254,8 +266,6 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 				else if(alertBox.getSelectedItem().equals("2 days before")) { back = 60 * 24 * 2; }
 				
 				String[] parts = timeBefore(appointment.getDate(), appointment.getStartTime(), back).split(",");
-				
-				System.out.println(alertBox.getSelectedIndex());
 				
 				DBHandler.createAlarm(parts[0], parts[1], user.getBrukernavn(), appointment.getAppointmentNr(), alertBox.getSelectedIndex());
 			}
@@ -295,6 +305,17 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 			
 		} catch (ParseException e) { e.printStackTrace(); }
 		return value;
+	}
+	
+	private String getStatus(){
+		if(yes.isSelected()) { return "1"; }
+		else if(no.isSelected()) { return "0"; }
+		else { return "2"; }
+	}
+	
+	private void setStatus(String status){
+		if(status.equals("1")) { yes.setSelected(true); }
+		else if(status.equals("0")) { no.setSelected(true); }
 	}
 	
 }
