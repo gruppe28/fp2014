@@ -289,7 +289,7 @@ public final class DBHandler {
 	
 	public static void createAttendance(String username, int appointmentNum, int attendance) {		
 		Database db = new Database();
-		db.update("INSERT INTO AnsattAvtale(avtaleNr, brukernavn, deltar) VALUES ('"+ appointmentNum + "','" + username + "','" + attendance + "'");
+		db.update("INSERT INTO AnsattAvtale(avtaleNr, brukernavn, deltar) VALUES ('"+ appointmentNum + "','" + username + "','" + attendance + "')");
 		db.close();
 	}
 	
@@ -298,16 +298,45 @@ public final class DBHandler {
 		int countOfAppointments = 0;
 		
 		Database db = new Database();
-		ResultSet rs = db.query("SELECT COUNT(*) FROM Avtale AS rowCount");
+		ResultSet rs = db.query("SELECT COUNT(*) FROM Avtale");
 		try {
 			if (rs.next()) {
-				countOfAppointments = rs.getInt("rowCount");
+				countOfAppointments = rs.getInt("COUNT(*)");
 			}
 		} catch (SQLException e) { e.printStackTrace(); }
 		
 		db.close();
 		
 		return countOfAppointments;
+	}
+	
+	public static void deleteAttendances(int appointmentNum){
+		Database db = new Database();
+	    db.update("DELETE FROM AnsattAvtale WHERE avtaleNr = " + appointmentNum);
+	    db.close();
+	}
+	
+	public static void updateAppointment(Appointment appointment) {
+		Database db = new Database();
+		if (appointment.getRom() == null) {
+			db.update("UPDATE Avtale SET navn = '" + appointment.getName() 
+					+ "', starttidspunkt = '" + appointment.getStartTime() 
+					+ "', sluttidspunkt = '" + appointment.getEndTime() 
+					+ "', beskrivelse = '" + appointment.getDescription() 
+					+ "', sted = '" + appointment.getPlace() 
+					+ "', dato = '" + appointment.getDate() 
+					+ "' WHERE avtaleNr = " + appointment.getAppointmentNr());
+		} else {
+			db.update("UPDATE Avtale SET navn = '" + appointment.getName() 
+					+ "', starttidspunkt = '" + appointment.getStartTime() 
+					+ "', sluttidspunkt = '" + appointment.getEndTime() 
+					+ "', beskrivelse = '" + appointment.getDescription() 
+					+ "', romNr = '" + appointment.getRom().getRomNr() 
+					+ "', dato = '" + appointment.getDate() 
+					+ "' WHERE avtaleNr = " + appointment.getAppointmentNr());
+		}
+		
+		db.close();
 	}
 	
 }
