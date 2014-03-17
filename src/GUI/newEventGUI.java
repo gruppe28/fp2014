@@ -25,6 +25,7 @@ import javax.swing.text.MaskFormatter;
 
 import com.toedter.calendar.JDateChooser;
 
+import database.DBHandler;
 import fp2014.Ansatt;
 import fp2014.Appointment;
 import fp2014.Mail;
@@ -191,8 +192,15 @@ public class newEventGUI extends JPanel implements ActionListener {
 				parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
 				System.out.println("Appointment saved to database.");
 				
+				//Legger til møteleder som deltager med status "Deltar"
+				this.participants.put(user, 1);
+
 				//Opprett/Endre AnsattAvtaler
-			
+				for (Ansatt a : this.participants.keySet()) {
+					DBHandler.createAttendance(a.getBrukernavn(), DBHandler.getCountOfAppointments() + 1, participants.get(a));
+				}
+				
+				//Sender mail til evt eksterne deltagere
 				sendMailInvitations();
 				
 				// Oppdaterer kalenderen til å vise ingen valgt avtale
@@ -201,7 +209,7 @@ public class newEventGUI extends JPanel implements ActionListener {
 			}
 
 		} else if (s == inviteViaEmailBtn){
-			SendEmailPanel mailPanel = new SendEmailPanel(this, emailParticipants);
+			new SendEmailPanel(this, emailParticipants);
 		}
 		
 		else if (s == avbryt) {
@@ -213,11 +221,11 @@ public class newEventGUI extends JPanel implements ActionListener {
 		} else if (s == moterom) {
 
 			if (checkDate() == null) {
-				romValgGUI romValg = new romValgGUI(this, datoVelgerFra.getDateFormatString(),startTidspunkt.getText(), sluttTidspunkt.getText());
+				new romValgGUI(this, datoVelgerFra.getDateFormatString(),startTidspunkt.getText(), sluttTidspunkt.getText());
 			}
 
 		} else if (s == deltakere) {
-			ManageParticipants manageParticipants = new ManageParticipants(this, appointment.getParticipants());
+			new ManageParticipants(this, appointment.getParticipants());
 		} else if (s == slettAvtale) {
 			
 			// her må vi slette gjeldende avtale fra databasen
@@ -300,16 +308,8 @@ public class newEventGUI extends JPanel implements ActionListener {
 				+ "\n\n Best Regards, \n\n" + user.getFornavn() + " " + user.getEtternavn() + "\n" + user.getEmail();
 		
 		for (String mail : emailParticipants){
-			Mail mailsender = new Mail(mail,user.getEmail(),user.getFornavn()+" "+user.getEtternavn(), "Meeting invitation to "+ appointment.getName(), content);
+			new Mail(mail,user.getEmail(),user.getFornavn()+" "+user.getEtternavn(), "Meeting invitation to "+ appointment.getName(), content);
 		}
-	}
-
-	public static void main(String[] args) {
-		JFrame frame = new JFrame();
-		Ansatt user = new Ansatt("brukernavn", "passord", "fornavn", "etternavn", "epost");
-		Appointment appointment = new Appointment();
-		KalenderView view = new KalenderView(user, frame);
-		newEventGUI test = new newEventGUI(view, user, appointment);
 	}
 	
 	public void loadExistingAppointment(){
