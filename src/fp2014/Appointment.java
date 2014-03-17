@@ -283,5 +283,13 @@ public class Appointment {
 		return Color.MAGENTA;
 	}
 	
+	public String getLocation(){
+		if (place == null){
+			return rom.getSted();
+		}else{
+			return place;
+		}
+	}
+	
 	
 }
