@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.joda.time.DateTime;
@@ -97,6 +98,10 @@ public class newEventGUI extends JPanel implements ActionListener {
 		GridBagConstraints gbcA = new GridBagConstraints();
 
 		feedback.setForeground(Color.RED);
+		
+		if (appointment.getName() != null){
+			loadExistingAppointment();
+		}
 
 		gbcA.insets = new Insets(4, 2, 4, 2);
 		gbcA.anchor = GridBagConstraints.NORTH;
@@ -180,14 +185,14 @@ public class newEventGUI extends JPanel implements ActionListener {
 			}
 			else {
 				LocalDate appointmentDate = new DateTime(datoVelgerFra.getDate()).toLocalDate();
-				this.appointment.edit(avtaleNavn.getText(),startTidspunkt.getText(), sluttTidspunkt.getText(),avtaleBeskrivelse.getText(),appointmentDate.toString(), user, this.participants);
+				this.appointment.edit(avtaleNavn.getText(),startTidspunkt.getText(), sluttTidspunkt.getText(),avtaleBeskrivelse.getText(), toOtherDateFormat(appointmentDate), user, this.participants);
 				System.out.println(this.appointment.toString());
 				appointment.sendAppoinmentToDatabase();
 				parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
 				System.out.println("Appointment saved to database.");
 				
 				//Opprett/Endre AnsattAvtaler
-				
+			
 				sendMailInvitations();
 				
 				// Oppdaterer kalenderen til å vise ingen valgt avtale
@@ -305,6 +310,73 @@ public class newEventGUI extends JPanel implements ActionListener {
 		Appointment appointment = new Appointment();
 		KalenderView view = new KalenderView(user, frame);
 		newEventGUI test = new newEventGUI(view, user, appointment);
+	}
+	
+	public void loadExistingAppointment(){
+		avtaleNavn = new JTextField(appointment.getName());
+		avtaleBeskrivelse = new JTextField(appointment.getDescription());
+		
+		MaskFormatter formatterStart = null;
+		MaskFormatter formatterEnd = null;
+		
+		try {
+			formatterStart = new MaskFormatter(appointment.getStartTime());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			formatterEnd = new MaskFormatter(appointment.getEndTime());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		datoVelgerFra = new JDateChooser(toDateFormat(appointment.getDate()));
+		
+		startTidspunkt = new JFormattedTextField(formatterStart);
+		sluttTidspunkt = new JFormattedTextField(formatterEnd);
+		
+		if (appointment.getPlace() != null){
+			visRom = new JTextField(appointment.getRom().getSted());
+		} else if (appointment.getRom() != null) {
+			visRom = new JTextField(appointment.getPlace());
+		}
+	}
+	
+	public Date toDateFormat(String wrongFormatDate){
+
+		String[] dateParts = wrongFormatDate.split("\\.");
+		String dd = dateParts[0];
+		String mm = dateParts[1];
+		String yyyy = dateParts[2];
+
+		if (dd.length() == 1){
+			dd = "0"+dd;
+		} 
+		if (mm.length() == 1){
+			mm = "0"+mm;
+		}
+		
+		String oldDate = yyyy+"-"+mm+"-"+dd;
+		
+		LocalDate localDate = new LocalDate(oldDate);
+		Date date = localDate.toDateTimeAtStartOfDay().toDate();
+		
+		System.out.println(date);
+		
+		return date;
+	}
+	
+	public String toOtherDateFormat (LocalDate wrongFormatDate) {
+		
+		String[] dateParts = wrongFormatDate.toString().split("\\-");
+		int yyyy = Integer.parseInt(dateParts[0]);
+		int mm = Integer.parseInt(dateParts[1]);
+		int dd = Integer.parseInt(dateParts[2]);
+		
+		String date = dd+"."+mm+"."+yyyy;
+		
+		return date;
 	}
 
 }
