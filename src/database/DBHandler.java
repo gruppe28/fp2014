@@ -373,4 +373,23 @@ public final class DBHandler {
 		db.close();
 	}
 	
+	public static boolean isChanged(String username, int appointmentNum){
+		
+		boolean changed = false;
+		
+		Database db = new Database();
+		
+		ResultSet rs = db.query("Select * from AnsattAvtale where brukernavn = '" + username + "' and avtaleNr = " + appointmentNum);
+		try {
+			if(rs.next()) {
+				if(rs.getInt("endret") == 1) { changed = true; }
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		db.close();
+		return changed;
+	}
+	
 }
