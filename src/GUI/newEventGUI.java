@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,8 +19,10 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.text.MaskFormatter;
 
 import org.joda.time.DateTime;
@@ -32,7 +36,7 @@ import fp2014.Appointment;
 import fp2014.Mail;
 
 @SuppressWarnings("serial")
-public class newEventGUI extends JPanel implements ActionListener{
+public class newEventGUI extends JPanel implements ActionListener, FocusListener{
 
 	private JTextField avtaleNavn;
 	private JTextArea avtaleBeskrivelse;
@@ -111,77 +115,47 @@ public class newEventGUI extends JPanel implements ActionListener{
 			loadExistingAppointment();
 		}
 
-		gbcA.insets = new Insets(4, 2, 4, 2);
-		gbcA.anchor = GridBagConstraints.NORTH;
-		gbcA.fill = GridBagConstraints.HORIZONTAL;
-		gbcA.weightx = 1;
-		gbcA.weighty = 0;
-
-		gbcA.gridx = 0;
-		gbcA.gridy = 0;
-		gbcA.gridwidth = 3;
-		this.add(avtaleNavn, gbcA);
-
-		gbcA.gridy = 1;
-		gbcA.gridwidth = 3;
-		this.add(avtaleBeskrivelse, gbcA);
-
-		gbcA.gridy = 2;
-		gbcA.gridwidth = 1;
-		this.add(startTid, gbcA);
-
-		gbcA.gridx = 1;
-		this.add(startTidspunkt, gbcA);
-
-		gbcA.gridx = 2;
-		this.add(duration, gbcA);
-
-		gbcA.gridy = 3;
-		gbcA.gridx = 0;
-		this.add(sluttTid, gbcA);
-
-		gbcA.gridx = 1;
-		this.add(sluttTidspunkt, gbcA);
-
-		gbcA.gridx = 2;
-		this.add(datoVelgerFra, gbcA);
+		JScrollPane scroll = new JScrollPane(avtaleBeskrivelse);
+	    scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+	    visRom.setEditable(false);
 		
-		gbcA.gridy = 4;
-		gbcA.gridx = 0;
-		gbcA.gridwidth = 3;
-		moterom.addActionListener(this);
-		this.add(moterom, gbcA);
-
-		visRom.setEditable(false);
-		gbcA.gridy = 5;
-		gbcA.gridwidth = 3;
-		this.add(visRom, gbcA);
-
-		gbcA.gridy = 6;
-		gbcA.gridwidth = 3;
-		this.add(deltakere, gbcA);
-		deltakere.addActionListener(this);
+		this.setLayout(null);
 		
-		gbcA.gridy = 7;
-		this.add(inviteViaEmailBtn, gbcA);
-
-		gbcA.gridy = 8;
-		this.add(feedback, gbcA);
-
-		gbcA.gridy = 9;
-		gbcA.gridwidth = 3;
-		gbcA.insets = new Insets(180, 2, 4, 2);
-		this.add(slettAvtale, gbcA);
-
-		gbcA.gridy = 10;
-		gbcA.gridwidth = 2;
-		gbcA.insets = new Insets(0, 2, 4, 2);
-		this.add(avbryt, gbcA);
-
-		gbcA.gridy = 10;
-		gbcA.gridx = 2;
-		gbcA.gridwidth = 1;
-		this.add(lagre, gbcA);
+		avtaleBeskrivelse.addFocusListener(this);
+		avtaleNavn.addFocusListener(this);
+		startTidspunkt.addFocusListener(this);
+		sluttTidspunkt.addFocusListener(this);
+		
+		avtaleNavn.setBounds(5,5,210,25);
+		avtaleBeskrivelse.setBounds(8, 35, 204, 100);
+		scroll.setBounds(8, 35, 204, 100);
+		startTid.setBounds(10, 137, 50, 25);
+		sluttTid.setBounds(10, 163, 50, 25);
+		startTidspunkt.setBounds(40, 140, 50, 20);
+		sluttTidspunkt.setBounds(40, 165, 50, 20);
+		datoVelgerFra.setBounds(100,165,118,20);
+		moterom.setBounds(1,190,218,25);
+		visRom.setBounds(5,220,210,25);
+		deltakere.setBounds(1,253,218,25);
+		inviteViaEmailBtn.setBounds(1,283,218,25);
+		slettAvtale.setBounds(1,420,218,25);
+		lagre.setBounds(1,450,112,25);
+		avbryt.setBounds(108,450,112,25);
+		
+		this.add(avtaleNavn);
+		this.add(scroll);
+		this.add(startTid);
+		this.add(sluttTid);
+		this.add(startTidspunkt);
+		this.add(sluttTidspunkt);
+		this.add(datoVelgerFra);
+		this.add(moterom);
+		this.add(visRom);
+		this.add(deltakere);
+		this.add(inviteViaEmailBtn);
+		this.add(slettAvtale);
+		this.add(lagre);
+		this.add(avbryt);
 	}
 
 	@Override
@@ -458,5 +432,34 @@ public class newEventGUI extends JPanel implements ActionListener{
 		duration.addItem("07:30");
 		duration.addItem("07:45");
 		duration.addItem("08:00");
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		if (e.getSource() == avtaleBeskrivelse){
+			avtaleBeskrivelse.selectAll();
+		} else if (e.getSource() == avtaleNavn) {
+			avtaleNavn.selectAll();
+		} else if (e.getSource() == startTidspunkt){
+			startTidspunkt.selectAll();
+		} else if (e.getSource() == sluttTidspunkt){
+			sluttTidspunkt.selectAll();
+		}
+		
+	}
+
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		if (e.getSource() == avtaleBeskrivelse){
+			avtaleBeskrivelse.select(0, 0);
+		} else if (e.getSource() == avtaleNavn) {
+			avtaleNavn.select(0, 0);
+		} else if (e.getSource() == startTidspunkt){
+			startTidspunkt.select(0, 0);
+		} else if (e.getSource() == sluttTidspunkt){
+			sluttTidspunkt.select(0, 0);
+		}
+		
 	}
 }
