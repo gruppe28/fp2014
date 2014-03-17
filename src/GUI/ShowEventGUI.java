@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -12,6 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -42,7 +45,8 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 	private KalenderView parent;
 	private Ansatt user;
 	private boolean isOwner;
-	private String yourStatus;
+	private int yourStatus;
+	private HashMap<Ansatt, Integer> participants2;
 	
 	public ShowEventGUI(KalenderView parent, Ansatt user, Appointment appointment){
 		
@@ -86,35 +90,40 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		hideBox = new JCheckBox("yes");
 		
 		// Fetch attendants and their statuses from database
-		ArrayList<ArrayList<String>> attendantsAndStatuses = DBHandler.getAttendants(appointment.getAppointmentNr());
-		ArrayList<String> attendants = attendantsAndStatuses.get(0);
-		ArrayList<String> statuses = attendantsAndStatuses.get(1);
+		participants2 = DBHandler.getAttendants(appointment.getAppointmentNr());
 		
 		// Fill participant list
 		participantListModel = new DefaultListModel<String>();
-		String status;
+		int status;
 		
-		for (String a : attendants){
-			status = statuses.get(attendants.indexOf(a));
-			String tmp = a + " - ";
-			if (status.equals("1")){
+		for (Ansatt a : participants2.keySet()){
+			
+			if(a.getBrukernavn().equals(user.getBrukernavn())){
+				yourStatus = participants2.get(a);
+			}
+			
+			status = participants2.get(a);
+			String tmp = a.getFornavn() + " " + a.getEtternavn() + " - ";
+			if (status == 1){
 				tmp += "attending";
-			}else if (status.equals("0")){
+			}else if (status == 0){
 				tmp += "not attending";
 			}
 			participantListModel.addElement(tmp);
 		}
 		
 		participants = new JList<String>(participantListModel);
+		participants.setEnabled(false);
 		
 		scrollDescription = new JScrollPane(description);
-		scrollDescription.setPreferredSize(new Dimension(200, 80));
+		scrollDescription.setPreferredSize(new Dimension(200, 75));
 		
 		scrollParticipants = new JScrollPane(participants);
-		scrollParticipants.setPreferredSize(new Dimension(200, 120));
+		scrollParticipants.setPreferredSize(new Dimension(200, 80));
+		
 		
 		// Check if you are attending or not. Update checkboxes.
-		yourStatus = statuses.get(attendants.indexOf(user.getBrukernavn()));
+		
 		setStatus(yourStatus);
 		
 		// Generate alart combobox
@@ -241,13 +250,14 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 			((CalendarPanel) parent.kalender).unSelectAllAppointments();
 			
 		}else if(s == edit){
+			appointment.setParticipants(participants2);
 			parent.addNewPanel("avtale", new newEventGUI(parent, user, appointment));
 			
 		}else if(s == save){
 			
-			String newStatus = getStatus();
+			int newStatus = getStatus();
 			// Save attending status
-			if(!yourStatus.equals(newStatus)){ // Only update if status has changed.
+			if(yourStatus != newStatus){ // Only update if status has changed.
 				DBHandler.updateAttendance(user.getBrukernavn(), appointment.getAppointmentNr(), newStatus); // Updates database
 			}
 			
@@ -307,15 +317,15 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		return value;
 	}
 	
-	private String getStatus(){
-		if(yes.isSelected()) { return "1"; }
-		else if(no.isSelected()) { return "0"; }
-		else { return "2"; }
+	private int getStatus(){
+		if(yes.isSelected()) { return 1; }
+		else if(no.isSelected()) { return 0; }
+		else { return 2; }
 	}
 	
-	private void setStatus(String status){
-		if(status.equals("1")) { yes.setSelected(true); }
-		else if(status.equals("0")) { no.setSelected(true); }
+	private void setStatus(int status){
+		if(status == 1) { yes.setSelected(true); }
+		else if(status == 0) { no.setSelected(true); }
 	}
 	
 }

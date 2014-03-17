@@ -3,6 +3,7 @@ package database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import fp2014.Alarm;
 import fp2014.Notification;
@@ -261,33 +262,29 @@ public final class DBHandler {
 	
 	
 	// Update attendance
-	public static void updateAttendance(String username, int appointmentNum, String attendance){
+	public static void updateAttendance(String username, int appointmentNum, int attendance){
 		Database db = new Database();
 		db.update("UPDATE AnsattAvtale SET deltar = '" + attendance + "' WHERE brukernavn = '" + username + "' AND avtaleNr =" + appointmentNum);
 		db.close();
 	}
 	
 	// Get attendants and their status
-	public static ArrayList<ArrayList<String>> getAttendants(int appointmentNum){
+	public static HashMap<Ansatt, Integer> getAttendants(int appointmentNum){
 		
-		ArrayList<String> users = new ArrayList<String>();
-		ArrayList<String> statuses = new ArrayList<String>();
-		ArrayList<ArrayList<String>> matrix = new ArrayList<ArrayList<String>>();
+		HashMap<Ansatt, Integer> attendants = new HashMap<Ansatt, Integer>();
 		
 		Database db = new Database();
 		
 		ResultSet rs = db.query("Select * from AnsattAvtale where avtaleNr = " + appointmentNum);
 		try {
 			while (rs.next()) {
-				users.add(rs.getString("brukernavn"));
-				statuses.add(rs.getString("deltar"));
+				attendants.put(getAnsatt(rs.getString("brukernavn")), Integer.parseInt(rs.getString("deltar")));
 			}
 		} catch (SQLException e) { e.printStackTrace(); }
 		
 		db.close();
-		matrix.add(users);
-		matrix.add(statuses);
-		return matrix;
+		
+		return attendants;
 	}
 	
 }
