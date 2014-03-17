@@ -7,7 +7,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -232,7 +231,7 @@ public class newEventGUI extends JPanel implements ActionListener{
 		} else if (s == moterom) {
 
 			if (checkDate() == null) {
-				new romValgGUI(this, datoVelgerFra.getDateFormatString(),startTidspunkt.getText(), sluttTidspunkt.getText());
+				new romValgGUI(this, toOtherDateFormat((LocalDate)new DateTime(datoVelgerFra.getDate()).toLocalDate()),startTidspunkt.getText(), sluttTidspunkt.getText());
 			}
 
 		} else if (s == deltakere) {
