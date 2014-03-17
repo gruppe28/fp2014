@@ -277,7 +277,7 @@ public class newEventGUI extends JPanel implements ActionListener{
 				return;
 			}
 			
-			sluttTidspunkt.setText(nhh + ":" + nmm);
+			sluttTidspunkt.setText(nhh + ":" + String.format("%02d", nmm));
 			sluttTidspunkt.setEditable(false);
 		}else{
 			sluttTidspunkt.setEditable(true);
