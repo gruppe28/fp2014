@@ -208,8 +208,8 @@ public class newEventGUI extends JPanel implements ActionListener{
 				
 				//Opprett/Endre AnsattAvtaler
 				if (nullAppointment) {
-					int appCount = DBHandler.getCountOfAppointments();
 					appointment.sendAppoinmentToDatabase();					
+					int appCount = DBHandler.getCountOfAppointments();
 					appointment.getParticipants().put(user, 1);
 					
 					for (Ansatt a : appointment.getParticipants().keySet()) {
