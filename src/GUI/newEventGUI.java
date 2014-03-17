@@ -50,7 +50,6 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 	public JTextField visRom;
 	private JButton inviteViaEmailBtn;
 	private JButton deltakere;
-	private JButton slettAvtale;
 	private JButton lagre;
 	private JButton avbryt;
 	private KalenderView parent;
@@ -87,27 +86,15 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 		startTidspunkt = new JFormattedTextField(formatter);
 		sluttTidspunkt = new JFormattedTextField(formatter);
 		datoVelgerFra = new JDateChooser();
-		
-		duration = new JComboBox<String>();
-		duration.addActionListener(this);
-		duration.setPrototypeDisplayValue("xx:xx");
-		addDurationsToBox();
-		
 		moterom = new JButton("Velg Moterom");
 		visRom = new JTextField("Rom ikke valgt");
 		deltakere = new JButton("Administrer deltakere");
-		slettAvtale = new JButton("Slett avtale");
 		lagre = new JButton("Lagre");
 		avbryt = new JButton("Avbryt");
 		inviteViaEmailBtn = new JButton("Invite participants via email");
-		inviteViaEmailBtn.addActionListener(this);
-		
-		lagre.addActionListener(this);
-		avbryt.addActionListener(this);
-		slettAvtale.addActionListener(this);
-
-		this.setLayout(new GridBagLayout());
-		GridBagConstraints gbcA = new GridBagConstraints();
+		duration = new JComboBox<String>();
+		duration.setPrototypeDisplayValue("xx:xx");
+		addDurationsToBox();
 
 		feedback.setForeground(Color.RED);
 		
@@ -119,28 +106,34 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 	    scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 	    visRom.setEditable(false);
 		
-		this.setLayout(null);
-		
+	    duration.addActionListener(this);
+		inviteViaEmailBtn.addActionListener(this);
+		lagre.addActionListener(this);
+		avbryt.addActionListener(this);
+		moterom.addActionListener(this);
+		deltakere.addActionListener(this);
 		avtaleBeskrivelse.addFocusListener(this);
 		avtaleNavn.addFocusListener(this);
 		startTidspunkt.addFocusListener(this);
 		sluttTidspunkt.addFocusListener(this);
 		
+		this.setLayout(null);
+		
 		avtaleNavn.setBounds(5,5,210,25);
-		avtaleBeskrivelse.setBounds(8, 35, 204, 100);
-		scroll.setBounds(8, 35, 204, 100);
-		startTid.setBounds(10, 137, 50, 25);
-		sluttTid.setBounds(10, 163, 50, 25);
+		avtaleBeskrivelse.setBounds(5, 35, 210, 100);
+		scroll.setBounds(5, 35, 210, 100);
+		startTid.setBounds(5, 137, 50, 25);
+		sluttTid.setBounds(5, 163, 50, 25);
 		startTidspunkt.setBounds(40, 140, 50, 20);
 		sluttTidspunkt.setBounds(40, 165, 50, 20);
-		datoVelgerFra.setBounds(100,165,118,20);
-		moterom.setBounds(1,190,218,25);
+		duration.setBounds(100,140,115,20);
+		datoVelgerFra.setBounds(100,165,115,20);
+		moterom.setBounds(5,190,210,25);
 		visRom.setBounds(5,220,210,25);
-		deltakere.setBounds(1,253,218,25);
-		inviteViaEmailBtn.setBounds(1,283,218,25);
-		slettAvtale.setBounds(1,420,218,25);
-		lagre.setBounds(1,450,112,25);
-		avbryt.setBounds(108,450,112,25);
+		deltakere.setBounds(5,253,210,25);
+		inviteViaEmailBtn.setBounds(5,283,210,25);
+		lagre.setBounds(5,450,102,25);
+		avbryt.setBounds(112,450,103,25);
 		
 		this.add(avtaleNavn);
 		this.add(scroll);
@@ -149,11 +142,11 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 		this.add(startTidspunkt);
 		this.add(sluttTidspunkt);
 		this.add(datoVelgerFra);
+		this.add(duration);
 		this.add(moterom);
 		this.add(visRom);
 		this.add(deltakere);
 		this.add(inviteViaEmailBtn);
-		this.add(slettAvtale);
 		this.add(lagre);
 		this.add(avbryt);
 	}
@@ -225,14 +218,6 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 
 		} else if (s == deltakere) {
 			new ManageParticipants(this, appointment.getParticipants());
-		} else if (s == slettAvtale) {
-			
-			// her må vi slette gjeldende avtale fra databasen
-			// TODO
-			// lag slett-funksjon i Appointment
-			
-			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
-			System.out.println("slettet");
 		} else if (s == duration && !startTidspunkt.getText().equals("__:__") && duration.getSelectedIndex() != 0){
 			int ihh = Integer.parseInt(startTidspunkt.getText().substring(0, 2));
 			int imm = Integer.parseInt(startTidspunkt.getText().substring(3));
@@ -399,7 +384,7 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 	}
 
 	public void addDurationsToBox(){
-		duration.addItem("--:--");
+		duration.addItem("Varighet");
 		duration.addItem("00:15");
 		duration.addItem("00:30");
 		duration.addItem("00:45");
