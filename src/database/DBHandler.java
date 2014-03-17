@@ -119,7 +119,7 @@ public final class DBHandler {
 		try {
 			Database db = new Database();
 
-			ResultSet rs = db.query("select distinct Avtale.* from Avtale, AnsattAvtale WHERE Avtale.avtaleNr = AnsattAvtale.avtaleNr and (" + usersSQL + ") and (" + daysSQL + ")");
+			ResultSet rs = db.query("select distinct Avtale.* from Avtale, AnsattAvtale WHERE AnsattAvtale.skjult = 0 AND Avtale.avtaleNr = AnsattAvtale.avtaleNr and (" + usersSQL + ") and (" + daysSQL + ")");
 		    while (rs.next()) {
 		    	appointments.add(new Appointment(rs.getInt("avtaleNr"), rs.getString("navn"), rs.getString("starttidspunkt"), rs.getString("sluttidspunkt"), rs.getString("beskrivelse"), rs.getString("sted"), getRom(rs.getInt("romNr")), rs.getString("dato"), getAnsatt(rs.getString("opprettetAv"))));
 		    }
