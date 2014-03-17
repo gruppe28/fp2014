@@ -8,6 +8,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -61,6 +62,10 @@ public class CalendarPanel extends JPanel implements FocusListener {
 		
 		appointments = DBHandler.getAppointmentsInInterval(users, daySpan);
 	
+		for (Appointment a: appointments){
+			a.setParticipants(DBHandler.getAttendants(a.getAppointmentNr()));
+		}
+		
 		
 		setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		

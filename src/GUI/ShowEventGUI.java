@@ -46,7 +46,6 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 	private Ansatt user;
 	private boolean isOwner;
 	private int yourStatus;
-	private HashMap<Ansatt, Integer> participants2;
 	
 	public ShowEventGUI(KalenderView parent, Ansatt user, Appointment appointment){
 		
@@ -90,19 +89,19 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		hideBox = new JCheckBox("yes");
 		
 		// Fetch attendants and their statuses from database
-		participants2 = DBHandler.getAttendants(appointment.getAppointmentNr());
+		
 		
 		// Fill participant list
 		participantListModel = new DefaultListModel<String>();
 		int status;
 		
-		for (Ansatt a : participants2.keySet()){
+		for (Ansatt a : appointment.getParticipants().keySet()){
 			
 			if(a.getBrukernavn().equals(user.getBrukernavn())){
-				yourStatus = participants2.get(a);
+				yourStatus = appointment.getParticipants().get(a);
 			}
 			
-			status = participants2.get(a);
+			status = appointment.getParticipants().get(a);
 			String tmp = a.getFornavn() + " " + a.getEtternavn() + " - ";
 			if (status == 1){
 				tmp += "attending";
@@ -250,7 +249,6 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 			((CalendarPanel) parent.kalender).unSelectAllAppointments();
 			
 		}else if(s == edit){
-			appointment.setParticipants(participants2);
 			parent.addNewPanel("avtale", new newEventGUI(parent, user, appointment));
 			
 		}else if(s == save){
@@ -285,8 +283,10 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 			
 			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
 			
+			parent.addNewPanel("kalender", new CalendarPanel(parent, user, parent.getShowUsers(), parent.getWeek(), parent.getYear()));
+			
 			// Oppdaterer kalenderen til aa vise ingen valgt avtale
-			((CalendarPanel) parent.kalender).unSelectAllAppointments();
+			//((CalendarPanel) parent.kalender).unSelectAllAppointments();
 			
 		}else if(s == delete){
 			//appointment.getParticipants().put(user, 0);------------ Endrer lokalt

@@ -234,6 +234,14 @@ public class KalenderView extends JPanel implements ActionListener {
 		this.avtale = avtale;
 	}
 	
+	public int getWeek() {
+		return week;
+	}
+
+	public int getYear() {
+		return year;
+	}
+
 	public ArrayList<Ansatt> getShowUsers(){
 		return showUsers;
 	}

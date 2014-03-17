@@ -254,30 +254,31 @@ public class Appointment {
 	}
 	
 	public Color getStatusColor(){
-		boolean allAttending = true;
-		boolean someAttending = false;
-		boolean awaitingAnswer = false;
+		boolean allAttending = true;//false
+		boolean someAttending = false;//true
+		boolean awaitingAnswer = false;//false
+		
 		for (int p: participants.values()){
 			if (p == 2){
 				allAttending = false;
 				awaitingAnswer = true;
-				
 			}else if(p == 0){
 				allAttending = false;
-				
 			}else if(p == 1){
 				someAttending = true;
 			}
 		}
 		
 		if (allAttending){
-			return Color.GREEN; //green
+			return Color.GREEN;
 		}else if(someAttending && awaitingAnswer){
-			return Color.YELLOW;//yellow
-		}else if(!someAttending && awaitingAnswer){
-			return Color.ORANGE;//orange
+			return Color.YELLOW;
+		}else if(someAttending && !awaitingAnswer){
+			return Color.ORANGE;
 		}else if (!someAttending && !awaitingAnswer){
-			return Color.RED;//red
+			return Color.RED;
+		}else if(!someAttending && awaitingAnswer){
+			return Color.YELLOW;
 		}
 		return Color.MAGENTA;
 	}
