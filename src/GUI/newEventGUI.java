@@ -7,21 +7,22 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
+
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -31,7 +32,7 @@ import fp2014.Appointment;
 import fp2014.Mail;
 
 @SuppressWarnings("serial")
-public class newEventGUI extends JPanel implements ActionListener {
+public class newEventGUI extends JPanel implements ActionListener{
 
 	private JTextField avtaleNavn;
 	private JTextField avtaleBeskrivelse;
@@ -54,6 +55,7 @@ public class newEventGUI extends JPanel implements ActionListener {
 	private MaskFormatter formatter;
 	public ArrayList<String> emailParticipants;
 	private HashMap<Ansatt, Integer> participants;
+	private JComboBox<String> duration;
 
 	public newEventGUI(KalenderView parent, Ansatt ansatt, Appointment appointment) {
 
@@ -81,7 +83,12 @@ public class newEventGUI extends JPanel implements ActionListener {
 		startTidspunkt = new JFormattedTextField(formatter);
 		sluttTidspunkt = new JFormattedTextField(formatter);
 		datoVelgerFra = new JDateChooser();
-
+		
+		duration = new JComboBox<String>();
+		duration.addActionListener(this);
+		duration.setPrototypeDisplayValue("xx:xx");
+		addDurationsToBox();
+		
 		moterom = new JButton("Velg Moterom");
 		visRom = new JTextField("Rom ikke valgt");
 		deltakere = new JButton("Administrer deltakere");
@@ -127,7 +134,7 @@ public class newEventGUI extends JPanel implements ActionListener {
 		this.add(startTidspunkt, gbcA);
 
 		gbcA.gridx = 2;
-		this.add(datoVelgerFra, gbcA);
+		this.add(duration, gbcA);
 
 		gbcA.gridy = 3;
 		gbcA.gridx = 0;
@@ -136,6 +143,9 @@ public class newEventGUI extends JPanel implements ActionListener {
 		gbcA.gridx = 1;
 		this.add(sluttTidspunkt, gbcA);
 
+		gbcA.gridx = 2;
+		this.add(datoVelgerFra, gbcA);
+		
 		gbcA.gridy = 4;
 		gbcA.gridx = 0;
 		gbcA.gridwidth = 3;
@@ -204,6 +214,7 @@ public class newEventGUI extends JPanel implements ActionListener {
 				sendMailInvitations();
 				
 				// Oppdaterer kalenderen til å vise ingen valgt avtale
+				parent.addNewPanel("kalender", new CalendarPanel(parent, user, parent.getShowUsers(), parent.getWeek(), parent.getYear()));
 				((CalendarPanel) parent.kalender).unSelectAllAppointments();
 				
 			}
@@ -234,6 +245,28 @@ public class newEventGUI extends JPanel implements ActionListener {
 			
 			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
 			System.out.println("slettet");
+		} else if (s == duration && !startTidspunkt.getText().equals("__:__") && duration.getSelectedIndex() != 0){
+			int ihh = Integer.parseInt(startTidspunkt.getText().substring(0, 2));
+			int imm = Integer.parseInt(startTidspunkt.getText().substring(3));
+			
+			int nhh = ihh + Integer.parseInt(((String) duration.getSelectedItem()).substring(0, 2));
+			int nmm = imm + Integer.parseInt(((String) duration.getSelectedItem()).substring(3));
+			
+			if (nmm >= 60){
+				nmm -= 60;
+				nhh++;
+			}
+			
+			if (nhh > 23){
+				duration.setSelectedIndex(0);
+				sluttTidspunkt.setText("__:__");
+				return;
+			}
+			
+			sluttTidspunkt.setText(nhh + ":" + nmm);
+			sluttTidspunkt.setEditable(false);
+		}else{
+			sluttTidspunkt.setEditable(true);
 		}
 	}
 
@@ -379,4 +412,39 @@ public class newEventGUI extends JPanel implements ActionListener {
 		return date;
 	}
 
+	public void addDurationsToBox(){
+		duration.addItem("--:--");
+		duration.addItem("00:15");
+		duration.addItem("00:30");
+		duration.addItem("00:45");
+		duration.addItem("01:00");
+		duration.addItem("01:15");
+		duration.addItem("01:30");
+		duration.addItem("01:45");
+		duration.addItem("02:00");
+		duration.addItem("02:15");
+		duration.addItem("02:30");
+		duration.addItem("02:45");
+		duration.addItem("03:00");
+		duration.addItem("03:15");
+		duration.addItem("03:30");
+		duration.addItem("03:45");
+		duration.addItem("04:00");
+		duration.addItem("04:15");
+		duration.addItem("04:30");
+		duration.addItem("04:45");
+		duration.addItem("05:00");
+		duration.addItem("05:15");
+		duration.addItem("05:30");
+		duration.addItem("05:45");
+		duration.addItem("06:00");
+		duration.addItem("06:15");
+		duration.addItem("06:30");
+		duration.addItem("07:45");
+		duration.addItem("07:00");
+		duration.addItem("07:15");
+		duration.addItem("07:30");
+		duration.addItem("07:45");
+		duration.addItem("08:00");
+	}
 }
