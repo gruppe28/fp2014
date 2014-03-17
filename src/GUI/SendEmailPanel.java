@@ -86,7 +86,11 @@ public class SendEmailPanel extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
-		if (s == addAdressBtn) {
+		if (s == addAdressBtn 
+				&& newEmail.getText().contains("@") 
+				&& newEmail.getText().contains(".") 
+				&& !newEmail.getText().contains(" ")){
+			
 			emailListModel.addElement(newEmail.getText());
 			participantsList.add(newEmail.getText());
 		} else if (s == deleteAdressBtn) {
