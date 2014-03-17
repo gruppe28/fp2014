@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import fp2014.Alarm;
 import fp2014.Notification;
@@ -119,7 +120,7 @@ public final class DBHandler {
 		try {
 			Database db = new Database();
 
-			ResultSet rs = db.query("select distinct Avtale.* from Avtale, AnsattAvtale WHERE Avtale.avtaleNr = AnsattAvtale.avtaleNr and (" + usersSQL + ") and (" + daysSQL + ")");
+			ResultSet rs = db.query("select distinct Avtale.* from Avtale, AnsattAvtale WHERE AnsattAvtale.skjult = 0 AND Avtale.avtaleNr = AnsattAvtale.avtaleNr and (" + usersSQL + ") and (" + daysSQL + ")");
 		    while (rs.next()) {
 		    	appointments.add(new Appointment(rs.getInt("avtaleNr"), rs.getString("navn"), rs.getString("starttidspunkt"), rs.getString("sluttidspunkt"), rs.getString("beskrivelse"), rs.getString("sted"), getRom(rs.getInt("romNr")), rs.getString("dato"), getAnsatt(rs.getString("opprettetAv"))));
 		    }
@@ -239,6 +240,16 @@ public final class DBHandler {
 		db.close();
 	}
 	
+	public static void createNotification(String text, Set<Ansatt> recipients, int appointmentNum){
+		Database db = new Database();
+		
+		for(Ansatt a : recipients){
+			db.update("INSERT INTO Varsel(brukernavn, tekst, avtaleNr) VALUES ('" + a.getBrukernavn() + "', '" + text + "', " + appointmentNum + ")");
+		}
+		
+		db.close();
+	}
+	
 	public static void deleteAlarm(String username, int appointmentNum){
 		Database db = new Database();
 	    db.update("DELETE FROM Alarm WHERE brukernavn = '" + username + "' and avtaleNr = " + appointmentNum);
@@ -267,6 +278,14 @@ public final class DBHandler {
 		db.update("UPDATE AnsattAvtale SET deltar = '" + attendance + "' WHERE brukernavn = '" + username + "' AND avtaleNr =" + appointmentNum);
 		db.close();
 	}
+	
+	// Update hidden
+	public static void updateHidden(String username, int appointmentNum, int status){
+		Database db = new Database();
+		db.update("UPDATE AnsattAvtale SET skjult = '" + status + "' WHERE brukernavn = '" + username + "' AND avtaleNr =" + appointmentNum);
+		db.close();
+	}
+	
 	
 	// Get attendants and their status
 	public static HashMap<Ansatt, Integer> getAttendants(int appointmentNum){
@@ -313,6 +332,19 @@ public final class DBHandler {
 	public static void deleteAttendances(int appointmentNum){
 		Database db = new Database();
 	    db.update("DELETE FROM AnsattAvtale WHERE avtaleNr = " + appointmentNum);
+	    db.close();
+	}
+	
+	public static void deleteAttendance(String brukernavn, int appointmentNum){
+		Database db = new Database();
+	    db.update("DELETE FROM AnsattAvtale WHERE brukernavn = '" + brukernavn + "' and avtaleNr = " + appointmentNum);
+	    db.close();
+	}
+	
+	
+	public static void deleteAppointment(int appointmentNum){
+		Database db = new Database();
+	    db.update("DELETE FROM Avtale WHERE avtaleNr = " + appointmentNum);
 	    db.close();
 	}
 	
