@@ -293,4 +293,21 @@ public final class DBHandler {
 		db.close();
 	}
 	
+	public static int getCountOfAppointments(){
+		
+		int countOfAppointments = 0;
+		
+		Database db = new Database();
+		ResultSet rs = db.query("SELECT COUNT(*) FROM Avtale AS rowCount");
+		try {
+			if (rs.next()) {
+				countOfAppointments = rs.getInt("rowCount");
+			}
+		} catch (SQLException e) { e.printStackTrace(); }
+		
+		db.close();
+		
+		return countOfAppointments;
+	}
+	
 }
