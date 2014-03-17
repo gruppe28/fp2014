@@ -148,14 +148,18 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 	public void getUsers(HashMap<Ansatt, Integer> participants){
 		
 		for (Ansatt i : participants.keySet()) {
-			participantsListModel.addElement(i);
-			appointment.editParticipant(i, participants.get(i));
+			if (!i.getBrukernavn().equals(parent.user.getBrukernavn())) {
+				participantsListModel.addElement(i);
+				appointment.editParticipant(i, participants.get(i));				
+			}
 		}
 		
 		ArrayList<Ansatt> allUsers = DBHandler.getAllUsers();
 		
 		for (Ansatt i : allUsers) {
-			employeeListModel.addElement(i);
+			if (!i.getBrukernavn().equals(parent.user.getBrukernavn())) {
+				employeeListModel.addElement(i);
+			}
 		}
 		
 		for (Ansatt alle : allUsers) {
