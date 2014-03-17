@@ -316,7 +316,7 @@ public final class DBHandler {
 	
 	public static void createAttendance(String username, int appointmentNum, int attendance, int change) {		
 		Database db = new Database();
-		db.update("INSERT INTO AnsattAvtale(avtaleNr, brukernavn, deltar) VALUES ('"+ appointmentNum + "','" + username + "','" + attendance + "', endret = " + change + ")");
+		db.update("INSERT INTO AnsattAvtale(avtaleNr, brukernavn, deltar, endret) VALUES ('"+ appointmentNum + "','" + username + "','" + attendance + "', endret = " + change + ")");
 		db.close();
 	}
 	

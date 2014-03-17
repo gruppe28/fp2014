@@ -220,6 +220,8 @@ public class CalendarPanel extends JPanel implements FocusListener {
 					currentEvent.setForeground(Color.WHITE);
 					if (user.getBrukernavn().equals(appointments.get(i).getMadeBy().getBrukernavn())){
 						currentEvent.append(" - eier");
+					}else if(DBHandler.isChanged(user.getBrukernavn(), appointments.get(i).getAppointmentNr())){
+						currentEvent.append(" - endret");
 					}
 					currentEvent.append("\n" + appointments.get(i).getLocation());
 					addAppointmentToCalendar(currentEvent, CALENDAR_X_START + dateToDayNumber(appointments.get(i).getDate()) * width + xPos * eventWidth, (int)(HOUR_HEIGHT * hourToX(appointments.get(i).getStartTime()) + CALENDAR_Y_START), eventWidth, (int)(CalendarPanel.HOUR_HEIGHT * durance(appointments.get(i).getStartTime(), appointments.get(i).getEndTime())), appointments.get(i));

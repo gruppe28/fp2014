@@ -54,6 +54,7 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		
 		isOwner = (appointment.getMadeBy().getBrukernavn().equals(user.getBrukernavn()));
 		
+		DBHandler.updateChanged(user.getBrukernavn(), appointment.getAppointmentNr());
 		
 		this.setPreferredSize(new Dimension(220, 500));
 		
