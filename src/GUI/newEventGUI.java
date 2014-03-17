@@ -2,9 +2,6 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -71,8 +68,8 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 		
 		emailParticipants = new ArrayList<String>();
 		
-		avtaleNavn = new JTextField("Navn paa avtale");
-		avtaleBeskrivelse = new JTextArea("Beskrivelse av avtalen");
+		avtaleNavn = new JTextField("Appointment name");
+		avtaleBeskrivelse = new JTextArea("Description");
 		try {
 			formatter = new MaskFormatter("##:##");
 		} catch (ParseException e) {
@@ -80,17 +77,17 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 		}
 		formatter.setPlaceholderCharacter('_');
 
-		startTid = new JLabel("Fra:");
-		sluttTid = new JLabel("Til:");
+		startTid = new JLabel("From:");
+		sluttTid = new JLabel("To:");
 		feedback = new JLabel(" ");
 		startTidspunkt = new JFormattedTextField(formatter);
 		sluttTidspunkt = new JFormattedTextField(formatter);
 		datoVelgerFra = new JDateChooser();
-		moterom = new JButton("Velg Moterom");
-		visRom = new JTextField("Rom ikke valgt");
-		deltakere = new JButton("Administrer deltakere");
-		lagre = new JButton("Lagre");
-		avbryt = new JButton("Avbryt");
+		moterom = new JButton("Select location");
+		visRom = new JTextField("Location not chosen");
+		deltakere = new JButton("Manage participants");
+		lagre = new JButton("Save");
+		avbryt = new JButton("Cancel");
 		inviteViaEmailBtn = new JButton("Invite participants via email");
 		duration = new JComboBox<String>();
 		duration.setPrototypeDisplayValue("xx:xx");
@@ -162,6 +159,7 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 				feedback.setText("Velg et rom først.");
 			}
 			else {
+				parent.addNewPanel("avtale", new AvtaleGUI(parent, user)); // Exits the edit meny
 				boolean nullAppointment = false;
 				
 				if (appointment.getName() == null){
@@ -169,21 +167,18 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 				}
 				LocalDate appointmentDate = new DateTime(datoVelgerFra.getDate()).toLocalDate();
 				this.appointment.edit(avtaleNavn.getText(),startTidspunkt.getText(), sluttTidspunkt.getText(),avtaleBeskrivelse.getText(), toOtherDateFormat(appointmentDate), user, appointment.getParticipants());
-				System.out.println(this.appointment.toString());
-				parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
-				System.out.println("Appointment saved to database.");
 				
 				//Opprett/Endre AnsattAvtaler
 				if (nullAppointment) {
 					appointment.sendAppoinmentToDatabase();					
 					int appCount = DBHandler.getCountOfAppointments();
+					
 					appointment.getParticipants().put(user, 1);
 					
 					for (Ansatt a : appointment.getParticipants().keySet()) {
 						DBHandler.createAttendance(a.getBrukernavn(), appCount, appointment.getParticipants().get(a), 0);
 					}
 				} else {
-					System.out.println(appointment.getAppointmentNr());
 					DBHandler.updateAppointment(appointment);
 					DBHandler.deleteAttendances(appointment.getAppointmentNr());
 					
@@ -194,6 +189,9 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 				
 				//Sender mail til evt eksterne deltagere
 				sendMailInvitations();
+				
+				// Update the calendar panel
+				parent.addNewPanel("kalender", new CalendarPanel(parent, user, parent.getShowUsers(), parent.getWeek(), parent.getYear()));
 				
 				// Oppdaterer kalenderen til å vise ingen valgt avtale
 				((CalendarPanel) parent.kalender).unSelectAllAppointments();
@@ -384,7 +382,7 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 	}
 
 	public void addDurationsToBox(){
-		duration.addItem("Varighet");
+		duration.addItem("Durance");
 		duration.addItem("00:15");
 		duration.addItem("00:30");
 		duration.addItem("00:45");

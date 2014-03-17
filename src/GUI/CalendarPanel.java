@@ -8,9 +8,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
-
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -19,7 +17,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
-
 import database.DBHandler;
 import fp2014.Ansatt;
 import fp2014.Appointment;
@@ -31,7 +28,6 @@ public class CalendarPanel extends JPanel implements FocusListener {
 	public static final int DAY_WIDTH = 105;
 	public static final int CALENDAR_X_START = 60;
 	public static final int CALENDAR_Y_START = 10;
-	
 	private ArrayList<Component> existingAppointments = new ArrayList<Component>();
 	private ArrayList<JTextArea> existingTextAreas = new ArrayList<JTextArea>();
 	private JLayeredPane layeredPane;
@@ -279,7 +275,8 @@ public class CalendarPanel extends JPanel implements FocusListener {
 	    c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parts[0]));
 	    int weekDay = (c.get(Calendar.DAY_OF_WEEK));
 	    if(weekDay > 7) { weekDay -= 7; }
-	    return weekDay - 2;
+	    if(weekDay == 1) { return 6; }
+	    else { return weekDay - 2; }
 	}
 	
 	private void setDaySpan(){

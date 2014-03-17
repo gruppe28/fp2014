@@ -157,6 +157,7 @@ public final class DBHandler {
 		
 		Rom room = new Rom(0, null, 0, null);
 		
+		
 		Database db = new Database();
 		
 		ResultSet rs = db.query("Select * from Rom Where romNr = " + "'" +romNr + "'" + "");
@@ -314,9 +315,10 @@ public final class DBHandler {
 		return attendants;
 	}
 	
-	public static void createAttendance(String username, int appointmentNum, int attendance, int change) {		
+	public static void createAttendance(String username, int appointmentNum, int attendance, int change) {
+		
 		Database db = new Database();
-		db.update("INSERT INTO AnsattAvtale(avtaleNr, brukernavn, deltar, endret) VALUES ('"+ appointmentNum + "','" + username + "','" + attendance + "', endret = " + change + ")");
+		db.update("INSERT INTO AnsattAvtale(avtaleNr, brukernavn, deltar, endret) VALUES ('"+ appointmentNum + "','" + username + "','" + attendance + "', " + change + ")");
 		db.close();
 	}
 	
@@ -358,7 +360,7 @@ public final class DBHandler {
 	
 	public static void updateAppointment(Appointment appointment) {
 		Database db = new Database();
-		if (appointment.getRom() == null) {
+		if (appointment.getRom() == null || appointment.getRom().getRomNr() == 0) {
 			db.update("UPDATE Avtale SET navn = '" + appointment.getName() 
 					+ "', starttidspunkt = '" + appointment.getStartTime() 
 					+ "', sluttidspunkt = '" + appointment.getEndTime() 
