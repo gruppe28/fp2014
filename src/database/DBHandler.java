@@ -35,6 +35,8 @@ public final class DBHandler {
 	    	ResultSet rs = db.query("SELECT * FROM Varsel WHERE brukernavn ='"+username+"' AND sett='0' ORDER BY id DESC");
 			while(rs.next()){
 				notificationList.add(new Notification(rs.getString("brukernavn"), rs.getString("tekst"), getAppointment(rs.getInt("avtaleNr"))));
+				System.out.println();
+				db.update("UPDATE Varsel SET sett = '1' WHERE brukernavn = '" + username + "' AND id = " + rs.getString("id"));
 			}
 		} catch (SQLException e) { e.printStackTrace(); }
 		return notificationList;
@@ -61,7 +63,7 @@ public final class DBHandler {
 			ResultSet rs = db.query("select * from Rom");
 		    while (rs.next()) {
 		    	validRoom = true;
-		    	ResultSet avtaleRes = db.query("select * from Avtale WHERE romNr = " + rs.getInt("romNr") + " and dato = '" + date + "'");
+		    	ResultSet avtaleRes = db.query("select * from Avtale WHERE slett = 0 and romNr = " + rs.getInt("romNr") + " and dato = '" + date + "'");
 		    	
 		    	while (avtaleRes.next()) {
 		    		if(checkOverlap(from, to, avtaleRes.getString("starttidspunkt"), avtaleRes.getString("sluttidspunkt"))) { validRoom = false; }
@@ -120,7 +122,7 @@ public final class DBHandler {
 		try {
 			Database db = new Database();
 
-			ResultSet rs = db.query("select distinct Avtale.* from Avtale, AnsattAvtale WHERE AnsattAvtale.skjult = 0 AND Avtale.avtaleNr = AnsattAvtale.avtaleNr and (" + usersSQL + ") and (" + daysSQL + ")");
+			ResultSet rs = db.query("select distinct Avtale.* from Avtale, AnsattAvtale WHERE AnsattAvtale.skjult = 0 AND Avtale.slett = 0 AND Avtale.avtaleNr = AnsattAvtale.avtaleNr and (" + usersSQL + ") and (" + daysSQL + ")");
 		    while (rs.next()) {
 		    	appointments.add(new Appointment(rs.getInt("avtaleNr"), rs.getString("navn"), rs.getString("starttidspunkt"), rs.getString("sluttidspunkt"), rs.getString("beskrivelse"), rs.getString("sted"), getRom(rs.getInt("romNr")), rs.getString("dato"), getAnsatt(rs.getString("opprettetAv"))));
 		    }
@@ -344,7 +346,7 @@ public final class DBHandler {
 	
 	public static void deleteAppointment(int appointmentNum){
 		Database db = new Database();
-	    db.update("DELETE FROM Avtale WHERE avtaleNr = " + appointmentNum);
+	    db.update("UPDATE Avtale SET slett = 1 WHERE avtaleNr = " + appointmentNum);
 	    db.close();
 	}
 	

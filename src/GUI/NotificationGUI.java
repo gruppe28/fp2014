@@ -84,6 +84,8 @@ public class NotificationGUI extends JPanel implements ActionListener, FocusList
 			notificationPanel.add(notification, gb);
 			gb.gridy++;
 		}
+		
+		parent.updateAnnounchementCounter();
 
 		// Dirty solution for filling up the remaining space of the frame:
 		JTextPane filler = new JTextPane();

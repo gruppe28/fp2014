@@ -256,6 +256,7 @@ public class KalenderView extends JPanel implements ActionListener {
 		int unseenNotifications = user.getNumberOfUnseenNotifications();
 		alerts.setText("Notifications: " + unseenNotifications);
 		if(unseenNotifications > 0) { alerts.setForeground(Color.RED); }
+		else { alerts.setForeground(Color.BLACK); }
 	}
 	
 	// Listener classes below
