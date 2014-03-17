@@ -17,6 +17,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
@@ -34,7 +35,7 @@ import fp2014.Mail;
 public class newEventGUI extends JPanel implements ActionListener{
 
 	private JTextField avtaleNavn;
-	private JTextField avtaleBeskrivelse;
+	private JTextArea avtaleBeskrivelse;
 	private JLabel startTid;
 	private JLabel sluttTid;
 	private JLabel feedback;
@@ -68,7 +69,7 @@ public class newEventGUI extends JPanel implements ActionListener{
 		emailParticipants = new ArrayList<String>();
 		
 		avtaleNavn = new JTextField("Navn paa avtale");
-		avtaleBeskrivelse = new JTextField("Beskrivelse av avtalen");
+		avtaleBeskrivelse = new JTextArea("Beskrivelse av avtalen");
 		try {
 			formatter = new MaskFormatter("##:##");
 		} catch (ParseException e) {
@@ -346,7 +347,7 @@ public class newEventGUI extends JPanel implements ActionListener{
 	
 	public void loadExistingAppointment(){
 		avtaleNavn = new JTextField(appointment.getName());
-		avtaleBeskrivelse = new JTextField(appointment.getDescription());
+		avtaleBeskrivelse = new JTextArea(appointment.getDescription());
 		
 		MaskFormatter formatterStart = null;
 		MaskFormatter formatterEnd = null;
