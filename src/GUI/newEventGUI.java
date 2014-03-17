@@ -195,26 +195,40 @@ public class newEventGUI extends JPanel implements ActionListener{
 				feedback.setText("Velg et rom først.");
 			}
 			else {
+				boolean nullAppointment = false;
+				
+				if (appointment.getName() == null){
+					nullAppointment = true;
+				}
 				LocalDate appointmentDate = new DateTime(datoVelgerFra.getDate()).toLocalDate();
-				this.appointment.edit(avtaleNavn.getText(),startTidspunkt.getText(), sluttTidspunkt.getText(),avtaleBeskrivelse.getText(), toOtherDateFormat(appointmentDate), user, this.participants);
+				this.appointment.edit(avtaleNavn.getText(),startTidspunkt.getText(), sluttTidspunkt.getText(),avtaleBeskrivelse.getText(), toOtherDateFormat(appointmentDate), user, appointment.getParticipants());
 				System.out.println(this.appointment.toString());
-				appointment.sendAppoinmentToDatabase();
 				parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
 				System.out.println("Appointment saved to database.");
 				
-				//Legger til møteleder som deltager med status "Deltar"
-				this.participants.put(user, 1);
-
 				//Opprett/Endre AnsattAvtaler
-				for (Ansatt a : this.participants.keySet()) {
-					DBHandler.createAttendance(a.getBrukernavn(), DBHandler.getCountOfAppointments() + 1, participants.get(a));
+				if (nullAppointment) {
+					int appCount = DBHandler.getCountOfAppointments();
+					appointment.sendAppoinmentToDatabase();					
+					appointment.getParticipants().put(user, 1);
+					
+					for (Ansatt a : appointment.getParticipants().keySet()) {
+						DBHandler.createAttendance(a.getBrukernavn(), appCount, appointment.getParticipants().get(a));
+					}
+				} else {
+					System.out.println(appointment.getAppointmentNr());
+					DBHandler.updateAppointment(appointment);
+					DBHandler.deleteAttendances(appointment.getAppointmentNr());
+					
+					for (Ansatt a : appointment.getParticipants().keySet()) {
+						DBHandler.createAttendance(a.getBrukernavn(), appointment.getAppointmentNr(), appointment.getParticipants().get(a));
+					}
 				}
 				
 				//Sender mail til evt eksterne deltagere
 				sendMailInvitations();
 				
 				// Oppdaterer kalenderen til å vise ingen valgt avtale
-				parent.addNewPanel("kalender", new CalendarPanel(parent, user, parent.getShowUsers(), parent.getWeek(), parent.getYear()));
 				((CalendarPanel) parent.kalender).unSelectAllAppointments();
 				
 			}
