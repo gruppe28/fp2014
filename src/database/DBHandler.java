@@ -287,4 +287,10 @@ public final class DBHandler {
 		return attendants;
 	}
 	
+	public static void createAttendance(String username, int appointmentNum, int attendance) {		
+		Database db = new Database();
+		db.update("INSERT INTO AnsattAvtale(avtaleNr, brukernavn, deltar) VALUES ('"+ appointmentNum + "','" + username + "','" + attendance + "'");
+		db.close();
+	}
+	
 }
