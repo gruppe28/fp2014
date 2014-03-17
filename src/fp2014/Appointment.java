@@ -217,16 +217,27 @@ public class Appointment {
 	}
 	
 	public String toString(){
-		return ("Avtalenavn: " + this.getName() +
-				"\nAvtalebeskrivelse: " + this.getDescription() +
-				"\nStarttid: " + this.getStartTime() +
-				"\nSluttid: " + this.getEndTime() +
-				"\nDato: " + this.getDate().toString() +
-				"\nSted: " + this.getPlace() +
-				"\nRom: " + this.getRom().getSted() +
-				"\nOpprettet av: " + this.getMadeBy().getBrukernavn() +
-				"");
-		
+		if (this.getRom() == null) {
+			return ("Avtalenavn: " + this.getName() +
+					"\nAvtalebeskrivelse: " + this.getDescription() +
+					"\nStarttid: " + this.getStartTime() +
+					"\nSluttid: " + this.getEndTime() +
+					"\nDato: " + this.getDate().toString() +
+					"\nSted: " + this.getPlace() +
+					"\nRom: " +
+					"\nOpprettet av: " + this.getMadeBy().getBrukernavn() +
+					"");
+		} else {
+			return ("Avtalenavn: " + this.getName() +
+					"\nAvtalebeskrivelse: " + this.getDescription() +
+					"\nStarttid: " + this.getStartTime() +
+					"\nSluttid: " + this.getEndTime() +
+					"\nDato: " + this.getDate().toString() +
+					"\nSted: " + this.getPlace() +
+					"\nRom: " + this.getRom().getSted() +
+					"\nOpprettet av: " + this.getMadeBy().getBrukernavn() +
+					"");
+		}
 	}
 
 	public HashMap<Ansatt, Integer> getParticipants() {
