@@ -1,6 +1,8 @@
 package fp2014;
 
+import java.awt.Color;
 import java.util.HashMap;
+
 import database.Database;
 
 public class Appointment {
@@ -251,7 +253,34 @@ public class Appointment {
 		}
 	}
 	
-	
+	public Color getStatusColor(){
+		boolean allAttending = true;
+		boolean someAttending = false;
+		boolean awaitingAnswer = false;
+		for (int p: participants.values()){
+			if (p == 2){
+				allAttending = false;
+				awaitingAnswer = true;
+				
+			}else if(p == 0){
+				allAttending = false;
+				
+			}else if(p == 1){
+				someAttending = true;
+			}
+		}
+		
+		if (allAttending){
+			return Color.GREEN; //green
+		}else if(someAttending && awaitingAnswer){
+			return Color.YELLOW;//yellow
+		}else if(!someAttending && awaitingAnswer){
+			return Color.ORANGE;//orange
+		}else if (!someAttending && !awaitingAnswer){
+			return Color.RED;//red
+		}
+		return Color.MAGENTA;
+	}
 	
 	
 }

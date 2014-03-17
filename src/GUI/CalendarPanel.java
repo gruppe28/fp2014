@@ -33,7 +33,7 @@ public class CalendarPanel extends JPanel implements FocusListener {
 	
 	private ArrayList<Component> existingAppointments = new ArrayList<Component>();
 	private ArrayList<JTextArea> existingTextAreas = new ArrayList<JTextArea>();
-	private JLayeredPane panel;
+	private JLayeredPane layeredPane;
 	private KalenderView parent;
 	private int week;
 	private int year;
@@ -68,15 +68,15 @@ public class CalendarPanel extends JPanel implements FocusListener {
 		JLabel label = null;
 		int hours = 24;
 		
-		panel = new JLayeredPane();
-		panel.setPreferredSize(new Dimension(804, 1000));
-		panel.setLayout(null);
+		layeredPane = new JLayeredPane();
+		layeredPane.setPreferredSize(new Dimension(804, 1000));
+		layeredPane.setLayout(null);
 		
 		for (int i = 0; i < hours; i++) {
 			label = new JLabel( String.format("%02d", i)+":00");
 			
 			label.setBounds(20, CALENDAR_Y_START - 17 +(i*40), 50, 40);
-			panel.add(label, 0);
+			layeredPane.add(label, 0);
 		}
 		
 		String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
@@ -85,22 +85,22 @@ public class CalendarPanel extends JPanel implements FocusListener {
 		spacer.setPreferredSize(new Dimension(60, 5));
 		this.add(spacer);
 		for (int i = 0; i < days.length; i++) {
-			this.addDay(days[i], i, CALENDAR_X_START + 30 +(i*CalendarPanel.DAY_WIDTH), CALENDAR_Y_START, 100, 40, panel);
+			this.addDay(days[i], i, CALENDAR_X_START + 30 +(i*CalendarPanel.DAY_WIDTH), CALENDAR_Y_START, 100, 40, layeredPane);
 		}
 		
 		for (int i = 0; i <= hours; i++) {
 			hSep = new JSeparator(JSeparator.HORIZONTAL);
 			hSep.setBounds(CalendarPanel.CALENDAR_X_START, CALENDAR_Y_START+(i*CalendarPanel.HOUR_HEIGHT), 735, 5);			
-			panel.add(hSep, 0);
+			layeredPane.add(hSep, 0);
 		}
 		
 		for (int i = 0; i <= days.length; i++) {
 			vSep = new JSeparator(JSeparator.VERTICAL);
 			vSep.setBounds(CalendarPanel.CALENDAR_X_START+(i*CalendarPanel.DAY_WIDTH), CALENDAR_Y_START, 5, 960);
-			panel.add(vSep, 0);			
+			layeredPane.add(vSep, 0);			
 		}
 		
-		s = new JScrollPane(panel, 
+		s = new JScrollPane(layeredPane, 
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		s.setPreferredSize(new Dimension(804, 500));
@@ -125,17 +125,20 @@ public class CalendarPanel extends JPanel implements FocusListener {
 		add(label);
 	}
 	
-	public void addAppointmentToCalendar(Component c, int x, int y, int width, int height, CalendarPanel panel){
+	public void addAppointmentToCalendar(Component c, int x, int y, int width, int height, Appointment appointment){
 		((JTextArea) c).setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.CYAN));
 		((JTextArea) c).setLineWrap(true);
-		c.setBounds(x, y, width, height);
-		panel.panel.add(c, 1);
+		((JTextArea) c).setBounds(x, y, width, height);
+		((JTextArea) c).setForeground(Color.BLACK);
+		((JTextArea) c).setBackground(appointment.getStatusColor());
+		
+		this.layeredPane.add(c, 1);
 	}
 
 	public void removeAppointmentFromCalendar(Component c, CalendarPanel panel){
 		if (this.existingAppointments.contains(c)) {
 			this.existingAppointments.remove(c);
-			panel.panel.remove(c);
+			panel.layeredPane.remove(c);
 		}
 	}
 	
@@ -210,7 +213,7 @@ public class CalendarPanel extends JPanel implements FocusListener {
 					currentEvent.addFocusListener(this);
 					currentEvent.setBackground(Color.GRAY);
 					currentEvent.setForeground(Color.WHITE);
-					this.addAppointmentToCalendar(currentEvent, CALENDAR_X_START + dateToDayNumber(appointments.get(i).getDate()) * width + xPos * eventWidth, (int)(HOUR_HEIGHT * hourToX(appointments.get(i).getStartTime()) + CALENDAR_Y_START), eventWidth, (int)(CalendarPanel.HOUR_HEIGHT * durance(appointments.get(i).getStartTime(), appointments.get(i).getEndTime())), this);
+					addAppointmentToCalendar(currentEvent, CALENDAR_X_START + dateToDayNumber(appointments.get(i).getDate()) * width + xPos * eventWidth, (int)(HOUR_HEIGHT * hourToX(appointments.get(i).getStartTime()) + CALENDAR_Y_START), eventWidth, (int)(CalendarPanel.HOUR_HEIGHT * durance(appointments.get(i).getStartTime(), appointments.get(i).getEndTime())), appointments.get(i));
 					intervalWidth.get(j)[3] = String.valueOf((Integer.parseInt(intervalWidth.get(j)[3])+1));
 					break;
 				}
@@ -288,9 +291,10 @@ public class CalendarPanel extends JPanel implements FocusListener {
 	}
 	
 	public void unSelectAllAppointments(){
+		int i = 0;
 		for (JTextArea eta: existingTextAreas){
 			eta.setName("");
-			eta.setBackground(Color.GRAY);
+			eta.setBackground(appointments.get(i++).getStatusColor());
 		}
 	}
 
@@ -298,17 +302,19 @@ public class CalendarPanel extends JPanel implements FocusListener {
 	public void focusGained(FocusEvent e) {
 		
 		int index = existingTextAreas.indexOf(e.getSource());
+		int i = 0;
 		
 		for (JTextArea eta: existingTextAreas){
 			if (eta.getName().equals("focused") && existingTextAreas.indexOf(eta) != index){
 				eta.setName("");
-				eta.setBackground(Color.GRAY);
+				eta.setBackground(appointments.get(i).getStatusColor());
 			}
+			i++;
 		}
 		
 		//appointments.get(x);
 		existingTextAreas.get(index).setName("focused");
-		existingTextAreas.get(index).setBackground(Color.red);
+		existingTextAreas.get(index).setBackground(Color.CYAN);
 		
 		parent.addNewPanel("avtale", new ShowEventGUI(parent, user, appointments.get(index)));
 	}
