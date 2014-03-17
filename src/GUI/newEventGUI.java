@@ -180,7 +180,7 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 					appointment.getParticipants().put(user, 1);
 					
 					for (Ansatt a : appointment.getParticipants().keySet()) {
-						DBHandler.createAttendance(a.getBrukernavn(), appCount, appointment.getParticipants().get(a));
+						DBHandler.createAttendance(a.getBrukernavn(), appCount, appointment.getParticipants().get(a), 0);
 					}
 				} else {
 					System.out.println(appointment.getAppointmentNr());
@@ -188,7 +188,7 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 					DBHandler.deleteAttendances(appointment.getAppointmentNr());
 					
 					for (Ansatt a : appointment.getParticipants().keySet()) {
-						DBHandler.createAttendance(a.getBrukernavn(), appointment.getAppointmentNr(), appointment.getParticipants().get(a));
+						DBHandler.createAttendance(a.getBrukernavn(), appointment.getAppointmentNr(), appointment.getParticipants().get(a), 1);
 					}
 				}
 				

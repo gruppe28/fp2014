@@ -288,6 +288,12 @@ public final class DBHandler {
 		db.close();
 	}
 	
+	// Update changed
+	public static void updateChanged(String username, int appointmentNum){
+		Database db = new Database();
+		db.update("UPDATE AnsattAvtale SET endret = 0 WHERE brukernavn = '" + username + "' AND avtaleNr =" + appointmentNum);
+		db.close();
+	}
 	
 	// Get attendants and their status
 	public static HashMap<Ansatt, Integer> getAttendants(int appointmentNum){
@@ -308,9 +314,9 @@ public final class DBHandler {
 		return attendants;
 	}
 	
-	public static void createAttendance(String username, int appointmentNum, int attendance) {		
+	public static void createAttendance(String username, int appointmentNum, int attendance, int change) {		
 		Database db = new Database();
-		db.update("INSERT INTO AnsattAvtale(avtaleNr, brukernavn, deltar) VALUES ('"+ appointmentNum + "','" + username + "','" + attendance + "')");
+		db.update("INSERT INTO AnsattAvtale(avtaleNr, brukernavn, deltar) VALUES ('"+ appointmentNum + "','" + username + "','" + attendance + "', endret = " + change + ")");
 		db.close();
 	}
 	
@@ -391,5 +397,7 @@ public final class DBHandler {
 		db.close();
 		return changed;
 	}
+	
+	
 	
 }
