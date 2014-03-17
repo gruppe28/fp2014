@@ -10,6 +10,7 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -25,6 +26,7 @@ import javax.swing.event.ListSelectionListener;
 import database.DBHandler;
 import fp2014.Ansatt;
 import fp2014.Appointment;
+import fp2014.Group;
 
 @SuppressWarnings({"serial", "unchecked"})
 public class ManageParticipants extends JPanel implements ActionListener, ListSelectionListener, ItemListener{
@@ -34,17 +36,28 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 	JButton remove;
 	JRadioButton attend;
 	JRadioButton notattend;
+	
+	JRadioButton groups;
+	JRadioButton people;
+	
 	DefaultListModel<Ansatt> employeeListModel;
 	DefaultListModel<Ansatt> participantsListModel;
+	DefaultListModel<Group> groupListModel;
+	
 	JList<Ansatt> employeeList;
 	JList<Ansatt> participantsList;
 	JScrollPane employeeListBox;
 	JScrollPane participantsListBox;
+	
+	JList<Group> groupList;
+	JScrollPane groupListBox;
+	
 	newEventGUI parent;
 	JDialog romFrame;
 	HashMap<Ansatt, Integer> participants;
 	private boolean changeBlock;
 	private Appointment appointment;
+	private ArrayList<Group> groupsArray;
 	
 	public ManageParticipants(newEventGUI parent, HashMap<Ansatt, Integer> participants) {
 		
@@ -63,18 +76,32 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		// Create radio buttons and listeners
 		attend = new JRadioButton("Attending");
 		notattend = new JRadioButton("Not attending");
+		groups = new JRadioButton("Add groups");
+		people = new JRadioButton("Add people");
 		attend.addActionListener(this);
 		attend.addItemListener(this);
 		attend.setEnabled(false);
 		notattend.addActionListener(this);
 		notattend.addItemListener(this);
 		notattend.setEnabled(false);
+		groups.addActionListener(this);
+		people.addActionListener(this);
+		people.setSelected(true);
+		
+		ButtonGroup group = new ButtonGroup();
+		group.add(groups);
+		group.add(people);
 		
 		// Create lists
 		employeeListModel = new DefaultListModel<Ansatt>();
 		employeeList = new JList<Ansatt>(employeeListModel);
 		employeeList.setCellRenderer(new UserListCellRenderer());
 		employeeList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		groupListModel = new DefaultListModel<Group>();
+		groupList = new JList<Group>(groupListModel);
+		//groupList.setCellRenderer(new GroupListCellRenderer());
+		groupList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		participantsListModel = new DefaultListModel<Ansatt>();
 		participantsList = new JList<Ansatt>(participantsListModel);
@@ -85,7 +112,19 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		getUsers(participants);		
 		
 		employeeListBox = new JScrollPane(employeeList);
-		employeeListBox.setPreferredSize(new Dimension(150, 150));
+		employeeListBox.setPreferredSize(new Dimension(150, 130));
+		
+		groupListBox = new JScrollPane(groupList);
+		groupListBox.setPreferredSize(new Dimension(150, 130));
+
+		
+		// Fill group list
+		
+		groupsArray = DBHandler.getGroups();
+		
+		for(Group g : groupsArray){
+			groupListModel.addElement(g);
+		}
 		
 		// Create buttons
 		add = new JButton("→");
@@ -101,23 +140,27 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		GridBagConstraints gb = new GridBagConstraints();
 
 		gb.fill = GridBagConstraints.HORIZONTAL;
+		gb.anchor = GridBagConstraints.NORTH;
 		gb.weightx = 1;
 		gb.weighty = 0;
 
 		gb.gridx = 0;
 		gb.gridy = 0;
 		gb.gridheight = 3;
+		gb.gridwidth = 2;
 		romPanel.add(employeeListBox, gb);
+		romPanel.add(groupListBox, gb);
 		gb.gridheight = 1;
+		gb.gridwidth = 1;
 		
-		gb.gridx = 1;
+		gb.gridx = 2;
 		gb.anchor = GridBagConstraints.SOUTH;
 		romPanel.add(add, gb);
 		gb.gridy = 1;
 		gb.anchor = GridBagConstraints.NORTH;
 		romPanel.add(remove, gb);
 		
-		gb.gridx = 2;
+		gb.gridx = 3;
 		gb.gridy = 0;
 		gb.gridwidth = 2;
 		gb.gridheight = 2;
@@ -126,11 +169,21 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		gb.gridy = 2;
 		gb.gridwidth = 1;
 		gb.gridheight = 1;
-		romPanel.add(attend, gb);
+		
+		gb.gridx = 0;
+		romPanel.add(people, gb);
+		
+		gb.gridx = 1;
+		romPanel.add(groups, gb);
+		
 		gb.gridx = 3;
+		romPanel.add(attend, gb);
+		
+		gb.gridx = 4;
 		romPanel.add(notattend, gb);
 		
-		gb.gridy = 3;
+		
+		gb.gridy = 4;
 		romPanel.add(save, gb);
 		
 		attend.addActionListener(this);
@@ -194,9 +247,33 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 			if (attend.isSelected()){
 				attend.setSelected(false);
 			}
+		}else if(s == people){
+			groupListBox.setVisible(false);
+			employeeListBox.setVisible(true);
+		}else if(s == groups){
+			groupListBox.setVisible(true);
+			employeeListBox.setVisible(false);
+		}
+		else if (s == add) {
 			
-		}else if (s == add) {
-			if (employeeList.getSelectedValue() == null) {
+			
+			if(groups.isSelected() && groupList.getSelectedValue() != null){
+				Group selectedGroup = groupList.getSelectedValue();
+				
+				for(String username : selectedGroup.getMembers()){
+					for(int i = 0; i < employeeListModel.size(); i++){
+						Ansatt a = employeeListModel.getElementAt(i);
+						if(a.getBrukernavn().equals(username)){
+							participantsListModel.addElement(a);
+							appointment.editParticipant(a, 2);
+							employeeListModel.removeElement(a);
+						}
+						
+					}
+				}
+				
+			}
+			else if (employeeList.getSelectedValue() == null) {
 				
 			} else {
 				participantsListModel.addElement(employeeList.getSelectedValue());

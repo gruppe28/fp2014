@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import fp2014.Alarm;
+import fp2014.Group;
 import fp2014.Notification;
 import fp2014.Ansatt;
 import fp2014.Appointment;
@@ -19,19 +20,21 @@ public final class DBHandler {
 	private DBHandler(){ } // Ensures that you cannot make instances of class.
 	
 	public static int numberOfUnseenNotifications(String username){
+		Database db = new Database();
 	    try {
-	    	Database db = new Database();
 	    	ResultSet rs = db.query("SELECT * FROM Varsel WHERE brukernavn ='"+username+"' AND sett='0'");
 			rs.last();
 			return rs.getRow();
 		} catch (SQLException e) { e.printStackTrace(); }
+	    db.close();
 		return -1; // Only to satisfy try/catch. Should not actually happen.
 	}
 	
 	public static ArrayList<Notification> getUnseenNotifications(String username){
 		ArrayList<Notification> notificationList = new ArrayList<Notification>();
+		
+		Database db = new Database();
 	    try {
-	    	Database db = new Database();
 	    	ResultSet rs = db.query("SELECT * FROM Varsel WHERE brukernavn ='"+username+"' AND sett='0' ORDER BY id DESC");
 			while(rs.next()){
 				notificationList.add(new Notification(rs.getString("brukernavn"), rs.getString("tekst"), getAppointment(rs.getInt("avtaleNr"))));
@@ -39,18 +42,21 @@ public final class DBHandler {
 				db.update("UPDATE Varsel SET sett = '1' WHERE brukernavn = '" + username + "' AND id = " + rs.getString("id"));
 			}
 		} catch (SQLException e) { e.printStackTrace(); }
+	    db.close();
 		return notificationList;
 	}
 	
 	public static ArrayList<Notification> getSeenNotifications(String username){
 		ArrayList<Notification> notificationList = new ArrayList<Notification>();
+		
+		Database db = new Database();
 	    try {
-	    	Database db = new Database();
 	    	ResultSet rs = db.query("SELECT * FROM Varsel WHERE brukernavn ='"+username+"' AND sett='1' ORDER BY id DESC");
 			while(rs.next()){
 				notificationList.add(new Notification(rs.getString("brukernavn"), rs.getString("tekst"), getAppointment(rs.getInt("avtaleNr"))));
 			}
 		} catch (SQLException e) { e.printStackTrace(); }
+	    db.close();
 		return notificationList;
 	}
 	
@@ -351,7 +357,6 @@ public final class DBHandler {
 	    db.close();
 	}
 	
-	
 	public static void deleteAppointment(int appointmentNum){
 		Database db = new Database();
 	    db.update("UPDATE Avtale SET slett = 1 WHERE avtaleNr = " + appointmentNum);
@@ -400,6 +405,31 @@ public final class DBHandler {
 		return changed;
 	}
 	
-	
+	// Get all groups
+	public static ArrayList<Group> getGroups(){
+		
+		ArrayList<Group> groups = new ArrayList<Group>();
+		
+		Database db = new Database();
+		
+		ResultSet rs = db.query("Select * from Gruppe, MedlemAv where ID = gruppeID ORDER BY navn ASC");
+		try {
+			String curName = "";
+			Group curGroup = new Group("");
+			while (rs.next()) {
+				if(!curName.equals(rs.getString("navn"))){
+					curName = rs.getString("navn");
+					curGroup = new Group(rs.getString("navn"));
+					groups.add(curGroup);
+					System.out.println(rs.getString("navn"));
+				}
+				curGroup.addMember(rs.getString("brukernavn"));
+			}
+		} catch (SQLException e) { e.printStackTrace(); }
+		
+		db.close();
+		
+		return groups;
+	}
 	
 }

@@ -64,16 +64,19 @@ public class KalenderView extends JPanel implements ActionListener {
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.VERTICAL;
 		
-		kalender = new CalendarPanel(this, user, showUsers, week, year);
 		headerLeft = new JPanel();
 		headerRight = new JPanel();
 		avtale = new AvtaleGUI(this, user);
 		
-		kalender.setPreferredSize(new Dimension(804, 500));
 		headerLeft.setPreferredSize(new Dimension(804, 100));
 		headerRight.setPreferredSize(new Dimension(220, 100));
 		avtale.setPreferredSize(new Dimension(220, 500));
 	
+		// Initiate CalendarPanel
+		kalender = new JPanel();
+		CalendarPanel newCalendar = new CalendarPanel(this, user, showUsers, week, year);
+		addNewPanel("kalender", newCalendar);
+		
 		// Create Swing elements
 		previousWeek = new JButton("<");
 		nextWeek = new JButton(">");

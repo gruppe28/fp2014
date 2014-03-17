@@ -169,11 +169,12 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 				this.appointment.edit(avtaleNavn.getText(),startTidspunkt.getText(), sluttTidspunkt.getText(),avtaleBeskrivelse.getText(), toOtherDateFormat(appointmentDate), user, appointment.getParticipants());
 				
 				//Opprett/Endre AnsattAvtaler
+				appointment.getParticipants().put(user, 1);
 				if (nullAppointment) {
 					appointment.sendAppoinmentToDatabase();					
 					int appCount = DBHandler.getCountOfAppointments();
 					
-					appointment.getParticipants().put(user, 1);
+					
 					
 					for (Ansatt a : appointment.getParticipants().keySet()) {
 						DBHandler.createAttendance(a.getBrukernavn(), appCount, appointment.getParticipants().get(a), 0);
@@ -320,25 +321,10 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 		avtaleNavn = new JTextField(appointment.getName());
 		avtaleBeskrivelse = new JTextArea(appointment.getDescription());
 		
-		MaskFormatter formatterStart = null;
-		MaskFormatter formatterEnd = null;
-		
-		try {
-			formatterStart = new MaskFormatter(appointment.getStartTime());
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			formatterEnd = new MaskFormatter(appointment.getEndTime());
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		
 		datoVelgerFra = new JDateChooser(toDateFormat(appointment.getDate()));
 		
-		startTidspunkt = new JFormattedTextField(formatterStart);
-		sluttTidspunkt = new JFormattedTextField(formatterEnd);
+		startTidspunkt.setText(appointment.getStartTime());
+		sluttTidspunkt.setText(appointment.getEndTime());
 		
 		if (appointment.hasReservedRoom()){
 			visRom = new JTextField(appointment.getRom().getSted());

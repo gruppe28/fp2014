@@ -52,6 +52,9 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		this.appointment = appointment;
 		this.user = user;
 		
+		
+		if(appointment.getParticipants().size() == 0){ appointment.setParticipants(DBHandler.getAttendants(appointment.getAppointmentNr())); }
+		
 		isOwner = (appointment.getMadeBy().getBrukernavn().equals(user.getBrukernavn()));
 		
 		DBHandler.updateChanged(user.getBrukernavn(), appointment.getAppointmentNr());
@@ -101,6 +104,7 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 			if(a.getBrukernavn().equals(user.getBrukernavn())){
 				yourStatus = appointment.getParticipants().get(a);
 				isParticipant = true;
+				this.user = a;
 			}
 			
 			status = appointment.getParticipants().get(a);
@@ -333,7 +337,7 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 				DBHandler.deleteAttendance(user.getBrukernavn(), appointment.getAppointmentNr());
 				Set<Ansatt> tmp = appointment.getParticipants().keySet();
 				tmp.remove(user);
-				DBHandler.createNotification(user.getFornavn() + " " + user.getEtternavn() + " will not be attending: " + appointment.getName(), tmp, appointment.getAppointmentNr());
+				DBHandler.createNotification(user.getFornavn() + " " + user.getEtternavn() + " will not be attending " + appointment.getName() + ".", tmp, appointment.getAppointmentNr());
 			}
 			
 			
