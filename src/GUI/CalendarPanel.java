@@ -273,11 +273,11 @@ public class CalendarPanel extends JPanel implements FocusListener {
 		String[] parts = date.split("\\.");
 	    Calendar c = Calendar.getInstance();
 	    c.set(Calendar.YEAR, Integer.parseInt(parts[2]));
-	    c.set(Calendar.MONTH, Integer.parseInt(parts[1]));
+	    c.set(Calendar.MONTH, Integer.parseInt(parts[1])-1);
 	    c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parts[0]));
-	    int weekDay = (c.get(Calendar.DAY_OF_WEEK) + 3);
+	    int weekDay = (c.get(Calendar.DAY_OF_WEEK));
 	    if(weekDay > 7) { weekDay -= 7; }
-	    return weekDay - 1;
+	    return weekDay - 2;
 	}
 	
 	private void setDaySpan(){
