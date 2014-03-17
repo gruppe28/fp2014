@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import database.DBHandler;
 import fp2014.Ansatt;
 import fp2014.Appointment;
 import fp2014.Watcher;
@@ -149,7 +150,6 @@ public class KalenderView extends JPanel implements ActionListener {
 			avtale.setBackground(Color.WHITE);
 			this.add(avtale, gbc);
 			
-		
 	}
 	
 	// Changes the selected week, and if necessary the year too
