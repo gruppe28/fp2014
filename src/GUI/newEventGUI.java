@@ -368,14 +368,14 @@ public class newEventGUI extends JPanel implements ActionListener{
 		startTidspunkt = new JFormattedTextField(formatterStart);
 		sluttTidspunkt = new JFormattedTextField(formatterEnd);
 		
-		if (appointment.getPlace() != null){
+		if (appointment.hasReservedRoom()){
 			visRom = new JTextField(appointment.getRom().getSted());
-		} else if (appointment.getRom() != null) {
+		} else {
 			visRom = new JTextField(appointment.getPlace());
 		}
 	}
 	
-	public Date toDateFormat(String wrongFormatDate){
+	public Date toDateFormat(String wrongFormatDate) {
 
 		String[] dateParts = wrongFormatDate.split("\\.");
 		String dd = dateParts[0];
@@ -393,8 +393,6 @@ public class newEventGUI extends JPanel implements ActionListener{
 		
 		LocalDate localDate = new LocalDate(oldDate);
 		Date date = localDate.toDateTimeAtStartOfDay().toDate();
-		
-		System.out.println(date);
 		
 		return date;
 	}

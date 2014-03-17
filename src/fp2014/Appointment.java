@@ -302,5 +302,13 @@ public class Appointment {
 		}
 	}
 	
+	public boolean hasReservedRoom(){
+		if (this.rom.isReservedToAppointment()){
+			return true;
+		}
+		return false;
+		
+	}
+	
 	
 }

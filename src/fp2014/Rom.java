@@ -2,7 +2,7 @@ package fp2014;
 
 public class Rom {
 	/*
-	 * Rom legges til i databasen direkte, dette er evt noe vi kan legge til hvis vi blir ferdige før tiden.
+	 * Rom legges til i databasen direkte, dette er evt noe vi kan legge til hvis vi blir ferdige fï¿½r tiden.
 	 */
 	
 	private int romNr;
@@ -48,5 +48,12 @@ public class Rom {
 		
 		return true;
 		
+	}
+	
+	public boolean isReservedToAppointment(){
+		if (this.sted != null){
+			return true;
+		}
+		return false;
 	}
 }
