@@ -50,7 +50,7 @@ public class newEventGUI extends JPanel implements ActionListener{
 	private JButton lagre;
 	private JButton avbryt;
 	private KalenderView parent;
-	private Ansatt user;
+	protected Ansatt user;
 	protected Appointment appointment;
 	private MaskFormatter formatter;
 	public ArrayList<String> emailParticipants;
