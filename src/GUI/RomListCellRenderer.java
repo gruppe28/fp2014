@@ -6,7 +6,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-import fp2014.Rom;
+import fp2014.Room;
 
 @SuppressWarnings("rawtypes")
 public class RomListCellRenderer implements ListCellRenderer{
@@ -19,7 +19,7 @@ public class RomListCellRenderer implements ListCellRenderer{
 		ImageIcon radioNotSelected = new ImageIcon(getClass().getResource("/fp2014/images/NonSelectedRadioButton.png"));
 		
 		// Set item text to room name ("sted")
-		JLabel label = new JLabel(((Rom) value).getSted());
+		JLabel label = new JLabel(((Room) value).getPlace());
 		
 		// Apply styles to item
 		if (isSelected) {

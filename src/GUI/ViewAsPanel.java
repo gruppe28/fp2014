@@ -16,27 +16,27 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import database.DBHandler;
-import fp2014.Ansatt;
+import fp2014.User;
 
 @SuppressWarnings({"serial", "unchecked"})
-public class ViewAsGUI extends JPanel implements ActionListener{
+public class ViewAsPanel extends JPanel implements ActionListener{
 	
 	JButton save;
 	JButton add;
 	JButton remove;
-	DefaultListModel<Ansatt> employeeListModel;
-	DefaultListModel<Ansatt> selectedListModel;
-	JList<Ansatt> employeeList;
-	JList<Ansatt> selectedList;
+	DefaultListModel<User> employeeListModel;
+	DefaultListModel<User> selectedListModel;
+	JList<User> employeeList;
+	JList<User> selectedList;
 	JScrollPane employeeListBox;
 	JScrollPane selectedListBox;
-	KalenderView parent;
+	MainFrame parent;
 	JDialog viewFrame;
-	ArrayList<Ansatt> showUsers;
+	ArrayList<User> showUsers;
 	JLabel allUsersLabel;
 	JLabel selectedUsersLabel;
 	
-	public ViewAsGUI(KalenderView parent) {
+	public ViewAsPanel(MainFrame parent) {
 		
 		this.parent = parent;
 		showUsers = new ArrayList<>();
@@ -47,28 +47,28 @@ public class ViewAsGUI extends JPanel implements ActionListener{
 		viewFrame.setTitle("View calendar as");
 		
 		// Create lists
-		employeeListModel = new DefaultListModel<Ansatt>();
-		employeeList = new JList<Ansatt>(employeeListModel);
+		employeeListModel = new DefaultListModel<User>();
+		employeeList = new JList<User>(employeeListModel);
 		employeeList.setCellRenderer(new UserListCellRenderer());
 		employeeList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		employeeListBox = new JScrollPane(employeeList);
 		employeeListBox.setPreferredSize(new Dimension(150, 150));
 		
-		selectedListModel = new DefaultListModel<Ansatt>();
-		selectedList = new JList<Ansatt>(selectedListModel);
+		selectedListModel = new DefaultListModel<User>();
+		selectedList = new JList<User>(selectedListModel);
 		selectedList.setCellRenderer(new UserListCellRenderer());
 		selectedList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		selectedListBox = new JScrollPane(selectedList);
 		selectedListBox.setPreferredSize(new Dimension(150, 150));
 		
 		// Fill lists
-		ArrayList<Ansatt> allUsers = DBHandler.getAllUsers();
+		ArrayList<User> allUsers = DBHandler.getAllUsers();
 		boolean userShownFromBefore;
 		
-		for (Ansatt i : allUsers) {
+		for (User i : allUsers) {
 			userShownFromBefore = false;
-			for (Ansatt j : parent.getShowUsers()) {
-				if(i.getBrukernavn().equals(j.getBrukernavn())) {
+			for (User j : parent.getShowUsers()) {
+				if(i.getUsername().equals(j.getUsername())) {
 					selectedListModel.addElement(i);
 					showUsers.add(i); 
 					userShownFromBefore = true;
@@ -145,14 +145,14 @@ public class ViewAsGUI extends JPanel implements ActionListener{
 		
 		if (s == add) {
 			if (employeeList.getSelectedValue() != null) {
-				Ansatt moved = employeeList.getSelectedValue();
+				User moved = employeeList.getSelectedValue();
 				selectedListModel.addElement(moved);
 				employeeListModel.removeElement(moved);
 				showUsers.add(moved);
 			}
 		} else if (s == remove) {
 			if (selectedList.getSelectedValue() != null) {
-				Ansatt moved = selectedList.getSelectedValue();
+				User moved = selectedList.getSelectedValue();
 				employeeListModel.addElement(moved);
 				selectedListModel.removeElement(moved);
 				showUsers.remove(moved);

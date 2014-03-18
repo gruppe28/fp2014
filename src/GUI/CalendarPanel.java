@@ -18,7 +18,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import database.DBHandler;
-import fp2014.Ansatt;
+import fp2014.User;
 import fp2014.Appointment;
 
 @SuppressWarnings("serial")
@@ -31,22 +31,20 @@ public class CalendarPanel extends JPanel implements FocusListener {
 	private ArrayList<Component> existingAppointments = new ArrayList<Component>();
 	private ArrayList<JTextArea> existingTextAreas = new ArrayList<JTextArea>();
 	private JLayeredPane layeredPane;
-	private KalenderView parent;
+	private MainFrame parent;
 	private int week;
 	private int year;
 	private ArrayList<String> daySpan;
 	private JScrollPane s;
-	private Ansatt user;
-	private ArrayList<Ansatt> users;
+	private User user;
+	private ArrayList<User> users;
 	ArrayList<Appointment> appointments;
 	
-	public CalendarPanel(KalenderView parent, Ansatt user, ArrayList<Ansatt> users, int week, int year){
-		
+	public CalendarPanel(MainFrame parent, User user, ArrayList<User> users, int week, int year){
 		
 		daySpan = new ArrayList<>();
 		
 		this.setBackground(Color.LIGHT_GRAY);
-		
 		
 		this.parent = parent;
 		this.week = week;
@@ -55,14 +53,12 @@ public class CalendarPanel extends JPanel implements FocusListener {
 		this.user = user;
 		setDaySpan();
 		
-		
 		appointments = DBHandler.getAppointmentsInInterval(users, daySpan);
 	
 		for (Appointment a: appointments){
 			a.setParticipants(DBHandler.getAttendants(a.getAppointmentNr()));
 		}
-		
-		
+	
 		setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		
 		JSeparator hSep, vSep;
@@ -214,9 +210,9 @@ public class CalendarPanel extends JPanel implements FocusListener {
 					currentEvent.addFocusListener(this);
 					currentEvent.setBackground(Color.GRAY);
 					currentEvent.setForeground(Color.WHITE);
-					if (user.getBrukernavn().equals(appointments.get(i).getMadeBy().getBrukernavn())){
+					if (user.getUsername().equals(appointments.get(i).getMadeBy().getUsername())){
 						currentEvent.append(" - eier");
-					}else if(DBHandler.isChanged(user.getBrukernavn(), appointments.get(i).getAppointmentNr())){
+					}else if(DBHandler.isChanged(user.getUsername(), appointments.get(i).getAppointmentNr())){
 						currentEvent.append(" - endret");
 					}
 					currentEvent.append("\n" + appointments.get(i).getLocation());
@@ -324,7 +320,7 @@ public class CalendarPanel extends JPanel implements FocusListener {
 		existingTextAreas.get(index).setName("focused");
 		existingTextAreas.get(index).setBackground(Color.CYAN);
 		
-		parent.addNewPanel("avtale", new ShowEventGUI(parent, user, appointments.get(index)));
+		parent.addNewPanel("avtale", new ShowAppointmentPanel(parent, user, appointments.get(index)));
 	}
 
 	@Override

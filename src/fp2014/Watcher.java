@@ -7,15 +7,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import database.DBHandler;
-import GUI.AlarmGUI;
-import GUI.KalenderView;
+import GUI.AlarmPanel;
+import GUI.MainFrame;
 
 public class Watcher {
 
 	private ArrayList<Alarm> alarms;
-	private Ansatt user;
+	private User user;
 
-	public Watcher(final KalenderView parent, final Ansatt user){
+	public Watcher(final MainFrame parent, final User user){
 		
 		this.user = user;
 		
@@ -38,7 +38,7 @@ public class Watcher {
 
 		        	for(Alarm a : alarms){
 		        		if(a.getTime().equals(time) && a.getDate().equals(date)) { 
-		        			new AlarmGUI(parent, user, a);
+		        			new AlarmPanel(parent, user, a);
 		        		}
 		        	}
 		        	

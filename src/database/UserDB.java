@@ -2,7 +2,7 @@ package database;
 
 import java.sql.ResultSet;
 
-public class User{
+public class UserDB{
 	
 	// hei
 
@@ -11,7 +11,7 @@ public class User{
 	// Checks the existence of a username with the database
 	public boolean userExists(String inputUsername){
 		try {
-			Database db = new Database();
+			SQL db = new SQL();
 		    ResultSet rs = db.query("SELECT brukernavn FROM Ansatt WHERE brukernavn ='"+inputUsername+"'");
 			
 			if(rs.next()) { db.close(); return true; } //If there were any results, the user exists.
@@ -25,7 +25,7 @@ public class User{
 		String password = null;
 		
 		try {
-			Database db = new Database();
+			SQL db = new SQL();
 		    ResultSet rs = db.query("SELECT * FROM Ansatt WHERE brukernavn ='"+inputUsername+"'");
 		    if(rs.next()) { password = rs.getString("passord"); }
 		} catch (Exception e){ feedback = "Could not connect to the database."; return false; }

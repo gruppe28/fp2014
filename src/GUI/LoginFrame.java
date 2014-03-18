@@ -13,11 +13,11 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import database.DBHandler;
-import database.User;
-import fp2014.Ansatt;
+import database.UserDB;
+import fp2014.User;
 
 @SuppressWarnings("serial")
-public class LoginGUI extends JPanel {
+public class LoginFrame extends JPanel {
 	
 	private GridBagConstraints gbc;
 	private JPasswordField passwordField;
@@ -27,7 +27,7 @@ public class LoginGUI extends JPanel {
 	private JLabel passwordLabel;
 	private JButton loginButton;
 	
-	public LoginGUI(final JFrame loginFrame){
+	public LoginFrame(final JFrame loginFrame){
 
 		// Create Swing elements
 		usernameLabel = new JLabel("Username: ");
@@ -68,15 +68,15 @@ public class LoginGUI extends JPanel {
 				// Fetch data and create user object
 				String pw = new String(passwordField.getPassword());
 				String un = usernameField.getText();
-				User newUser = new User(); // User object to perform validating methods on
+				UserDB newUser = new UserDB(); // User object to perform validating methods on
 				
 				if(newUser.checkLogin(un, pw)){
 					loginFrame.dispose(); // Close the login form before opening the calendar
-					Ansatt you = DBHandler.getAnsatt(un); // Fetch an Ansatt object based on username. Will be used throughout the session in order to identify logged in user.
+					User you = DBHandler.getAnsatt(un); // Fetch an Ansatt object based on username. Will be used throughout the session in order to identify logged in user.
 					
 					// Create new calendar window
-					JFrame frame = new JFrame(you.getFornavn() + " " + you.getEtternavn() + "'s calendar");
-					KalenderView mainPanel = new KalenderView(you, frame);
+					JFrame frame = new JFrame(you.getFirstname() + " " + you.getLastname() + "'s calendar");
+					MainFrame mainPanel = new MainFrame(you, frame);
 					frame.setContentPane(mainPanel);
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					frame.pack();
@@ -91,7 +91,7 @@ public class LoginGUI extends JPanel {
 	
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Login");
-		LoginGUI mainPanel = new LoginGUI(frame);
+		LoginFrame mainPanel = new LoginFrame(frame);
 		frame.setContentPane(mainPanel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1024,600);

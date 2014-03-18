@@ -24,42 +24,42 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import database.DBHandler;
-import fp2014.Ansatt;
+import fp2014.User;
 import fp2014.Appointment;
 import fp2014.Group;
 
 @SuppressWarnings({"serial", "unchecked"})
-public class ManageParticipants extends JPanel implements ActionListener, ListSelectionListener, ItemListener{
+public class ManageParticipantsPanel extends JPanel implements ActionListener, ListSelectionListener, ItemListener{
 	
-	JButton save;
-	JButton add;
-	JButton remove;
-	JRadioButton attend;
-	JRadioButton notattend;
+	JButton saveBtn;
+	JButton addBtn;
+	JButton removeBtn;
+	JRadioButton attendBtn;
+	JRadioButton notattendBtn;
 	
-	JRadioButton groups;
+	JRadioButton groupsBtn;
 	JRadioButton people;
 	
-	DefaultListModel<Ansatt> employeeListModel;
-	DefaultListModel<Ansatt> participantsListModel;
+	DefaultListModel<User> employeeListModel;
+	DefaultListModel<User> participantsListModel;
 	DefaultListModel<Group> groupListModel;
 	
-	JList<Ansatt> employeeList;
-	JList<Ansatt> participantsList;
+	JList<User> employeeList;
+	JList<User> participantsList;
 	JScrollPane employeeListBox;
 	JScrollPane participantsListBox;
 	
 	JList<Group> groupList;
 	JScrollPane groupListBox;
 	
-	newEventGUI parent;
+	EditAppointmentPanel parent;
 	JDialog romFrame;
-	HashMap<Ansatt, Integer> participants;
+	HashMap<User, Integer> participants;
 	private boolean changeBlock;
 	private Appointment appointment;
 	private ArrayList<Group> groupsArray;
 	
-	public ManageParticipants(newEventGUI parent, HashMap<Ansatt, Integer> participants) {
+	public ManageParticipantsPanel(EditAppointmentPanel parent, HashMap<User, Integer> participants) {
 		
 		this.parent = parent;
 		this.participants = participants;
@@ -74,27 +74,27 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		romFrame.setTitle("Manage participants");
 		
 		// Create radio buttons and listeners
-		attend = new JRadioButton("Attending");
-		notattend = new JRadioButton("Not attending");
-		groups = new JRadioButton("Add groups");
+		attendBtn = new JRadioButton("Attending");
+		notattendBtn = new JRadioButton("Not attending");
+		groupsBtn = new JRadioButton("Add groups");
 		people = new JRadioButton("Add people");
-		attend.addActionListener(this);
-		attend.addItemListener(this);
-		attend.setEnabled(false);
-		notattend.addActionListener(this);
-		notattend.addItemListener(this);
-		notattend.setEnabled(false);
-		groups.addActionListener(this);
+		attendBtn.addActionListener(this);
+		attendBtn.addItemListener(this);
+		attendBtn.setEnabled(false);
+		notattendBtn.addActionListener(this);
+		notattendBtn.addItemListener(this);
+		notattendBtn.setEnabled(false);
+		groupsBtn.addActionListener(this);
 		people.addActionListener(this);
 		people.setSelected(true);
 		
 		ButtonGroup group = new ButtonGroup();
-		group.add(groups);
+		group.add(groupsBtn);
 		group.add(people);
 		
 		// Create lists
-		employeeListModel = new DefaultListModel<Ansatt>();
-		employeeList = new JList<Ansatt>(employeeListModel);
+		employeeListModel = new DefaultListModel<User>();
+		employeeList = new JList<User>(employeeListModel);
 		employeeList.setCellRenderer(new UserListCellRenderer());
 		employeeList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
@@ -103,8 +103,8 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		//groupList.setCellRenderer(new GroupListCellRenderer());
 		groupList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		participantsListModel = new DefaultListModel<Ansatt>();
-		participantsList = new JList<Ansatt>(participantsListModel);
+		participantsListModel = new DefaultListModel<User>();
+		participantsList = new JList<User>(participantsListModel);
 		participantsList.setCellRenderer(new UserListCellRenderer());
 		participantsListBox = new JScrollPane(participantsList);
 		participantsListBox.setPreferredSize(new Dimension(150, 130));
@@ -117,7 +117,6 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		groupListBox = new JScrollPane(groupList);
 		groupListBox.setPreferredSize(new Dimension(150, 130));
 
-		
 		// Fill group list
 		
 		groupsArray = DBHandler.getGroups();
@@ -127,13 +126,13 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		}
 		
 		// Create buttons
-		add = new JButton("→");
-		remove = new JButton("←");
-		save = new JButton("Save");
+		addBtn = new JButton("→");
+		removeBtn = new JButton("←");
+		saveBtn = new JButton("Save");
 		
-		add.addActionListener(this);
-		remove.addActionListener(this);
-		save.addActionListener(this);
+		addBtn.addActionListener(this);
+		removeBtn.addActionListener(this);
+		saveBtn.addActionListener(this);
 
 		// Add elements and manage layout
 		romPanel.setLayout(new GridBagLayout());
@@ -155,10 +154,10 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		
 		gb.gridx = 2;
 		gb.anchor = GridBagConstraints.SOUTH;
-		romPanel.add(add, gb);
+		romPanel.add(addBtn, gb);
 		gb.gridy = 1;
 		gb.anchor = GridBagConstraints.NORTH;
-		romPanel.add(remove, gb);
+		romPanel.add(removeBtn, gb);
 		
 		gb.gridx = 3;
 		gb.gridy = 0;
@@ -174,20 +173,19 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		romPanel.add(people, gb);
 		
 		gb.gridx = 1;
-		romPanel.add(groups, gb);
+		romPanel.add(groupsBtn, gb);
 		
 		gb.gridx = 3;
-		romPanel.add(attend, gb);
+		romPanel.add(attendBtn, gb);
 		
 		gb.gridx = 4;
-		romPanel.add(notattend, gb);
-		
+		romPanel.add(notattendBtn, gb);
 		
 		gb.gridy = 4;
-		romPanel.add(save, gb);
+		romPanel.add(saveBtn, gb);
 		
-		attend.addActionListener(this);
-		notattend.addActionListener(this);
+		attendBtn.addActionListener(this);
+		notattendBtn.addActionListener(this);
 			
 		romFrame.setModal(true);
 		romFrame.setAlwaysOnTop(true);
@@ -198,26 +196,26 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		romFrame.setVisible(true);
 	}
 	
-	public void getUsers(HashMap<Ansatt, Integer> participants){
+	public void getUsers(HashMap<User, Integer> participants){
 		
-		for (Ansatt i : participants.keySet()) {
-			if (!i.getBrukernavn().equals(parent.user.getBrukernavn())) {
+		for (User i : participants.keySet()) {
+			if (!i.getUsername().equals(parent.user.getUsername())) {
 				participantsListModel.addElement(i);
 				appointment.editParticipant(i, participants.get(i));				
 			}
 		}
 		
-		ArrayList<Ansatt> allUsers = DBHandler.getAllUsers();
+		ArrayList<User> allUsers = DBHandler.getAllUsers();
 		
-		for (Ansatt i : allUsers) {
-			if (!i.getBrukernavn().equals(parent.user.getBrukernavn())) {
+		for (User i : allUsers) {
+			if (!i.getUsername().equals(parent.user.getUsername())) {
 				employeeListModel.addElement(i);
 			}
 		}
 		
-		for (Ansatt alle : allUsers) {
-			for (Ansatt participant : participants.keySet()) {
-				if (alle.getBrukernavn().equals(participant.getBrukernavn())) {
+		for (User alle : allUsers) {
+			for (User participant : participants.keySet()) {
+				if (alle.getUsername().equals(participant.getUsername())) {
 					employeeListModel.removeElement(alle);
 			}
 		}
@@ -230,40 +228,40 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		changeBlock = true; // When you change selected participant, the radio box listeners should not trigger.
 		
 		if (participantsList.isSelectionEmpty()){
-			attend.setEnabled(false);
-			notattend.setEnabled(false);
+			attendBtn.setEnabled(false);
+			notattendBtn.setEnabled(false);
 		}else{
-			attend.setEnabled(true);
-			notattend.setEnabled(true);
+			attendBtn.setEnabled(true);
+			notattendBtn.setEnabled(true);
 		}
 		Object s = e.getSource();
 		
-		if (s == attend){
-			if (notattend.isSelected()){
-				notattend.setSelected(false);
+		if (s == attendBtn){
+			if (notattendBtn.isSelected()){
+				notattendBtn.setSelected(false);
 			}
 			
-		}else if(s == notattend){
-			if (attend.isSelected()){
-				attend.setSelected(false);
+		}else if(s == notattendBtn){
+			if (attendBtn.isSelected()){
+				attendBtn.setSelected(false);
 			}
 		}else if(s == people){
 			groupListBox.setVisible(false);
 			employeeListBox.setVisible(true);
-		}else if(s == groups){
+		}else if(s == groupsBtn){
 			groupListBox.setVisible(true);
 			employeeListBox.setVisible(false);
 		}
-		else if (s == add) {
+		else if (s == addBtn) {
 			
 			
-			if(groups.isSelected() && groupList.getSelectedValue() != null){
+			if(groupsBtn.isSelected() && groupList.getSelectedValue() != null){
 				Group selectedGroup = groupList.getSelectedValue();
 				
 				for(String username : selectedGroup.getMembers()){
 					for(int i = 0; i < employeeListModel.size(); i++){
-						Ansatt a = employeeListModel.getElementAt(i);
-						if(a.getBrukernavn().equals(username)){
+						User a = employeeListModel.getElementAt(i);
+						if(a.getUsername().equals(username)){
 							participantsListModel.addElement(a);
 							appointment.editParticipant(a, 2);
 							employeeListModel.removeElement(a);
@@ -280,7 +278,7 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 				appointment.editParticipant(employeeList.getSelectedValue(), 2);
 				employeeListModel.removeElement(employeeList.getSelectedValue());
 			}
-		} else if (s == remove) {
+		} else if (s == removeBtn) {
 				if (participantsList.getSelectedValue() == null) {
 				
 			} else {
@@ -288,7 +286,7 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 				appointment.removeParticipant(participantsList.getSelectedValue());
 				participantsListModel.removeElement(participantsList.getSelectedValue());
 			}
-		} else if (s == save) {
+		} else if (s == saveBtn) {
 			parent.appointment.setParticipants(appointment.getParticipants());
 			romFrame.dispose();
 		} 
@@ -296,7 +294,6 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		changeBlock = false;
 		
 	}
-	
 
 	@Override
 	public void valueChanged(ListSelectionEvent arg0) {
@@ -306,25 +303,24 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		int status;
 		if (!participantsList.isSelectionEmpty()){
 			status = appointment.getParticipantStatus(participantsList.getSelectedValue());
-			attend.setEnabled(true);
-			notattend.setEnabled(true);
+			attendBtn.setEnabled(true);
+			notattendBtn.setEnabled(true);
 		}else{
 			status = 2;
-			attend.setEnabled(false);
-			notattend.setEnabled(false);
+			attendBtn.setEnabled(false);
+			notattendBtn.setEnabled(false);
 		}
-		
 		
 		if (arg0.getSource() == participantsList) {
 			if (status == 1) {
-				attend.setSelected(true);
-				notattend.setSelected(false);
+				attendBtn.setSelected(true);
+				notattendBtn.setSelected(false);
 			} else if (status == 0) {
-				attend.setSelected(false);
-				notattend.setSelected(true);				
+				attendBtn.setSelected(false);
+				notattendBtn.setSelected(true);				
 			} else {
-				attend.setSelected(false);
-				notattend.setSelected(false);
+				attendBtn.setSelected(false);
+				notattendBtn.setSelected(false);
 			}
 		}
 		
@@ -336,14 +332,14 @@ public class ManageParticipants extends JPanel implements ActionListener, ListSe
 		
 		if(changeBlock) { return; } // Omits status changes if true
 		
-		if (e.getSource().equals(attend)) {
-			if (attend.isSelected()) {
+		if (e.getSource().equals(attendBtn)) {
+			if (attendBtn.isSelected()) {
 				appointment.editParticipant(participantsList.getSelectedValue(), 1);				
 			} else {
 				appointment.editParticipant(participantsList.getSelectedValue(), 2);	
 			}
-		} else if (e.getSource().equals(notattend)) {
-			if (notattend.isSelected()) {
+		} else if (e.getSource().equals(notattendBtn)) {
+			if (notattendBtn.isSelected()) {
 				appointment.editParticipant(participantsList.getSelectedValue(), 0);
 			} else {
 				appointment.editParticipant(participantsList.getSelectedValue(), 2);

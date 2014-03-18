@@ -1,6 +1,5 @@
 package GUI;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -17,28 +16,27 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import database.DBHandler;
-import fp2014.Ansatt;
+import fp2014.User;
 import fp2014.Appointment;
 import fp2014.Notification;
 
 @SuppressWarnings("serial")
-public class NotificationGUI extends JPanel implements ActionListener, FocusListener {
+public class NotificationPanel extends JPanel implements ActionListener, FocusListener {
 
-	private JButton exit;
-	private KalenderView parent;
+	private JButton exitBtn;
+	private MainFrame parent;
 	private JPanel notificationPanel;
 	private JScrollPane scrollPanel;
-	private Ansatt user;
+	private User user;
 	private ArrayList<Notification> unseenNotifications;
 	private ArrayList<Notification> seenNotifications;
 
-	public NotificationGUI(KalenderView parent, Ansatt user) {
+	public NotificationPanel(MainFrame parent, User user) {
 		this.parent = parent; 
 		this.user = user;
 		
 		// Create a panel to store notifications in
 		notificationPanel = new JPanel();
-		notificationPanel.setBackground(Color.WHITE);
 		
 		// Create GridBag for notification panel. Style it.
 		notificationPanel.setLayout(new GridBagLayout());		
@@ -99,9 +97,9 @@ public class NotificationGUI extends JPanel implements ActionListener, FocusList
 		scrollPanel.setPreferredSize(new Dimension(220, 470));
 		
 		// Style exit button
-		exit = new JButton("Exit");
-		exit.addActionListener(this);
-		exit.setPreferredSize(new Dimension(220, 30));
+		exitBtn = new JButton("Exit");
+		exitBtn.addActionListener(this);
+		exitBtn.setPreferredSize(new Dimension(220, 30));
 
 		// GridBag
 		setLayout(new GridBagLayout());
@@ -109,7 +107,7 @@ public class NotificationGUI extends JPanel implements ActionListener, FocusList
 		gb.gridy = 0;
 		add(scrollPanel, gb);
 		gb.gridy = 1;
-		add(exit, gb);
+		add(exitBtn, gb);
 		
 		// Scroll back to the top of the pane
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -118,17 +116,17 @@ public class NotificationGUI extends JPanel implements ActionListener, FocusList
 	}
 	
 	private ArrayList<Notification> getUnseenNotifications(){
-		return DBHandler.getUnseenNotifications(user.getBrukernavn());
+		return DBHandler.getUnseenNotifications(user.getUsername());
 	}
 	
 	private ArrayList<Notification> getSeenNotifications(){
-		return DBHandler.getSeenNotifications(user.getBrukernavn());
+		return DBHandler.getSeenNotifications(user.getUsername());
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
-		if (s == exit){
-			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
+		if (s == exitBtn){
+			parent.addNewPanel("avtale", new DefaultRightPanel(parent, user));
 			
 		}
 	}
@@ -141,7 +139,7 @@ public class NotificationGUI extends JPanel implements ActionListener, FocusList
 		if(name.charAt(0) == 'u') { active = (unseenNotifications.get(Integer.parseInt(String.valueOf(name.charAt(1))))).getAppointment(); }
 		else { active = (seenNotifications.get(Integer.parseInt(String.valueOf(name.charAt(1))))).getAppointment(); }
 		
-		parent.addNewPanel("avtale", new ShowEventGUI(parent, user, active));
+		parent.addNewPanel("avtale", new ShowAppointmentPanel(parent, user, active));
 		
 	}
 

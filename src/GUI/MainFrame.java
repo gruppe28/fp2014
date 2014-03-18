@@ -16,14 +16,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import fp2014.Ansatt;
+import fp2014.User;
 import fp2014.Appointment;
 import fp2014.Watcher;
 
 @SuppressWarnings("serial")
-public class KalenderView extends JPanel implements ActionListener {
+public class MainFrame extends JPanel implements ActionListener {
 	
-	protected ArrayList<Appointment> avtaler;
+	protected ArrayList<Appointment> appointments;
 	private GridBagConstraints gbc;
 	protected JFrame activeWindow;
 	private int week;
@@ -34,12 +34,12 @@ public class KalenderView extends JPanel implements ActionListener {
 	private JButton alerts;
 	private JButton logOut;
 	private JButton viewAs;
-	protected JPanel kalender, headerLeft, headerRight, avtale;
-	private Ansatt user;
-	private ArrayList<Ansatt> showUsers;
+	protected JPanel kalender, headerLeft, headerRight, appointment;
+	private User user;
+	private ArrayList<User> showUsers;
 	
 	
-	public KalenderView(Ansatt user, JFrame activeWindow) {
+	public MainFrame(User user, JFrame activeWindow) {
 		this.user = user;
 		
 		showUsers = new ArrayList<>();
@@ -66,11 +66,11 @@ public class KalenderView extends JPanel implements ActionListener {
 		
 		headerLeft = new JPanel();
 		headerRight = new JPanel();
-		avtale = new AvtaleGUI(this, user);
+		appointment = new DefaultRightPanel(this, user);
 		
 		headerLeft.setPreferredSize(new Dimension(804, 100));
 		headerRight.setPreferredSize(new Dimension(220, 100));
-		avtale.setPreferredSize(new Dimension(220, 500));
+		appointment.setPreferredSize(new Dimension(220, 500));
 	
 		// Initiate CalendarPanel
 		kalender = new JPanel();
@@ -80,10 +80,10 @@ public class KalenderView extends JPanel implements ActionListener {
 		// Create Swing elements
 		previousWeek = new JButton("<");
 		nextWeek = new JButton(">");
-		weekNumberLabel = new JLabel("WEEK " + week + " - " + year);
+		weekNumberLabel = new JLabel("Week " + week + " - " + year);
 		weekNumberLabel.setFont(new Font("Arial", Font.PLAIN, 26)); // Larger font for the week header
 		alerts = new JButton();
-		logOut = new JButton("Log off " + user.getBrukernavn());
+		logOut = new JButton("Log out " + user.getUsername());
 		viewAs = new JButton("View calendar as");
 		
 		// Create watcher. This will update the announcement counter and trigger alarms regularly
@@ -137,18 +137,15 @@ public class KalenderView extends JPanel implements ActionListener {
 			
 			gbc.gridx = 0;
 			gbc.gridy = 0;
-			headerLeft.setBackground(Color.GREEN);
 			this.add(headerLeft, gbc);
 			
 			gbc.gridx = 1;
 			gbc.gridy = 0;
-			headerRight.setBackground(Color.GREEN);
 			this.add(headerRight, gbc);
 			
 			gbc.gridx = 1;
 			gbc.gridy = 1;
-			avtale.setBackground(Color.WHITE);
-			this.add(avtale, gbc);
+			this.add(appointment, gbc);
 			
 	}
 	
@@ -166,7 +163,7 @@ public class KalenderView extends JPanel implements ActionListener {
 		// Update fields and labels accordingly
 		week = newWeek;
 		year = newYear;
-		weekNumberLabel.setText("WEEK " + newWeek + " - " + newYear);
+		weekNumberLabel.setText("Week " + newWeek + " - " + newYear);
 		
 		// Update the calendar panel
 		CalendarPanel newCalendar = new CalendarPanel(this, user, showUsers, week, year);
@@ -186,7 +183,7 @@ public class KalenderView extends JPanel implements ActionListener {
 	
 	private void logOff(){
 		String[] args = {};
-		LoginGUI.main(args);
+		LoginFrame.main(args);
 		activeWindow.dispose(); // Close the calendar window
 	}
 
@@ -204,21 +201,18 @@ public class KalenderView extends JPanel implements ActionListener {
 			headerLeft.setPreferredSize(new Dimension(804, 100));
 			gbc.gridx = 0;
 			gbc.gridy = 0;
-			newPanel.setBackground(Color.GREEN);
 		}else if(panel.equals("headerRight")){
 			remove(headerRight);
 			headerRight = newPanel;
 			headerRight.setPreferredSize(new Dimension(220, 100));
 			gbc.gridx = 1;
 			gbc.gridy = 0;
-			newPanel.setBackground(Color.GREEN);
 		}else if(panel.equals("avtale")){
-			remove(avtale);
-			avtale = newPanel;
-			avtale.setPreferredSize(new Dimension(220, 500));
+			remove(appointment);
+			appointment = newPanel;
+			appointment.setPreferredSize(new Dimension(220, 500));
 			gbc.gridx = 1;
 			gbc.gridy = 1;
-			newPanel.setBackground(Color.WHITE);
 		}
 		this.add(newPanel, gbc);
 		
@@ -227,11 +221,11 @@ public class KalenderView extends JPanel implements ActionListener {
 	}
 	
 	public JPanel getAvtale() {
-		return avtale;
+		return appointment;
 	}
 
 	public void setAvtale(JPanel avtale) {
-		this.avtale = avtale;
+		this.appointment = avtale;
 	}
 	
 	public int getWeek() {
@@ -242,11 +236,11 @@ public class KalenderView extends JPanel implements ActionListener {
 		return year;
 	}
 
-	public ArrayList<Ansatt> getShowUsers(){
+	public ArrayList<User> getShowUsers(){
 		return showUsers;
 	}
 	
-	public void setShowUsers(ArrayList<Ansatt> newList){
+	public void setShowUsers(ArrayList<User> newList){
 		showUsers = newList;
 		CalendarPanel newCalendar = new CalendarPanel(this, user, showUsers, week, year);
 		addNewPanel("kalender", newCalendar);
@@ -277,10 +271,10 @@ public class KalenderView extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
 		if (s == alerts){
-			addNewPanel("avtale", new NotificationGUI(this, user));
+			addNewPanel("avtale", new NotificationPanel(this, user));
 		}
 		else if(s == viewAs){
-			new ViewAsGUI(this);
+			new ViewAsPanel(this);
 		}
 	}
 

@@ -23,13 +23,13 @@ public class SendEmailPanel extends JPanel implements ActionListener {
 	JButton cancelBtn;
 	JList emailList;
 	JTextField newEmail;
-	newEventGUI parent;
+	EditAppointmentPanel parent;
 	DefaultListModel<String> emailListModel;
 	JDialog sendMailFrame;
 	JPanel sendMailPanel;
 	ArrayList<String> participantsList;
 	
-	public SendEmailPanel (newEventGUI parent, ArrayList<String> participantsList){
+	public SendEmailPanel (EditAppointmentPanel parent, ArrayList<String> participantsList){
 		this.parent = parent;
 		
 		sendMailFrame = new JDialog();

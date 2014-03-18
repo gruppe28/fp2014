@@ -14,10 +14,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import fp2014.Alarm;
-import fp2014.Ansatt;
+import fp2014.User;
 
 @SuppressWarnings("serial")
-public class AlarmGUI extends JPanel implements ActionListener{
+public class AlarmPanel extends JPanel implements ActionListener{
 
 	GridBagConstraints gb;
 	JTextArea text;
@@ -25,12 +25,12 @@ public class AlarmGUI extends JPanel implements ActionListener{
 	JButton goTo;
 	JDialog dialog;
 	JPanel panel;
-	KalenderView parent;
+	MainFrame parent;
 	Alarm alarm;
-	Ansatt user;
+	User user;
 	
 	
-	public AlarmGUI(KalenderView parent, Ansatt user, Alarm alarm){
+	public AlarmPanel(MainFrame parent, User user, Alarm alarm){
 		
 		this.alarm = alarm;
 		this.user = user;
@@ -88,7 +88,7 @@ public class AlarmGUI extends JPanel implements ActionListener{
 		
 		if (s == ok){ dialog.dispose();}
 		else if (s == goTo) {
-			parent.addNewPanel("avtale", new ShowEventGUI(parent, user, alarm.getAppointment()));
+			parent.addNewPanel("avtale", new ShowAppointmentPanel(parent, user, alarm.getAppointment()));
 			dialog.dispose();
 		}
 			

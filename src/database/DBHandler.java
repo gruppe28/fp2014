@@ -9,9 +9,9 @@ import java.util.Set;
 import fp2014.Alarm;
 import fp2014.Group;
 import fp2014.Notification;
-import fp2014.Ansatt;
+import fp2014.User;
 import fp2014.Appointment;
-import fp2014.Rom;
+import fp2014.Room;
 
 public final class DBHandler {
 
@@ -20,7 +20,7 @@ public final class DBHandler {
 	private DBHandler(){ } // Ensures that you cannot make instances of class.
 	
 	public static int numberOfUnseenNotifications(String username){
-		Database db = new Database();
+		SQL db = new SQL();
 	    try {
 	    	ResultSet rs = db.query("SELECT * FROM Varsel WHERE brukernavn ='"+username+"' AND sett='0'");
 			rs.last();
@@ -33,7 +33,7 @@ public final class DBHandler {
 	public static ArrayList<Notification> getUnseenNotifications(String username){
 		ArrayList<Notification> notificationList = new ArrayList<Notification>();
 		
-		Database db = new Database();
+		SQL db = new SQL();
 	    try {
 	    	ResultSet rs = db.query("SELECT * FROM Varsel WHERE brukernavn ='"+username+"' AND sett='0' ORDER BY id DESC");
 			while(rs.next()){
@@ -49,7 +49,7 @@ public final class DBHandler {
 	public static ArrayList<Notification> getSeenNotifications(String username){
 		ArrayList<Notification> notificationList = new ArrayList<Notification>();
 		
-		Database db = new Database();
+		SQL db = new SQL();
 	    try {
 	    	ResultSet rs = db.query("SELECT * FROM Varsel WHERE brukernavn ='"+username+"' AND sett='1' ORDER BY id DESC");
 			while(rs.next()){
@@ -60,10 +60,10 @@ public final class DBHandler {
 		return notificationList;
 	}
 	
-	public static ArrayList<Rom> getAvailableRooms(String date, String from, String to){
-		ArrayList<Rom> availableRooms = new ArrayList<Rom>();
+	public static ArrayList<Room> getAvailableRooms(String date, String from, String to){
+		ArrayList<Room> availableRooms = new ArrayList<Room>();
 		try {
-			Database db = new Database();
+			SQL db = new SQL();
 			boolean validRoom;
 
 			ResultSet rs = db.query("select * from Rom");
@@ -75,7 +75,7 @@ public final class DBHandler {
 		    		if(checkOverlap(from, to, avtaleRes.getString("starttidspunkt"), avtaleRes.getString("sluttidspunkt"))) { validRoom = false; }
 		    	}
 
-		    	if(validRoom) { availableRooms.add(new Rom(rs.getInt("romNr"), rs.getString("sted"), rs.getInt("antPlasser"), rs.getString("Beskrivelse"))); }
+		    	if(validRoom) { availableRooms.add(new Room(rs.getInt("romNr"), rs.getString("sted"), rs.getInt("antPlasser"), rs.getString("Beskrivelse"))); }
 		    	}
 	    	db.close();
 		}
@@ -94,15 +94,15 @@ public final class DBHandler {
 		return (from2float > from1float && from2float < to1float) || (to2float > from1float && to2float < to1float) || (from2float <= from1float && to2float >= to1float);
 	}
 	
-	public static ArrayList<Rom> getRoomsWithCapacity(int capacity){
-		ArrayList<Rom> satisfyingRooms = new ArrayList<Rom>();
+	public static ArrayList<Room> getRoomsWithCapacity(int capacity){
+		ArrayList<Room> satisfyingRooms = new ArrayList<Room>();
 		
 			try {
-				Database db = new Database();
+				SQL db = new SQL();
 
 				ResultSet rs = db.query("select * from Rom WHERE antPlasser >= " + capacity + "");
 			    while (rs.next()) {
-			    	satisfyingRooms.add(new Rom(rs.getInt("romNr"), rs.getString("sted"), rs.getInt("antPlasser"), rs.getString("beskrivelse")));
+			    	satisfyingRooms.add(new Room(rs.getInt("romNr"), rs.getString("sted"), rs.getInt("antPlasser"), rs.getString("beskrivelse")));
 			    }
 			}
 			catch (Exception e) { e.printStackTrace(); }
@@ -110,23 +110,23 @@ public final class DBHandler {
 		return satisfyingRooms;
 	}
 	
-	public static ArrayList<Appointment> getAppointmentsInInterval(ArrayList<Ansatt> users, ArrayList<String> days){
+	public static ArrayList<Appointment> getAppointmentsInInterval(ArrayList<User> users, ArrayList<String> days){
 		ArrayList<Appointment> appointments = new ArrayList<>();
 		String daysSQL;
 		String usersSQL;
 		daysSQL = "dato = '" + days.get(0) + "' ";
-		usersSQL = "brukernavn = '" + users.get(0).getBrukernavn() + "' ";
+		usersSQL = "brukernavn = '" + users.get(0).getUsername() + "' ";
 		
 		for (int i = 1; i < days.size(); i++) {
 			daysSQL += " or dato = '" + days.get(i) + "'";
 		}
 		
 		for (int i = 1; i < users.size(); i++) {
-			usersSQL += " or brukernavn = '" + users.get(i).getBrukernavn() + "'";
+			usersSQL += " or brukernavn = '" + users.get(i).getUsername() + "'";
 		}
 		
 		try {
-			Database db = new Database();
+			SQL db = new SQL();
 
 			ResultSet rs = db.query("select distinct Avtale.* from Avtale, AnsattAvtale WHERE AnsattAvtale.skjult = 0 AND Avtale.slett = 0 AND Avtale.avtaleNr = AnsattAvtale.avtaleNr and (" + usersSQL + ") and (" + daysSQL + ")");
 		    while (rs.next()) {
@@ -139,17 +139,17 @@ public final class DBHandler {
 	}
 	
 	// Fetches an Ansatt from the database based on username and returns it as an Ansatt object
-	public static Ansatt getAnsatt(String brukernavn) {
+	public static User getAnsatt(String brukernavn) {
 		
-		Ansatt user = new Ansatt(null, null, null, null, null);
+		User user = new User(null, null, null, null, null);
 		
-		Database db = new Database();
+		SQL db = new SQL();
 		
 		ResultSet rs = db.query("Select * from Ansatt Where brukernavn = " + "'" + brukernavn + "'" + "");
 		
 		try {
 			if (rs.next()) {
-				user = new Ansatt(rs.getString("brukernavn"), rs.getString("passord"), rs.getString("fornavn"), rs.getString("etternavn"), rs.getString("email"));
+				user = new User(rs.getString("brukernavn"), rs.getString("passord"), rs.getString("fornavn"), rs.getString("etternavn"), rs.getString("email"));
 				return user;
 			}
 		} catch (SQLException e) {
@@ -159,18 +159,18 @@ public final class DBHandler {
 		return user;
 	}
 	
-	public static Rom getRom(int romNr) {
+	public static Room getRom(int romNr) {
 		
-		Rom room = new Rom(0, null, 0, null);
+		Room room = new Room(0, null, 0, null);
 		
 		
-		Database db = new Database();
+		SQL db = new SQL();
 		
 		ResultSet rs = db.query("Select * from Rom Where romNr = " + "'" +romNr + "'" + "");
 		
 		try {
 			if (rs.next()) {
-				room = new Rom(rs.getInt("romNr"), rs.getString("sted"), rs.getInt("antPlasser"), rs.getString("beskrivelse"));
+				room = new Room(rs.getInt("romNr"), rs.getString("sted"), rs.getInt("antPlasser"), rs.getString("beskrivelse"));
 				return room;
 			}
 		} catch (SQLException e) {
@@ -185,7 +185,7 @@ public final class DBHandler {
 		
 		Appointment appointment = new Appointment();
 		
-		Database db = new Database();
+		SQL db = new SQL();
 		
 		ResultSet rs = db.query("Select * from Avtale where avtaleNr = " + "'" +avtaleNr + "'" + "");
 		
@@ -202,17 +202,17 @@ public final class DBHandler {
 		return appointment;
 	}
 	
-	public static ArrayList<Ansatt> getAllUsers(){
+	public static ArrayList<User> getAllUsers(){
 		
-		ArrayList<Ansatt> allUsers = new ArrayList<Ansatt>();
+		ArrayList<User> allUsers = new ArrayList<User>();
 		
-		Database db = new Database();
+		SQL db = new SQL();
 		
 		ResultSet rs = db.query("Select * from Ansatt");
 		
 		try {
 			while (rs.next()) {
-				allUsers.add(new Ansatt(rs.getString("brukernavn"), rs.getString("passord"), rs.getString("fornavn"), rs.getString("etternavn"), rs.getString("email")));
+				allUsers.add(new User(rs.getString("brukernavn"), rs.getString("passord"), rs.getString("fornavn"), rs.getString("etternavn"), rs.getString("email")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -223,13 +223,13 @@ public final class DBHandler {
 	}
 	
 	// Alarm queries
-	public static ArrayList<Alarm> getAlarms(Ansatt user){
+	public static ArrayList<Alarm> getAlarms(User user){
 		
 		ArrayList<Alarm> alarms = new ArrayList<Alarm>();
 		
-		Database db = new Database();
+		SQL db = new SQL();
 		
-		ResultSet rs = db.query("Select * from Alarm where brukernavn = '" + user.getBrukernavn() + "'");
+		ResultSet rs = db.query("Select * from Alarm where brukernavn = '" + user.getUsername() + "'");
 		try {
 			while (rs.next()) {
 				alarms.add(new Alarm(rs.getString("tidspunkt"), rs.getString("dato"), getAppointment(rs.getInt("avtaleNr"))));
@@ -244,23 +244,23 @@ public final class DBHandler {
 	}
 	
 	public static void createAlarm(String time, String date, String username, int appointmentNum, int type){
-		Database db = new Database();
+		SQL db = new SQL();
 		db.update("INSERT INTO Alarm(tidspunkt, dato, avtaleNr, brukernavn, type) VALUES ('" + time + "', '" + date + "', " + appointmentNum + ", '" + username + "', " + type + ")");
 		db.close();
 	}
 	
-	public static void createNotification(String text, Set<Ansatt> recipients, int appointmentNum){
-		Database db = new Database();
+	public static void createNotification(String text, Set<User> recipients, int appointmentNum){
+		SQL db = new SQL();
 		
-		for(Ansatt a : recipients){
-			db.update("INSERT INTO Varsel(brukernavn, tekst, avtaleNr) VALUES ('" + a.getBrukernavn() + "', '" + text + "', " + appointmentNum + ")");
+		for(User a : recipients){
+			db.update("INSERT INTO Varsel(brukernavn, tekst, avtaleNr) VALUES ('" + a.getUsername() + "', '" + text + "', " + appointmentNum + ")");
 		}
 		
 		db.close();
 	}
 	
 	public static void deleteAlarm(String username, int appointmentNum){
-		Database db = new Database();
+		SQL db = new SQL();
 	    db.update("DELETE FROM Alarm WHERE brukernavn = '" + username + "' and avtaleNr = " + appointmentNum);
 	    db.close();
 	}
@@ -269,7 +269,7 @@ public final class DBHandler {
 		
 		int type = 0;
 		
-		Database db = new Database();
+		SQL db = new SQL();
 		
 		ResultSet rs = db.query("Select type from Alarm where brukernavn = '" + username + "' AND avtaleNr = " + appointmentNum);
 		try {
@@ -283,31 +283,31 @@ public final class DBHandler {
 	
 	// Update attendance
 	public static void updateAttendance(String username, int appointmentNum, int attendance){
-		Database db = new Database();
+		SQL db = new SQL();
 		db.update("UPDATE AnsattAvtale SET deltar = '" + attendance + "' WHERE brukernavn = '" + username + "' AND avtaleNr =" + appointmentNum);
 		db.close();
 	}
 	
 	// Update hidden
 	public static void updateHidden(String username, int appointmentNum, int status){
-		Database db = new Database();
+		SQL db = new SQL();
 		db.update("UPDATE AnsattAvtale SET skjult = '" + status + "' WHERE brukernavn = '" + username + "' AND avtaleNr =" + appointmentNum);
 		db.close();
 	}
 	
 	// Update changed
 	public static void updateChanged(String username, int appointmentNum){
-		Database db = new Database();
+		SQL db = new SQL();
 		db.update("UPDATE AnsattAvtale SET endret = 0 WHERE brukernavn = '" + username + "' AND avtaleNr =" + appointmentNum);
 		db.close();
 	}
 	
 	// Get attendants and their status
-	public static HashMap<Ansatt, Integer> getAttendants(int appointmentNum){
+	public static HashMap<User, Integer> getAttendants(int appointmentNum){
 		
-		HashMap<Ansatt, Integer> attendants = new HashMap<Ansatt, Integer>();
+		HashMap<User, Integer> attendants = new HashMap<User, Integer>();
 		
-		Database db = new Database();
+		SQL db = new SQL();
 		
 		ResultSet rs = db.query("Select * from AnsattAvtale where avtaleNr = " + appointmentNum);
 		try {
@@ -323,7 +323,7 @@ public final class DBHandler {
 	
 	public static void createAttendance(String username, int appointmentNum, int attendance, int change) {
 		
-		Database db = new Database();
+		SQL db = new SQL();
 		db.update("INSERT INTO AnsattAvtale(avtaleNr, brukernavn, deltar, endret) VALUES ('"+ appointmentNum + "','" + username + "','" + attendance + "', " + change + ")");
 		db.close();
 	}
@@ -332,7 +332,7 @@ public final class DBHandler {
 		
 		int countOfAppointments = 0;
 		
-		Database db = new Database();
+		SQL db = new SQL();
 		ResultSet rs = db.query("SELECT COUNT(*) FROM Avtale");
 		try {
 			if (rs.next()) {
@@ -346,26 +346,26 @@ public final class DBHandler {
 	}
 	
 	public static void deleteAttendances(int appointmentNum){
-		Database db = new Database();
+		SQL db = new SQL();
 	    db.update("DELETE FROM AnsattAvtale WHERE avtaleNr = " + appointmentNum);
 	    db.close();
 	}
 	
 	public static void deleteAttendance(String brukernavn, int appointmentNum){
-		Database db = new Database();
+		SQL db = new SQL();
 	    db.update("DELETE FROM AnsattAvtale WHERE brukernavn = '" + brukernavn + "' and avtaleNr = " + appointmentNum);
 	    db.close();
 	}
 	
 	public static void deleteAppointment(int appointmentNum){
-		Database db = new Database();
+		SQL db = new SQL();
 	    db.update("UPDATE Avtale SET slett = 1 WHERE avtaleNr = " + appointmentNum);
 	    db.close();
 	}
 	
 	public static void updateAppointment(Appointment appointment) {
-		Database db = new Database();
-		if (appointment.getRom() == null || appointment.getRom().getRomNr() == 0) {
+		SQL db = new SQL();
+		if (appointment.getRom() == null || appointment.getRom().getRoomNumber() == 0) {
 			db.update("UPDATE Avtale SET navn = '" + appointment.getName() 
 					+ "', starttidspunkt = '" + appointment.getStartTime() 
 					+ "', sluttidspunkt = '" + appointment.getEndTime() 
@@ -378,7 +378,7 @@ public final class DBHandler {
 					+ "', starttidspunkt = '" + appointment.getStartTime() 
 					+ "', sluttidspunkt = '" + appointment.getEndTime() 
 					+ "', beskrivelse = '" + appointment.getDescription() 
-					+ "', romNr = '" + appointment.getRom().getRomNr() 
+					+ "', romNr = '" + appointment.getRom().getRoomNumber() 
 					+ "', dato = '" + appointment.getDate() 
 					+ "' WHERE avtaleNr = " + appointment.getAppointmentNr());
 		}
@@ -390,7 +390,7 @@ public final class DBHandler {
 		
 		boolean changed = false;
 		
-		Database db = new Database();
+		SQL db = new SQL();
 		
 		ResultSet rs = db.query("Select * from AnsattAvtale where brukernavn = '" + username + "' and avtaleNr = " + appointmentNum);
 		try {
@@ -410,7 +410,7 @@ public final class DBHandler {
 		
 		ArrayList<Group> groups = new ArrayList<Group>();
 		
-		Database db = new Database();
+		SQL db = new SQL();
 		
 		ResultSet rs = db.query("Select * from Gruppe, MedlemAv where ID = gruppeID ORDER BY navn ASC");
 		try {

@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-import fp2014.Ansatt;
+import fp2014.User;
 
 public class UserListCellRenderer implements ListCellRenderer {
 
@@ -15,7 +15,7 @@ public class UserListCellRenderer implements ListCellRenderer {
 	public Component getListCellRendererComponent(JList list, Object user,
 			int index, boolean isSelected, boolean cellHasFocus) {
 		
-		JLabel label = new JLabel(((Ansatt) user).getFornavn() + " " + ((Ansatt) user).getEtternavn());
+		JLabel label = new JLabel(((User) user).getFirstname() + " " + ((User) user).getLastname());
 		
 		if (isSelected) {
 			label.setOpaque(true);

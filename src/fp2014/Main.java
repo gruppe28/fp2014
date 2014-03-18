@@ -1,13 +1,13 @@
 package fp2014;
 
-import database.User;
+import database.UserDB;
 
 public class Main {
 
-	private User usr;
+	private UserDB usr;
 
 	public Main() throws Exception {
-		usr = new User();
+		usr = new UserDB();
 	}
 
 	public static void main(String[] args) throws Exception {

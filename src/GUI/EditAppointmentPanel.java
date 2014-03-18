@@ -28,36 +28,36 @@ import org.joda.time.LocalDate;
 import com.toedter.calendar.JDateChooser;
 
 import database.DBHandler;
-import fp2014.Ansatt;
+import fp2014.User;
 import fp2014.Appointment;
 import fp2014.Mail;
 
 @SuppressWarnings("serial")
-public class newEventGUI extends JPanel implements ActionListener, FocusListener{
+public class EditAppointmentPanel extends JPanel implements ActionListener, FocusListener{
 
-	private JTextField avtaleNavn;
-	private JTextArea avtaleBeskrivelse;
-	private JLabel startTid;
-	private JLabel sluttTid;
+	private JTextField nameField;
+	private JTextArea descriptionField;
+	private JLabel startTimeLabel;
+	private JLabel endTimeLabel;
 	private JLabel feedback;
-	private JFormattedTextField startTidspunkt;
-	private JFormattedTextField sluttTidspunkt;
-	private JDateChooser datoVelgerFra;
-	private JButton moterom;
-	public JTextField visRom;
+	private JFormattedTextField startTimeField;
+	private JFormattedTextField endTimeField;
+	private JDateChooser dateChooser;
+	private JButton destinationBtn;
+	public JTextField showLocationField;
 	private JButton inviteViaEmailBtn;
-	private JButton deltakere;
-	private JButton lagre;
-	private JButton avbryt;
-	private KalenderView parent;
-	protected Ansatt user;
+	private JButton manageParticipantsBtn;
+	private JButton saveBtn;
+	private JButton cancelBtn;
+	private MainFrame parent;
+	protected User user;
 	protected Appointment appointment;
 	private MaskFormatter formatter;
 	public ArrayList<String> emailParticipants;
-	private HashMap<Ansatt, Integer> participants;
+	private HashMap<User, Integer> participants;
 	private JComboBox<String> duration;
 
-	public newEventGUI(KalenderView parent, Ansatt ansatt, Appointment appointment) {
+	public EditAppointmentPanel(MainFrame parent, User ansatt, Appointment appointment) {
 
 		this.appointment = appointment;
 		this.parent = parent;
@@ -68,8 +68,8 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 		
 		emailParticipants = new ArrayList<String>();
 		
-		avtaleNavn = new JTextField("Appointment name");
-		avtaleBeskrivelse = new JTextArea("Description");
+		nameField = new JTextField("Appointment name");
+		descriptionField = new JTextArea("Description");
 		try {
 			formatter = new MaskFormatter("##:##");
 		} catch (ParseException e) {
@@ -77,17 +77,17 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 		}
 		formatter.setPlaceholderCharacter('_');
 
-		startTid = new JLabel("From:");
-		sluttTid = new JLabel("To:");
+		startTimeLabel = new JLabel("From:");
+		endTimeLabel = new JLabel("To:");
 		feedback = new JLabel(" ");
-		startTidspunkt = new JFormattedTextField(formatter);
-		sluttTidspunkt = new JFormattedTextField(formatter);
-		datoVelgerFra = new JDateChooser();
-		moterom = new JButton("Select location");
-		visRom = new JTextField("Location not chosen");
-		deltakere = new JButton("Manage participants");
-		lagre = new JButton("Save");
-		avbryt = new JButton("Cancel");
+		startTimeField = new JFormattedTextField(formatter);
+		endTimeField = new JFormattedTextField(formatter);
+		dateChooser = new JDateChooser();
+		destinationBtn = new JButton("Select location");
+		showLocationField = new JTextField("Location not chosen");
+		manageParticipantsBtn = new JButton("Manage participants");
+		saveBtn = new JButton("Save");
+		cancelBtn = new JButton("Cancel");
 		inviteViaEmailBtn = new JButton("Invite participants via email");
 		duration = new JComboBox<String>();
 		duration.setPrototypeDisplayValue("xx:xx");
@@ -99,74 +99,76 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 			loadExistingAppointment();
 		}
 
-		JScrollPane scroll = new JScrollPane(avtaleBeskrivelse);
+		JScrollPane scroll = new JScrollPane(descriptionField);
 	    scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-	    visRom.setEditable(false);
+	    showLocationField.setEditable(false);
 		
 	    duration.addActionListener(this);
 		inviteViaEmailBtn.addActionListener(this);
-		lagre.addActionListener(this);
-		avbryt.addActionListener(this);
-		moterom.addActionListener(this);
-		deltakere.addActionListener(this);
-		avtaleBeskrivelse.addFocusListener(this);
-		avtaleNavn.addFocusListener(this);
-		startTidspunkt.addFocusListener(this);
-		sluttTidspunkt.addFocusListener(this);
+		saveBtn.addActionListener(this);
+		cancelBtn.addActionListener(this);
+		destinationBtn.addActionListener(this);
+		manageParticipantsBtn.addActionListener(this);
+		descriptionField.addFocusListener(this);
+		nameField.addFocusListener(this);
+		startTimeField.addFocusListener(this);
+		endTimeField.addFocusListener(this);
 		
 		this.setLayout(null);
 		
-		avtaleNavn.setBounds(5,5,210,25);
-		avtaleBeskrivelse.setBounds(5, 35, 210, 100);
+		nameField.setBounds(5,5,210,25);
+		descriptionField.setBounds(5, 35, 210, 100);
 		scroll.setBounds(5, 35, 210, 100);
-		startTid.setBounds(5, 137, 50, 25);
-		sluttTid.setBounds(5, 163, 50, 25);
-		startTidspunkt.setBounds(40, 140, 50, 20);
-		sluttTidspunkt.setBounds(40, 165, 50, 20);
+		startTimeLabel.setBounds(5, 137, 50, 25);
+		endTimeLabel.setBounds(5, 163, 50, 25);
+		startTimeField.setBounds(40, 140, 50, 20);
+		endTimeField.setBounds(40, 165, 50, 20);
 		duration.setBounds(100,140,115,20);
-		datoVelgerFra.setBounds(100,165,115,20);
-		moterom.setBounds(5,190,210,25);
-		visRom.setBounds(5,220,210,25);
-		deltakere.setBounds(5,253,210,25);
+		dateChooser.setBounds(100,165,115,20);
+		destinationBtn.setBounds(5,190,210,25);
+		showLocationField.setBounds(5,220,210,25);
+		manageParticipantsBtn.setBounds(5,253,210,25);
 		inviteViaEmailBtn.setBounds(5,283,210,25);
-		lagre.setBounds(5,450,102,25);
-		avbryt.setBounds(112,450,103,25);
+		feedback.setBounds(5,310,210,25);
+		saveBtn.setBounds(5,470,102,25);
+		cancelBtn.setBounds(112,470,103,25);
 		
-		this.add(avtaleNavn);
+		this.add(nameField);
 		this.add(scroll);
-		this.add(startTid);
-		this.add(sluttTid);
-		this.add(startTidspunkt);
-		this.add(sluttTidspunkt);
-		this.add(datoVelgerFra);
+		this.add(startTimeLabel);
+		this.add(endTimeLabel);
+		this.add(startTimeField);
+		this.add(endTimeField);
+		this.add(dateChooser);
 		this.add(duration);
-		this.add(moterom);
-		this.add(visRom);
-		this.add(deltakere);
+		this.add(destinationBtn);
+		this.add(showLocationField);
+		this.add(manageParticipantsBtn);
 		this.add(inviteViaEmailBtn);
-		this.add(lagre);
-		this.add(avbryt);
+		this.add(feedback);
+		this.add(saveBtn);
+		this.add(cancelBtn);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
-		if (s == lagre) {
+		if (s == saveBtn) {
 			if (checkDate() != null) {
 				feedback.setText(checkDate());
 			} 
-			else if (visRom.getText().equals("Rom ikke valgt")){
-				feedback.setText("Velg et rom først.");
+			else if (showLocationField.getText().equals("Location not chosen")){
+				feedback.setText("Choose a location first");
 			}
 			else {
-				parent.addNewPanel("avtale", new AvtaleGUI(parent, user)); // Exits the edit meny
+				parent.addNewPanel("avtale", new DefaultRightPanel(parent, user)); // Exits the edit meny
 				boolean nullAppointment = false;
 				
 				if (appointment.getName() == null){
 					nullAppointment = true;
 				}
-				LocalDate appointmentDate = new DateTime(datoVelgerFra.getDate()).toLocalDate();
-				this.appointment.edit(avtaleNavn.getText(),startTidspunkt.getText(), sluttTidspunkt.getText(),avtaleBeskrivelse.getText(), toOtherDateFormat(appointmentDate), user, appointment.getParticipants());
+				LocalDate appointmentDate = new DateTime(dateChooser.getDate()).toLocalDate();
+				this.appointment.edit(nameField.getText(),startTimeField.getText(), endTimeField.getText(),descriptionField.getText(), toOtherDateFormat(appointmentDate), user, appointment.getParticipants());
 				
 				//Opprett/Endre AnsattAvtaler
 				appointment.getParticipants().put(user, 1);
@@ -174,17 +176,15 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 					appointment.sendAppoinmentToDatabase();					
 					int appCount = DBHandler.getCountOfAppointments();
 					
-					
-					
-					for (Ansatt a : appointment.getParticipants().keySet()) {
-						DBHandler.createAttendance(a.getBrukernavn(), appCount, appointment.getParticipants().get(a), 0);
+					for (User a : appointment.getParticipants().keySet()) {
+						DBHandler.createAttendance(a.getUsername(), appCount, appointment.getParticipants().get(a), 0);
 					}
 				} else {
 					DBHandler.updateAppointment(appointment);
 					DBHandler.deleteAttendances(appointment.getAppointmentNr());
 					
-					for (Ansatt a : appointment.getParticipants().keySet()) {
-						DBHandler.createAttendance(a.getBrukernavn(), appointment.getAppointmentNr(), appointment.getParticipants().get(a), 1);
+					for (User a : appointment.getParticipants().keySet()) {
+						DBHandler.createAttendance(a.getUsername(), appointment.getAppointmentNr(), appointment.getParticipants().get(a), 1);
 					}
 				}
 				
@@ -203,23 +203,25 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 			new SendEmailPanel(this, emailParticipants);
 		}
 		
-		else if (s == avbryt) {
-			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
+		else if (s == cancelBtn) {
+			parent.addNewPanel("avtale", new DefaultRightPanel(parent, user));
 			
 			// Oppdaterer kalenderen til å vise ingen valgt avtale
 			((CalendarPanel) parent.kalender).unSelectAllAppointments();
 			
-		} else if (s == moterom) {
+		} else if (s == destinationBtn) {
 
 			if (checkDate() == null) {
-				new romValgGUI(this, toOtherDateFormat((LocalDate)new DateTime(datoVelgerFra.getDate()).toLocalDate()),startTidspunkt.getText(), sluttTidspunkt.getText());
+				new RoomPanel(this, toOtherDateFormat((LocalDate)new DateTime(dateChooser.getDate()).toLocalDate()),startTimeField.getText(), endTimeField.getText());
+			} else {
+				feedback.setText(checkDate());
 			}
 
-		} else if (s == deltakere) {
-			new ManageParticipants(this, appointment.getParticipants());
-		} else if (s == duration && !startTidspunkt.getText().equals("__:__") && duration.getSelectedIndex() != 0){
-			int ihh = Integer.parseInt(startTidspunkt.getText().substring(0, 2));
-			int imm = Integer.parseInt(startTidspunkt.getText().substring(3));
+		} else if (s == manageParticipantsBtn) {
+			new ManageParticipantsPanel(this, appointment.getParticipants());
+		} else if (s == duration && !startTimeField.getText().equals("__:__") && duration.getSelectedIndex() != 0){
+			int ihh = Integer.parseInt(startTimeField.getText().substring(0, 2));
+			int imm = Integer.parseInt(startTimeField.getText().substring(3));
 			
 			int nhh = ihh + Integer.parseInt(((String) duration.getSelectedItem()).substring(0, 2));
 			int nmm = imm + Integer.parseInt(((String) duration.getSelectedItem()).substring(3));
@@ -231,14 +233,14 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 			
 			if (nhh > 23){
 				duration.setSelectedIndex(0);
-				sluttTidspunkt.setText("__:__");
+				endTimeField.setText("__:__");
 				return;
 			}
 			
-			sluttTidspunkt.setText(nhh + ":" + String.format("%02d", nmm));
-			sluttTidspunkt.setEditable(false);
+			endTimeField.setText(nhh + ":" + String.format("%02d", nmm));
+			endTimeField.setEditable(false);
 		}else{
-			sluttTidspunkt.setEditable(true);
+			endTimeField.setEditable(true);
 		}
 	}
 
@@ -258,78 +260,73 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 		return emailParticipants;
 	}
 	
-	public HashMap<Ansatt, Integer> getParticipants(){
+	public HashMap<User, Integer> getParticipants(){
 		return this.participants;
 	}
 	
-	public void setParticipants(HashMap<Ansatt, Integer> participants){
+	public void setParticipants(HashMap<User, Integer> participants){
 		this.participants = participants;
 	}
 
 	public String checkDate() {
-		if (startTidspunkt.getText().contains("_") || sluttTidspunkt.getText().contains("_")) {
-			System.out.println("Skriv inn et gyldig tidspunkt.");
-			return ("Skriv inn et gyldig tidspunkt.");
+		if (startTimeField.getText().contains("_") || endTimeField.getText().contains("_")) {
+			return ("Enter a valid time");
 		} else {
-			String[] start = startTidspunkt.getText().split(":");
+			String[] start = startTimeField.getText().split(":");
 			int startH = Integer.parseInt(start[0]);
 			int startM = Integer.parseInt(start[1]);
 
-			String[] end = sluttTidspunkt.getText().split(":");
+			String[] end = endTimeField.getText().split(":");
 			int endH = Integer.parseInt(end[0]);
 			int endM = Integer.parseInt(end[1]);
 			
-			if (new DateTime(datoVelgerFra.getDate()).toLocalDate().compareTo(
+			if (new DateTime(dateChooser.getDate()).toLocalDate().compareTo(
 					new LocalDate()) < 0) {
-				System.out.println("Velg en gyldig dato");
-				return ("Choose a valid date.");
-			} else if (datoVelgerFra.getDate() == null) {
-				System.out.println("Velg en dato først");
-				return ("Choose a date first.");
+				return ("Choose a valid date");
+			} else if (dateChooser.getDate() == null) {
+				return ("Choose a date first");
 			} else if ((startM > 59) || (endM > 59) || (startH > 23) || (endH > 23) || (startM < 0) || (endM < 0) || (startH < 0) || (endH < 0)) {
-				System.out.println("Skriv inn et gyldig tidspunkt");
-				return ("Skriv inn gydlig tidspunkt.");
+				return ("Enter a valid time");
 			} else if (startH > endH || (startH == endH && startM > endM) ) {
-				System.out.println("Sluttidspunkt er før starttidspunkt.");
-				return ("Sluttidspunkt er før starttidspunkt.");
+				return ("Enter a valid time interval");
 			}
 		}
 		return null;
 	}
 	
 	public void sendMailInvitations(){
-		String destination = "ukjent";
+		String destination = "unknown";
 		
 		if (appointment.getPlace() != null){
 			destination = appointment.getPlace();
 		} else if (appointment.getRom() != null) {
-			destination = appointment.getRom().getSted();
+			destination = appointment.getRom().getPlace();
 		}
 		
 		String content = "You have been invited to the appointment "+ appointment.getName() 
 				+ ". The meeting is about \"" + appointment.getDescription() 
 				+ "\", and takes place " + appointment.getDate() + " " + appointment.getStartTime() + "-" + appointment.getEndTime()
 				+ " at " + destination
-				+ "\n\n Best Regards, \n\n" + user.getFornavn() + " " + user.getEtternavn() + "\n" + user.getEmail();
+				+ "\n\n Best Regards, \n\n" + user.getFirstname() + " " + user.getLastname() + "\n" + user.getEmail();
 		
 		for (String mail : emailParticipants){
-			new Mail(mail,user.getEmail(),user.getFornavn()+" "+user.getEtternavn(), "Meeting invitation to "+ appointment.getName(), content);
+			new Mail(mail,user.getEmail(),user.getFirstname()+" "+user.getLastname(), "Meeting invitation to "+ appointment.getName(), content);
 		}
 	}
 	
 	public void loadExistingAppointment(){
-		avtaleNavn = new JTextField(appointment.getName());
-		avtaleBeskrivelse = new JTextArea(appointment.getDescription());
+		nameField = new JTextField(appointment.getName());
+		descriptionField = new JTextArea(appointment.getDescription());
 		
-		datoVelgerFra = new JDateChooser(toDateFormat(appointment.getDate()));
+		dateChooser = new JDateChooser(toDateFormat(appointment.getDate()));
 		
-		startTidspunkt.setText(appointment.getStartTime());
-		sluttTidspunkt.setText(appointment.getEndTime());
+		startTimeField.setText(appointment.getStartTime());
+		endTimeField.setText(appointment.getEndTime());
 		
 		if (appointment.hasReservedRoom()){
-			visRom = new JTextField(appointment.getRom().getSted());
+			showLocationField = new JTextField(appointment.getRom().getPlace());
 		} else {
-			visRom = new JTextField(appointment.getPlace());
+			showLocationField = new JTextField(appointment.getPlace());
 		}
 	}
 	
@@ -405,29 +402,28 @@ public class newEventGUI extends JPanel implements ActionListener, FocusListener
 
 	@Override
 	public void focusGained(FocusEvent e) {
-		if (e.getSource() == avtaleBeskrivelse){
-			avtaleBeskrivelse.selectAll();
-		} else if (e.getSource() == avtaleNavn) {
-			avtaleNavn.selectAll();
-		} else if (e.getSource() == startTidspunkt){
-			startTidspunkt.selectAll();
-		} else if (e.getSource() == sluttTidspunkt){
-			sluttTidspunkt.selectAll();
+		if (e.getSource() == descriptionField){
+			descriptionField.selectAll();
+		} else if (e.getSource() == nameField) {
+			nameField.selectAll();
+		} else if (e.getSource() == startTimeField){
+			startTimeField.selectAll();
+		} else if (e.getSource() == endTimeField){
+			endTimeField.selectAll();
 		}
 		
 	}
-
-
+	
 	@Override
 	public void focusLost(FocusEvent e) {
-		if (e.getSource() == avtaleBeskrivelse){
-			avtaleBeskrivelse.select(0, 0);
-		} else if (e.getSource() == avtaleNavn) {
-			avtaleNavn.select(0, 0);
-		} else if (e.getSource() == startTidspunkt){
-			startTidspunkt.select(0, 0);
-		} else if (e.getSource() == sluttTidspunkt){
-			sluttTidspunkt.select(0, 0);
+		if (e.getSource() == descriptionField){
+			descriptionField.select(0, 0);
+		} else if (e.getSource() == nameField) {
+			nameField.select(0, 0);
+		} else if (e.getSource() == startTimeField){
+			startTimeField.select(0, 0);
+		} else if (e.getSource() == endTimeField){
+			endTimeField.select(0, 0);
 		}
 		
 	}

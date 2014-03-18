@@ -13,10 +13,10 @@ How to run a database query:
 	3. Close connection with close()
 */
 
-public class Database {
+public class SQL {
 	private Connection connect = null;
 
-	public Database(){
+	public SQL(){
 		try {
 			//Load driver and connect
 			Class.forName("com.mysql.jdbc.Driver");

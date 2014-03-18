@@ -25,11 +25,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import database.DBHandler;
-import fp2014.Ansatt;
+import fp2014.User;
 import fp2014.Appointment;
 
 @SuppressWarnings("serial")
-public class ShowEventGUI extends JPanel implements ActionListener{
+public class ShowAppointmentPanel extends JPanel implements ActionListener{
 
 	private JLabel name, time, place, attending, alert, hide;
 	private JTextArea description;
@@ -38,15 +38,15 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 	private JScrollPane scrollDescription, scrollParticipants;
 	private JRadioButton yes, no;
 	private JComboBox<String> alertBox;
-	private JButton edit, delete, save, cancel;
+	private JButton editBtn, deleteBtn, saveBtn, cancelBtn;
 	private JCheckBox hideBox;
 	private Appointment appointment;
-	private KalenderView parent;
-	private Ansatt user;
+	private MainFrame parent;
+	private User user;
 	private boolean isOwner, isParticipant = false;
 	private int yourStatus;
 	
-	public ShowEventGUI(KalenderView parent, Ansatt user, Appointment appointment){
+	public ShowAppointmentPanel(MainFrame parent, User user, Appointment appointment){
 		
 		this.parent = parent;
 		this.appointment = appointment;
@@ -55,9 +55,9 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		
 		if(appointment.getParticipants().size() == 0){ appointment.setParticipants(DBHandler.getAttendants(appointment.getAppointmentNr())); }
 		
-		isOwner = (appointment.getMadeBy().getBrukernavn().equals(user.getBrukernavn()));
+		isOwner = (appointment.getMadeBy().getUsername().equals(user.getUsername()));
 		
-		DBHandler.updateChanged(user.getBrukernavn(), appointment.getAppointmentNr());
+		DBHandler.updateChanged(user.getUsername(), appointment.getAppointmentNr());
 		
 		this.setPreferredSize(new Dimension(220, 500));
 		
@@ -69,12 +69,12 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		
 		name.setFont(new Font(Font.MONOSPACED, Font.BOLD, 26));
 		
-		time = new JLabel(appointment.getDate() + " kl. " + appointment.getStartTime() + "-" + appointment.getEndTime());
+		time = new JLabel(appointment.getDate() + " at " + appointment.getStartTime() + "-" + appointment.getEndTime());
 		
 		if (appointment.getPlace() != null){
 			place = new JLabel("Place: " + appointment.getPlace());
 		}else{
-			place = new JLabel("Room: " + appointment.getRom().getSted());
+			place = new JLabel("Room: " + appointment.getRom().getPlace());
 		}
 		attending = new JLabel("Attending:");
 		alert = new JLabel("Alert:");
@@ -99,16 +99,16 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		participantListModel = new DefaultListModel<String>();
 		int status;
 		
-		for (Ansatt a : appointment.getParticipants().keySet()){
+		for (User a : appointment.getParticipants().keySet()){
 			
-			if(a.getBrukernavn().equals(user.getBrukernavn())){
+			if(a.getUsername().equals(user.getUsername())){
 				yourStatus = appointment.getParticipants().get(a);
 				isParticipant = true;
 				this.user = a;
 			}
 			
 			status = appointment.getParticipants().get(a);
-			String tmp = a.getFornavn() + " " + a.getEtternavn() + " - ";
+			String tmp = a.getFirstname() + " " + a.getLastname() + " - ";
 			if (status == 1){
 				tmp += "attending";
 			}else if (status == 0){
@@ -144,17 +144,17 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		alertBox.addItem("1 day before");
 		alertBox.addItem("2 days before");
 		
-		alertBox.setSelectedIndex(DBHandler.getAlarmType(user.getBrukernavn(), appointment.getAppointmentNr())); // Set index of alert box to previously chosen option
+		alertBox.setSelectedIndex(DBHandler.getAlarmType(user.getUsername(), appointment.getAppointmentNr())); // Set index of alert box to previously chosen option
 		
-		edit = new JButton("Edit");
-		delete = new JButton("Delete");
-		save = new JButton("Save");
-		cancel = new JButton("Cancel");
+		editBtn = new JButton("Edit");
+		deleteBtn = new JButton("Delete");
+		saveBtn = new JButton("Save");
+		cancelBtn = new JButton("Cancel");
 		
-		edit.addActionListener(this);
-		delete.addActionListener(this);
-		save.addActionListener(this);
-		cancel.addActionListener(this);
+		editBtn.addActionListener(this);
+		deleteBtn.addActionListener(this);
+		saveBtn.addActionListener(this);
+		cancelBtn.addActionListener(this);
 		
 		
 		this.setLayout(new GridBagLayout());
@@ -218,14 +218,14 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 		c.gridwidth = 2;
 		c.gridx--;
 		c.gridy++;
-		add(edit, c);
+		add(editBtn, c);
 		
 		c.gridx+=3;
-		add(delete, c);
+		add(deleteBtn, c);
 		
 		if (!isOwner){
-			edit.setEnabled(false);
-			edit.setVisible(false);
+			editBtn.setEnabled(false);
+			editBtn.setVisible(false);
 		}
 		
 		c.insets = new Insets(30, 0, 0, 0);
@@ -235,11 +235,11 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 			c.insets = new Insets(220, 0, 0, 0);
 			c.gridwidth = 5;
 		}
-		add(cancel, c);
+		add(cancelBtn, c);
 		
 		c.gridwidth = 2;
 		c.gridx+=3;
-		add(save, c);
+		add(saveBtn, c);
 		
 		if(!isParticipant){
 			attending.setVisible(false);
@@ -249,8 +249,8 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 			alertBox.setVisible(false);
 			hide.setVisible(false);
 			hideBox.setVisible(false);
-			save.setVisible(false);
-			delete.setVisible(false);
+			saveBtn.setVisible(false);
+			deleteBtn.setVisible(false);
 		}
 	}
 
@@ -274,32 +274,32 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 				hideBox.setEnabled(false);
 				hideBox.setSelected(false);
 			}
-		}else if(s == cancel){
-			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
+		}else if(s == cancelBtn){
+			parent.addNewPanel("avtale", new DefaultRightPanel(parent, user));
 			
 			// Oppdaterer kalenderen til aa vise ingen valgt avtale
 			((CalendarPanel) parent.kalender).unSelectAllAppointments();
 			
-		}else if(s == edit){
-			parent.addNewPanel("avtale", new newEventGUI(parent, user, appointment));
+		}else if(s == editBtn){
+			parent.addNewPanel("avtale", new EditAppointmentPanel(parent, user, appointment));
 			
-		}else if(s == save){
+		}else if(s == saveBtn){
 			
 			int newStatus = getStatus();
 			// Save attending status
 			if(yourStatus != newStatus){ // Only update if status has changed.
-				DBHandler.updateAttendance(user.getBrukernavn(), appointment.getAppointmentNr(), newStatus); // Updates database
+				DBHandler.updateAttendance(user.getUsername(), appointment.getAppointmentNr(), newStatus); // Updates database
 			}
 			
 			//Save hidden
 			if(hideBox.isSelected()){
-				DBHandler.updateHidden(user.getBrukernavn(), appointment.getAppointmentNr(), 1);
+				DBHandler.updateHidden(user.getUsername(), appointment.getAppointmentNr(), 1);
 			}else{
-				DBHandler.updateHidden(user.getBrukernavn(), appointment.getAppointmentNr(), 0);
+				DBHandler.updateHidden(user.getUsername(), appointment.getAppointmentNr(), 0);
 			}
 			
 			// Save alarm
-			DBHandler.deleteAlarm(user.getBrukernavn(), appointment.getAppointmentNr()); // Deletes existing alarm before creating a new one.
+			DBHandler.deleteAlarm(user.getUsername(), appointment.getAppointmentNr()); // Deletes existing alarm before creating a new one.
 			
 			if(!alertBox.getSelectedItem().equals("none")){
 				int back = 0;
@@ -314,16 +314,16 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 				
 				String[] parts = timeBefore(appointment.getDate(), appointment.getStartTime(), back).split(",");
 				
-				DBHandler.createAlarm(parts[0], parts[1], user.getBrukernavn(), appointment.getAppointmentNr(), alertBox.getSelectedIndex());
+				DBHandler.createAlarm(parts[0], parts[1], user.getUsername(), appointment.getAppointmentNr(), alertBox.getSelectedIndex());
 			}
 			
-			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
+			parent.addNewPanel("avtale", new DefaultRightPanel(parent, user));
 			parent.addNewPanel("kalender", new CalendarPanel(parent, user, parent.getShowUsers(), parent.getWeek(), parent.getYear()));
 			
 			// Oppdaterer kalenderen til aa vise ingen valgt avtale
 			//((CalendarPanel) parent.kalender).unSelectAllAppointments();
 			
-		}else if(s == delete){
+		}else if(s == deleteBtn){
 			//appointment.getParticipants().put(user, 0);------------ Endrer lokalt
 			//appointment.changeStatus(user, false, appointment);---- Endrer database
 			
@@ -334,14 +334,14 @@ public class ShowEventGUI extends JPanel implements ActionListener{
 				
 				
 			}else{
-				DBHandler.deleteAttendance(user.getBrukernavn(), appointment.getAppointmentNr());
-				Set<Ansatt> tmp = appointment.getParticipants().keySet();
+				DBHandler.deleteAttendance(user.getUsername(), appointment.getAppointmentNr());
+				Set<User> tmp = appointment.getParticipants().keySet();
 				tmp.remove(user);
-				DBHandler.createNotification(user.getFornavn() + " " + user.getEtternavn() + " will not be attending " + appointment.getName() + ".", tmp, appointment.getAppointmentNr());
+				DBHandler.createNotification(user.getFirstname() + " " + user.getLastname() + " will not be attending " + appointment.getName() + ".", tmp, appointment.getAppointmentNr());
 			}
 			
 			
-			parent.addNewPanel("avtale", new AvtaleGUI(parent, user));
+			parent.addNewPanel("avtale", new DefaultRightPanel(parent, user));
 			parent.addNewPanel("kalender", new CalendarPanel(parent, user, parent.getShowUsers(), parent.getWeek(), parent.getYear()));
 			// Oppdaterer kalenderen til aa vise ingen valgt avtale
 			((CalendarPanel) parent.kalender).unSelectAllAppointments();
