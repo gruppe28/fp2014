@@ -1,11 +1,14 @@
 package fp2014;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import database.DBHandler;
 
-public class User {
+public class User implements Serializable {
 
+	private static final long serialVersionUID = 2464861232923029943L;
+	
 	private String username;
 	private String password;
 	private String firstname;

@@ -1,16 +1,21 @@
 package fp2014;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.HashMap;
 
 import database.SQL;
 
-public class Appointment {
+public class Appointment implements Serializable {
 	
 	/*
 	 * muligens best � ha en metode som ser p� alle endringer som er gjort i avtale, og deretter endrer dette i databasen???? Koble dette til lagre knappen elns.
 	 */
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4109998445878823995L;
 	private int appointmentNr;
 	private String name;
 	private String startTime;

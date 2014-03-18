@@ -7,7 +7,7 @@ public class Main {
 	private UserDB usr;
 
 	public Main() throws Exception {
-		usr = new UserDB();
+		//usr = new UserDB();
 	}
 
 	public static void main(String[] args) throws Exception {

@@ -14,6 +14,7 @@ public class Watcher {
 
 	private ArrayList<Alarm> alarms;
 	private User user;
+	private Timer t;
 
 	public Watcher(final MainFrame parent, final User user){
 		
@@ -22,7 +23,7 @@ public class Watcher {
 		// Load alarms
 		loadAlarms();
 	
-		Timer t = new Timer();
+		t = new Timer();
 
 		t.scheduleAtFixedRate(
 		    new TimerTask()
@@ -53,6 +54,10 @@ public class Watcher {
 		alarms = DBHandler.getAlarms(user);
 	}
 	
+	public void stop(){
+		t.cancel();
+	}
+	
 	private String getTime(){
 		return new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime());
 	}
@@ -60,4 +65,5 @@ public class Watcher {
 	private String getDate(){
 		return new SimpleDateFormat("d.M.y").format(Calendar.getInstance().getTime());
 	}
+	
 }
