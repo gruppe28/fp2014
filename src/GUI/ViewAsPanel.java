@@ -48,6 +48,7 @@ public class ViewAsPanel extends JPanel implements ActionListener{
 		viewFrame = new JDialog();
 		JPanel viewPanel = new JPanel();
 		viewFrame.setTitle("View calendar as");
+		viewPanel.setLayout(null);
 		
 		// Create lists
 		employeeListModel = new DefaultListModel<User>();
@@ -93,44 +94,27 @@ public class ViewAsPanel extends JPanel implements ActionListener{
 		
 		allUsersLabel = new JLabel("All users:");
 		selectedUsersLabel = new JLabel("Selected users:");
+		
+		allUsersLabel.setBounds(20,20,200,20);
+		selectedUsersLabel.setBounds(280,20,200,20);
+		
+		employeeListBox.setBounds(20,40,200,130);
+		selectedListBox.setBounds(280,40,200,130);
+		
+		add.setBounds(224,40,50,25); 
+		remove.setBounds(224,75,50,25);
+		
+		save.setBounds(400,180,80,25);
 
-		// Add elements and manage layout
-		viewPanel.setLayout(new GridBagLayout());
-		GridBagConstraints gb = new GridBagConstraints();
-
-		gb.fill = GridBagConstraints.HORIZONTAL;
-		gb.weightx = 1;
-		gb.weighty = 0;
-		gb.gridx = 0;
-		gb.gridy = 0;
+		viewPanel.add(allUsersLabel);
+		viewPanel.add(selectedUsersLabel);
+		viewPanel.add(employeeListBox);
 		
-		viewPanel.add(allUsersLabel, gb);
-		gb.gridx = 2;
-		viewPanel.add(selectedUsersLabel, gb);
+		viewPanel.add(add);
+		viewPanel.add(remove);
+		viewPanel.add(selectedListBox);
 		
-		gb.gridx = 0;
-		gb.gridy = 1;
-		gb.gridheight = 2;
-		viewPanel.add(employeeListBox, gb);
-	
-		gb.gridx = 1;
-		gb.gridheight = 1;
-		gb.anchor = GridBagConstraints.SOUTH;
-		viewPanel.add(add, gb);
-		
-		gb.gridy = 2;
-		gb.anchor = GridBagConstraints.NORTH;
-		viewPanel.add(remove, gb);
-		
-		gb.gridx = 2;
-		gb.gridy = 1;
-		gb.gridheight = 2;
-		gb.anchor = GridBagConstraints.NORTH;
-		viewPanel.add(selectedListBox, gb);
-
-		gb.gridy = 3;
-		gb.gridheight = 1;
-		viewPanel.add(save, gb);
+		viewPanel.add(save);
 		
 		viewFrame.setName("VAPviewFrame");
 		employeeList.setName("VAPemployeeList");
@@ -142,7 +126,7 @@ public class ViewAsPanel extends JPanel implements ActionListener{
 		// Set frame options
 		viewFrame.setModal(true);
 		viewFrame.setAlwaysOnTop(true);
-		viewFrame.setMinimumSize(new Dimension(450, 230));
+		viewFrame.setMinimumSize(new Dimension(500, 245));
 		viewFrame.setContentPane(viewPanel);
 		viewFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		viewFrame.pack();
