@@ -192,7 +192,7 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 		this.add(alertBox);
 		this.add(hide);
 		this.add(hideBox);
-		this.hideBox.setEnabled(false);
+		this.hideBox.setEnabled(no.isSelected());
 		this.add(editBtn);
 		this.add(deleteBtn);
 		this.add(cancelBtn);
