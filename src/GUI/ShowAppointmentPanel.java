@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.swing.DefaultListModel;
@@ -198,7 +199,7 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 		this.add(cancelBtn);
 		this.add(saveBtn);
 		
-		if (!isOwner){
+		if (!isOwner || isExpired()){
 			editBtn.setEnabled(false);
 			editBtn.setVisible(false);
 		}
@@ -348,4 +349,28 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 		else if(status == 0) { no.setSelected(true); }
 	}
 	
+	private boolean isExpired(){
+		String tmpDate = time.getText().split(" ")[0];
+		String tmpEnd = time.getText().split("-")[1];
+		int eventDay = Integer.parseInt(tmpDate.split("\\.")[0]);
+		int eventMonth = Integer.parseInt(tmpDate.split("\\.")[1]) - 1;
+		int eventYear = Integer.parseInt(tmpDate.split("\\.")[2]);
+		int eventHour = Integer.parseInt(tmpEnd.split(":")[0]);
+		int eventMinutes = Integer.parseInt(tmpEnd.split(":")[1]);
+		
+		Calendar c = Calendar.getInstance(Locale.UK);
+	
+		if (eventYear < c.get(Calendar.YEAR)){
+			return true;
+		}else if(eventMonth < c.get(Calendar.MONTH)){
+			return true;
+		}else if (eventDay < c.get(Calendar.DAY_OF_MONTH)){
+			return true;
+		}else if (eventDay == c.get(Calendar.DAY_OF_MONTH) && eventHour < c.get(Calendar.HOUR_OF_DAY)){
+			return true;
+		}else if(eventDay == c.get(Calendar.DAY_OF_MONTH) && eventHour == c.get(Calendar.HOUR_OF_DAY) && eventMinutes < c.get(Calendar.MINUTE)){
+			return true;
+		}
+		return false;
+	}
 }
