@@ -9,6 +9,7 @@ import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -17,9 +18,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+
 import database.DBHandler;
-import fp2014.User;
 import fp2014.Appointment;
+import fp2014.User;
 
 @SuppressWarnings("serial")
 public class CalendarPanel extends JPanel implements FocusListener {

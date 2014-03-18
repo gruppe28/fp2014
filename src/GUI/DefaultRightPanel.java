@@ -7,8 +7,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import fp2014.User;
 import fp2014.Appointment;
+import fp2014.User;
 
 @SuppressWarnings("serial")
 public class DefaultRightPanel extends JPanel implements ActionListener {

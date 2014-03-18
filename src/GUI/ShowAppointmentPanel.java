@@ -25,8 +25,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import database.DBHandler;
-import fp2014.User;
 import fp2014.Appointment;
+import fp2014.User;
 
 @SuppressWarnings("serial")
 public class ShowAppointmentPanel extends JPanel implements ActionListener{

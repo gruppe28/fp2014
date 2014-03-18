@@ -24,9 +24,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import database.DBHandler;
-import fp2014.User;
 import fp2014.Appointment;
 import fp2014.Group;
+import fp2014.User;
 
 @SuppressWarnings({"serial", "unchecked"})
 public class ManageParticipantsPanel extends JPanel implements ActionListener, ListSelectionListener, ItemListener{

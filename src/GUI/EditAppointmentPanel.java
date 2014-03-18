@@ -28,9 +28,9 @@ import org.joda.time.LocalDate;
 import com.toedter.calendar.JDateChooser;
 
 import database.DBHandler;
-import fp2014.User;
 import fp2014.Appointment;
 import fp2014.Mail;
+import fp2014.User;
 
 @SuppressWarnings("serial")
 public class EditAppointmentPanel extends JPanel implements ActionListener, FocusListener{

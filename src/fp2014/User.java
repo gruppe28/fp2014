@@ -1,6 +1,7 @@
 package fp2014;
 
 import java.util.ArrayList;
+
 import database.DBHandler;
 
 public class User {

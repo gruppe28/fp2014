@@ -6,9 +6,9 @@ import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import database.DBHandler;
 import GUI.AlarmPanel;
 import GUI.MainFrame;
+import database.DBHandler;
 
 public class Watcher {
 

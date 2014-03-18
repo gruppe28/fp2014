@@ -10,15 +10,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
+
 import database.DBHandler;
-import fp2014.User;
 import fp2014.Appointment;
 import fp2014.Notification;
+import fp2014.User;
 
 @SuppressWarnings("serial")
 public class NotificationPanel extends JPanel implements ActionListener, FocusListener {
