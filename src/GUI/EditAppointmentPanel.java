@@ -49,7 +49,7 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 	private JButton manageParticipantsBtn;
 	private JButton saveBtn;
 	private JButton cancelBtn;
-	private MainFrame parent;
+	protected MainFrame parent;
 	protected User user;
 	protected Appointment appointment;
 	private MaskFormatter formatter;

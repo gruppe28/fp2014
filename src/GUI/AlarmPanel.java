@@ -80,6 +80,7 @@ public class AlarmPanel extends JPanel implements ActionListener{
 		dialog.setLocationRelativeTo(null);
 		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		dialog.pack();
+		dialog.setLocationRelativeTo(parent);
 		dialog.setVisible(true);
 	}
 	

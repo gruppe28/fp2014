@@ -45,7 +45,7 @@ public class Watcher {
 		        }
 		    },
 		    0,
-		    60000); // Repeat each 60 seconds
+		    20000); // Repeat each 60 seconds
 		
 	}
 	

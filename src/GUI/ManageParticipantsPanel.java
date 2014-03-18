@@ -193,6 +193,7 @@ public class ManageParticipantsPanel extends JPanel implements ActionListener, L
 		romFrame.setContentPane(romPanel);
 		romFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		romFrame.pack();
+		romFrame.setLocationRelativeTo(parent.parent);
 		romFrame.setVisible(true);
 	}
 	

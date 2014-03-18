@@ -138,6 +138,7 @@ public class ViewAsPanel extends JPanel implements ActionListener{
 		viewFrame.setContentPane(viewPanel);
 		viewFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		viewFrame.pack();
+		viewFrame.setLocationRelativeTo(parent);
 		viewFrame.setVisible(true);
 	}
 

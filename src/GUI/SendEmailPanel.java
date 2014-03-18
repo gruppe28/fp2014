@@ -78,8 +78,9 @@ public class SendEmailPanel extends JPanel implements ActionListener {
 		sendMailFrame.setMinimumSize(new Dimension(450, 300));
 		sendMailFrame.setContentPane(sendMailPanel);
 		sendMailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		sendMailFrame.setVisible(true);
 		sendMailFrame.pack();
+		sendMailFrame.setLocationRelativeTo(parent.parent);
+		sendMailFrame.setVisible(true);
 		
 	}
 

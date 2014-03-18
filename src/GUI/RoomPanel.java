@@ -132,8 +132,9 @@ public class RoomPanel extends JPanel implements ActionListener{
 		romFrame.setMinimumSize(new Dimension(350, 350));
 		romFrame.setContentPane(romPanel);
 		romFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		romFrame.setVisible(true);
 		romFrame.pack();
+		romFrame.setLocationRelativeTo(parent.parent);
+		romFrame.setVisible(true);
 	}
 	
 	
