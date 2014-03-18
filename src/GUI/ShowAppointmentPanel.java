@@ -66,7 +66,7 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 			name = new JLabel(appointment.getName());
 		}
 		
-		name.setFont(new Font(Font.MONOSPACED, Font.BOLD, 26));
+		name.setFont(new Font("Arial", Font.PLAIN, 26));
 		
 		time = new JLabel(appointment.getDate() + " at " + appointment.getStartTime() + "-" + appointment.getEndTime());
 		
@@ -157,90 +157,51 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 		saveBtn.addActionListener(this);
 		cancelBtn.addActionListener(this);
 		
+		// NYTT ------------------------------------------------------------------------------------------------------
 		
-		this.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
+		this.setLayout(null);
 		
-		c.anchor = GridBagConstraints.NORTHWEST;
-		c.gridx = 1;
-		c.gridy = 1;
-		c.gridwidth = 5;
+		name.setBounds(5,5,210,25);
+		time.setBounds(5,30,210,25);
+		place.setBounds(5,47,210,25);
+		scrollDescription.setBounds(5,70,210,75);		
+		attending.setBounds(5,145,70,25);
+		yes.setBounds(80,147,50,20);
+		no.setBounds(130,147,50,20);
+		alert.setBounds(5,170,40,25);
+		alertBox.setBounds(50,170,165,25);
+		hide.setBounds(5,195,40,25);
+		hideBox.setBounds(50,195,165,25);
+		scrollParticipants.setBounds(5,225,210,75);
 		
-		add(name, c);
+		deleteBtn.setBounds(5,438,103,25);
+		editBtn.setBounds(113,438,102,25);
 		
-		c.gridy++;
-		add(time, c);
+		cancelBtn.setBounds(5,468,103,25);
+		saveBtn.setBounds(113,468,102,25);
 		
-		c.insets = new Insets(0, 0, 10, 0);
-		c.gridy++;
-		add(place, c);
-		
-		c.gridy++;
-		add(scrollDescription, c);
-		
-		c.insets = new Insets(0, 0, 0, 0);
-		c.gridy++;
-		add(scrollParticipants, c);
-		
-		c.gridwidth = 1;
-		c.gridy++;
-		add(attending, c);
-		
-		c.gridwidth = 2;
-		c.gridx++;
-		add(yes, c);
-		
-		c.gridx+=2;
-		add(no, c);
-		
-		c.insets = new Insets(0, 0, 80, 0);
-		c.gridy++;
-		c.gridx=1;
-		c.gridwidth = 1;
-		add(alert, c);
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx++;
-		c.gridwidth = 4;
-		add(alertBox, c);
-		
-		c.insets = new Insets(-80, 0, 60, 0);
-		c.gridy++;
-		c.gridx=1;
-		c.gridwidth = 1;
-		add(hide, c);
-		
-		c.gridx++;
-		c.gridwidth = 4;
-		add(hideBox, c);
-		hideBox.setEnabled(false);
-		
-		c.insets = new Insets(0, 0, 0, 0);
-		c.gridwidth = 2;
-		c.gridx--;
-		c.gridy++;
-		add(editBtn, c);
-		
-		c.gridx+=3;
-		add(deleteBtn, c);
+		this.add(name);
+		this.add(time);
+		this.add(place);
+		this.add(scrollDescription);
+		this.add(scrollParticipants);
+		this.add(attending);
+		this.add(yes);
+		this.add(no);
+		this.add(alert);
+		this.add(alertBox);
+		this.add(hide);
+		this.add(hideBox);
+		this.hideBox.setEnabled(false);
+		this.add(editBtn);
+		this.add(deleteBtn);
+		this.add(cancelBtn);
+		this.add(saveBtn);
 		
 		if (!isOwner){
 			editBtn.setEnabled(false);
 			editBtn.setVisible(false);
 		}
-		
-		c.insets = new Insets(30, 0, 0, 0);
-		c.gridx-=3;
-		c.gridy++;
-		if(!isParticipant){
-			c.insets = new Insets(220, 0, 0, 0);
-			c.gridwidth = 5;
-		}
-		add(cancelBtn, c);
-		
-		c.gridwidth = 2;
-		c.gridx+=3;
-		add(saveBtn, c);
 		
 		if(!isParticipant){
 			attending.setVisible(false);
