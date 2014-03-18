@@ -3,6 +3,8 @@ package GUI;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -12,6 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import com.apple.eawt.Application;
 
 import database.DBHandler;
 import database.UserDB;
@@ -95,11 +99,16 @@ public class LoginFrame extends JPanel {
 	}
 	
 	public static void main(String[] args) {
+		
+		Application application = Application.getApplication();
+		Image image = Toolkit.getDefaultToolkit().getImage("resources/icon.png");
+		application.setDockIconImage(image);
+		
 		JFrame frame = new JFrame("Login");
 		LoginFrame mainPanel = new LoginFrame(frame);
 		frame.setContentPane(mainPanel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(1024,600);
+		frame.setSize(1024,768);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
