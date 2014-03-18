@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -138,6 +139,7 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 
 	@Override
 	public void focusGained(FocusEvent e) {
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		JTextArea area = ((JTextArea) e.getSource());
 		String name = area.getName();
 		Appointment active;
@@ -145,6 +147,7 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 		else { active = (seenNotifications.get(Integer.parseInt(String.valueOf(name.charAt(1))))).getAppointment(); }
 		
 		parent.addNewPanel("avtale", new ShowAppointmentPanel(parent, user, active));
+		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		
 	}
 

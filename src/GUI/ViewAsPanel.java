@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -168,8 +169,10 @@ public class ViewAsPanel extends JPanel implements ActionListener{
 				showUsers.remove(moved);
 			}
 		} else if (s == save) {
+			viewFrame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			parent.setShowUsers(showUsers);
 			viewFrame.dispose();
+			viewFrame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		} 
 	}
 }

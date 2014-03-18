@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -142,8 +143,8 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 		manageParticipantsBtn.setBounds(5,253,210,25);
 		inviteViaEmailBtn.setBounds(5,283,210,25);
 		feedback.setBounds(5,310,210,25);
-		saveBtn.setBounds(5,470,102,25);
-		cancelBtn.setBounds(112,470,103,25);
+		saveBtn.setBounds(112,470,103,25);
+		cancelBtn.setBounds(5,470,102,25);
 		
 		this.add(nameField);
 		this.add(scroll);
@@ -225,9 +226,11 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 			((CalendarPanel) parent.kalender).unSelectAllAppointments();
 			
 		} else if (s == destinationBtn) {
-
+			
 			if (checkDate() == null) {
+				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				new RoomPanel(this, toOtherDateFormat((LocalDate)new DateTime(dateChooser.getDate()).toLocalDate()),startTimeField.getText(), endTimeField.getText());
+				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			} else {
 				feedback.setText(checkDate());
 			}

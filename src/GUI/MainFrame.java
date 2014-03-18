@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -9,8 +10,6 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,6 +23,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import com.apple.eawt.Application;
 
 import fp2014.Appointment;
 import fp2014.User;
@@ -184,6 +185,7 @@ public class MainFrame extends JPanel implements ActionListener {
 	
 	// Changes the selected week, and if necessary the year too
 	private void changeWeek(int value){
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		int newWeek = week;
 		int newYear = year;
 		int weeksInYear = weeksInYear(newYear);
@@ -201,6 +203,7 @@ public class MainFrame extends JPanel implements ActionListener {
 		// Update the calendar panel
 		CalendarPanel newCalendar = new CalendarPanel(this, user, showUsers, week, year);
 		addNewPanel("kalender", newCalendar);
+		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 	
 	
@@ -282,8 +285,18 @@ public class MainFrame extends JPanel implements ActionListener {
 	public void updateAnnounchementCounter(){
 		int unseenNotifications = user.getNumberOfUnseenNotifications();
 		alerts.setText("Notifications: " + unseenNotifications);
-		if(unseenNotifications > 0) { alerts.setForeground(Color.RED); }
-		else { alerts.setForeground(Color.BLACK); }
+		if(unseenNotifications > 0) {
+			alerts.setForeground(Color.RED);
+			if (System.getProperty("os.name").equals("Mac OS X")){
+				Application.getApplication().setDockIconBadge(String.valueOf(unseenNotifications));
+			}
+		}
+		else {
+			alerts.setForeground(Color.BLACK);
+			if (System.getProperty("os.name").equals("Mac OS X")){
+				Application.getApplication().setDockIconBadge(String.valueOf(""));
+			}
+		}
 	}
 	
 	// Listener classes below
@@ -304,7 +317,9 @@ public class MainFrame extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
 		if (s == alerts){
+			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			addNewPanel("avtale", new NotificationPanel(this, user));
+			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 		else if(s == viewAs){
 			new ViewAsPanel(this);

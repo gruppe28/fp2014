@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -228,7 +229,6 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
-		
 		if (s == yes){
 			if (no.isSelected()){
 				no.setSelected(false);
@@ -256,6 +256,7 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 			
 		}else if(s == saveBtn){
 			
+			parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			int newStatus = getStatus();
 			// Save attending status
 			if(yourStatus != newStatus){ // Only update if status has changed.
@@ -291,15 +292,11 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 			parent.addNewPanel("avtale", new DefaultRightPanel(parent, user));
 			parent.addNewPanel("kalender", new CalendarPanel(parent, user, parent.getShowUsers(), parent.getWeek(), parent.getYear()));
 			
-			// Oppdaterer kalenderen til aa vise ingen valgt avtale
-			//((CalendarPanel) parent.kalender).unSelectAllAppointments();
+			parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			
 		}else if(s == deleteBtn){
-			//appointment.getParticipants().put(user, 0);------------ Endrer lokalt
-			//appointment.changeStatus(user, false, appointment);---- Endrer database
-			
-			//Hvis user er admin for avtalen, slett avtalen for alle
-			
+
+			parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			if (isOwner){
 				DBHandler.deleteAppointment(appointment.getAppointmentNr());
 				
@@ -316,8 +313,8 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 			parent.addNewPanel("kalender", new CalendarPanel(parent, user, parent.getShowUsers(), parent.getWeek(), parent.getYear()));
 			// Oppdaterer kalenderen til aa vise ingen valgt avtale
 			((CalendarPanel) parent.kalender).unSelectAllAppointments();
+			parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
-		
 	}
 	
 	private String timeBefore(String date, String time, int minutesBack){

@@ -1,13 +1,15 @@
 package GUI;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -31,9 +33,25 @@ public class LoginFrame extends JPanel {
 	private JLabel usernameLabel;
 	private JLabel passwordLabel;
 	private JButton loginButton;
+	private Image icon;
 	
 	public LoginFrame(final JFrame loginFrame){
-
+		
+		
+		try {
+			if (System.getProperty("os.name").equals("Mac OS X")){
+				icon = ImageIO.read(getClass().getResource("/fp2014/images/macIcon.png"));
+				Application application = Application.getApplication();
+				Image image = icon;
+				application.setDockIconImage(image);
+			}else{
+				icon = ImageIO.read(getClass().getResource("/fp2014/images/winIcon.png"));
+				loginFrame.setIconImage(icon);
+			}
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
 		// Create Swing elements
 		usernameLabel = new JLabel("Username: ");
 		passwordLabel = new JLabel("Password: ");
@@ -69,10 +87,14 @@ public class LoginFrame extends JPanel {
 		gbc.gridwidth = 5;
 		gbc.anchor = GridBagConstraints.WEST;
 		add(feedback,gbc);
+		gbc.gridy++;
+		
 		
 		// Listener logging the user in if correct credentials are given
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				
 				// Fetch data and create user object
 				String pw = new String(passwordField.getPassword());
@@ -80,7 +102,6 @@ public class LoginFrame extends JPanel {
 				UserDB newUser = new UserDB(); // User object to perform validating methods on
 				
 				if(newUser.checkLogin(un, pw)){
-					loginFrame.dispose(); // Close the login form before opening the calendar
 					User you = DBHandler.getAnsatt(un); // Fetch an Ansatt object based on username. Will be used throughout the session in order to identify logged in user.
 					
 					// Create new calendar window
@@ -91,24 +112,23 @@ public class LoginFrame extends JPanel {
 					frame.pack();
 					frame.setResizable(false);
 					frame.setLocationRelativeTo(null);
+					loginFrame.dispose(); // Close the login form before opening the calendar
+					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 					frame.setVisible(true);
 				}
-				else{ feedback.setText(newUser.feedback); } // Show feedback message from the login attempt
+				else{
+					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+					feedback.setText(newUser.feedback); } // Show feedback message from the login attempt
 			}
 		});
 	}
 	
 	public static void main(String[] args) {
-		
-		Application application = Application.getApplication();
-		Image image = Toolkit.getDefaultToolkit().getImage("resources/icon.png");
-		application.setDockIconImage(image);
-		
 		JFrame frame = new JFrame("Login");
 		LoginFrame mainPanel = new LoginFrame(frame);
 		frame.setContentPane(mainPanel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(1024,768);
+		frame.setSize(1024,600);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);

@@ -2,6 +2,7 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.FocusEvent;
@@ -307,7 +308,7 @@ public class CalendarPanel extends JPanel implements FocusListener {
 
 	@Override
 	public void focusGained(FocusEvent e) {
-		
+		parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		int index = existingTextAreas.indexOf(e.getSource());
 		int i = 0;
 		
@@ -316,16 +317,17 @@ public class CalendarPanel extends JPanel implements FocusListener {
 				eta.setName("");
 				eta.setBackground(appointments.get(i).getStatusColor());
 				eta.setForeground(Color.DARK_GRAY);
+				break;
 			}
 			i++;
 		}
 		
-		//appointments.get(x);
 		existingTextAreas.get(index).setName("focused");
 		existingTextAreas.get(index).setBackground(Color.LIGHT_GRAY);
 		existingTextAreas.get(index).setForeground(Color.WHITE);
 		
 		parent.addNewPanel("avtale", new ShowAppointmentPanel(parent, user, appointments.get(index)));
+		parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
 	@Override
