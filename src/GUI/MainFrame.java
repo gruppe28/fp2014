@@ -5,12 +5,19 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -80,8 +87,26 @@ public class MainFrame extends JPanel implements ActionListener {
 		addNewPanel("kalender", newCalendar);
 		
 		// Create Swing elements
-		previousWeek = new JButton("<");
-		nextWeek = new JButton(">");
+		
+		previousWeek = new JButton("");
+		nextWeek = new JButton("");
+		  try {
+		    Image leftArrowIcon = ImageIO.read(getClass().getResource("/fp2014/images/left_arrow.png"));
+		    previousWeek.setIcon(new ImageIcon(leftArrowIcon));
+		    
+		    Image rigthArrowIcon = ImageIO.read(getClass().getResource("/fp2014/images/right_arrow.png"));
+		    nextWeek.setIcon(new ImageIcon(rigthArrowIcon));
+		  } catch (IOException ex) {
+		  }
+
+		  previousWeek.setMargin(new Insets(0, 0, 0, 0));
+		  previousWeek.setBorder(BorderFactory.createEmptyBorder());
+		  previousWeek.setContentAreaFilled(false);
+		  nextWeek.setMargin(new Insets(0, 0, 0, 0));
+		  nextWeek.setBorder(BorderFactory.createEmptyBorder());
+		  nextWeek.setContentAreaFilled(false);
+
+		 
 		weekNumberLabel = new JLabel("Week " + week + " - " + year);
 		weekNumberLabel.setFont(new Font("Arial", Font.PLAIN, 26)); // Larger font for the week header
 		alerts = new JButton();

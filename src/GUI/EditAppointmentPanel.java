@@ -103,7 +103,7 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 		cancelBtn.setName("EAPcancelButton");
 		inviteViaEmailBtn.setName("EAPinviteViaEmailButton");
 		duration.setName("EAPduration");
-
+		
 		feedback.setForeground(Color.RED);
 		
 		if (appointment.getName() != null){
@@ -112,6 +112,7 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 
 		JScrollPane scroll = new JScrollPane(descriptionField);
 	    scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+	    scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 	    showLocationField.setEditable(false);
 		
 	    duration.addActionListener(this);
@@ -128,7 +129,7 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 		this.setLayout(null);
 		
 		nameField.setBounds(5,5,210,25);
-		descriptionField.setBounds(5, 35, 210, 100);
+		descriptionField.setBounds(5, 35, 150, 100);
 		scroll.setBounds(5, 35, 210, 100);
 		startTimeLabel.setBounds(5, 137, 50, 25);
 		endTimeLabel.setBounds(5, 163, 50, 25);
@@ -159,6 +160,9 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 		this.add(feedback);
 		this.add(saveBtn);
 		this.add(cancelBtn);
+		
+		descriptionField.setPreferredSize(new Dimension(150, 100));
+		descriptionField.setLineWrap(true);
 	}
 
 	@Override

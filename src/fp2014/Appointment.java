@@ -273,15 +273,15 @@ public class Appointment {
 		}
 		
 		if (allAttending){
-			return Color.GREEN;
+			return new Color(0xCCFFCC); // green
 		}else if(someAttending && awaitingAnswer){
-			return Color.YELLOW;
+			return new Color(0xFFFFCC); // yellow
 		}else if(someAttending && !awaitingAnswer){
-			return Color.ORANGE;
+			return new Color(0xFFE5CC); // orange
 		}else if (!someAttending && !awaitingAnswer){
-			return Color.RED;
+			return new Color(0xFFCCCC); // red
 		}else if(!someAttending && awaitingAnswer){
-			return Color.YELLOW;
+			return new Color(0xFFFFCC); // yellow
 		}
 		return Color.MAGENTA;
 	}

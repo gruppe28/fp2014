@@ -125,10 +125,10 @@ public class CalendarPanel extends JPanel implements FocusListener {
 	}
 	
 	public void addAppointmentToCalendar(Component c, int x, int y, int width, int height, Appointment appointment){
-		((JTextArea) c).setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.CYAN));
+		((JTextArea) c).setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
 		((JTextArea) c).setLineWrap(true);
 		((JTextArea) c).setBounds(x, y, width, height);
-		((JTextArea) c).setForeground(Color.BLACK);
+		((JTextArea) c).setForeground(Color.DARK_GRAY);
 		((JTextArea) c).setBackground(appointment.getStatusColor());
 		
 		this.layeredPane.add(c, 1);
@@ -301,6 +301,7 @@ public class CalendarPanel extends JPanel implements FocusListener {
 		for (JTextArea eta: existingTextAreas){
 			eta.setName("");
 			eta.setBackground(appointments.get(i++).getStatusColor());
+			eta.setForeground(Color.DARK_GRAY);
 		}
 	}
 
@@ -314,13 +315,15 @@ public class CalendarPanel extends JPanel implements FocusListener {
 			if (eta.getName().equals("focused") && existingTextAreas.indexOf(eta) != index){
 				eta.setName("");
 				eta.setBackground(appointments.get(i).getStatusColor());
+				eta.setForeground(Color.DARK_GRAY);
 			}
 			i++;
 		}
 		
 		//appointments.get(x);
 		existingTextAreas.get(index).setName("focused");
-		existingTextAreas.get(index).setBackground(Color.CYAN);
+		existingTextAreas.get(index).setBackground(Color.LIGHT_GRAY);
+		existingTextAreas.get(index).setForeground(Color.WHITE);
 		
 		parent.addNewPanel("avtale", new ShowAppointmentPanel(parent, user, appointments.get(index)));
 	}
