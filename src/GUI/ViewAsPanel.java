@@ -131,6 +131,13 @@ public class ViewAsPanel extends JPanel implements ActionListener{
 		gb.gridheight = 1;
 		viewPanel.add(save, gb);
 		
+		viewFrame.setName("VAPviewFrame");
+		employeeList.setName("VAPemployeeList");
+		selectedList.setName("VAPselectedList");
+		add.setName("VAPaddButton");
+		remove.setName("VAPremove");
+		save.setName("VAPsave");
+		
 		// Set frame options
 		viewFrame.setModal(true);
 		viewFrame.setAlwaysOnTop(true);

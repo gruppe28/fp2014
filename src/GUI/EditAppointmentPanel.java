@@ -92,6 +92,17 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 		duration = new JComboBox<String>();
 		duration.setPrototypeDisplayValue("xx:xx");
 		addDurationsToBox();
+		
+		startTimeField.setName("EAPstartTimeField");
+		endTimeField.setName("EAPendTimeField");
+		dateChooser.setName("EAPdateChooser");
+		destinationBtn.setName("EAPdestinationButton");
+		showLocationField.setName("EAPshowLocationField");
+		manageParticipantsBtn.setName("EAPmanageParticipantsButton");
+		saveBtn.setName("EAPsaveButton");
+		cancelBtn.setName("EAPcancelButton");
+		inviteViaEmailBtn.setName("EAPinviteViaEmailButton");
+		duration.setName("EAPduration");
 
 		feedback.setForeground(Color.RED);
 		

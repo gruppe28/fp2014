@@ -52,7 +52,6 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 		this.appointment = appointment;
 		this.user = user;
 		
-		
 		if(appointment.getParticipants().size() == 0){ appointment.setParticipants(DBHandler.getAttendants(appointment.getAppointmentNr())); }
 		
 		isOwner = (appointment.getMadeBy().getUsername().equals(user.getUsername()));
@@ -91,6 +90,8 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 		no = new JRadioButton("no");
 		no.addActionListener(this);
 		hideBox = new JCheckBox("yes");
+		
+		
 		
 		// Fetch attendants and their statuses from database
 		
@@ -252,6 +253,17 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 			saveBtn.setVisible(false);
 			deleteBtn.setVisible(false);
 		}
+		
+		editBtn.setName("SAPeditButton");
+		deleteBtn.setName("SAPdeleteButton");
+		saveBtn.setName("SAPsaveButton");
+		cancelBtn.setName("SAPcancelButton");
+		participants.setName("SAPparticipants");
+		description.setName("SAPdescription");
+		yes.setName("SAPyes");
+		no.setName("SAPno");
+		alertBox.setName("SAPalertBox");
+		hideBox.setName("SAPhideBox");
 	}
 
 	@Override

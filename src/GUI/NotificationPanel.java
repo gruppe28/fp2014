@@ -115,6 +115,9 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			   public void run() { scrollPanel.getVerticalScrollBar().setValue(0); }
 		});
+		
+		exitBtn.setName("NPexitButton");
+		notificationPanel.setName("NPnotificationPanel");
 	}
 	
 	private ArrayList<Notification> getUnseenNotifications(){
@@ -146,8 +149,5 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 	}
 
 	@Override
-	public void focusLost(FocusEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void focusLost(FocusEvent arg0) {}
 }

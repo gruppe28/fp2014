@@ -74,6 +74,14 @@ public class SendEmailPanel extends JPanel implements ActionListener {
 		sendMailPanel.add (emailList);
 		sendMailPanel.add(newEmail);
 		
+		addAdressBtn.setName("SEPaddAdressButton");
+		saveBtn.setName("SEPsaveButton");
+		deleteAdressBtn.setName("SEPdeleteAdressButton");
+		cancelBtn.setName("SEPcancelButton");
+		emailList.setName("SEPemailList");
+		newEmail.setName("SEPnewEmail");
+		sendMailFrame.setName("SEPsendMailFrame");
+		
 		sendMailFrame.setModal(true);
 		sendMailFrame.setMinimumSize(new Dimension(450, 300));
 		sendMailFrame.setContentPane(sendMailPanel);

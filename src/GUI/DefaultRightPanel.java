@@ -24,6 +24,7 @@ public class DefaultRightPanel extends JPanel implements ActionListener {
 		
 		nyAvtale = new JButton("New appointment");
 		nyAvtale.addActionListener(this);
+		nyAvtale.setName("DRPnyAvtale");
 		
 		setLayout(new GridBagLayout());
 		

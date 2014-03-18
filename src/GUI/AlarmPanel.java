@@ -40,15 +40,20 @@ public class AlarmPanel extends JPanel implements ActionListener{
 		// Create dialog window
 		dialog = new JDialog();
 		dialog.setTitle("Alarm");
+		dialog.setName("alarmDialog");
 		panel = new JPanel();
+		panel.setName("alarmPanel");
 		
 		// Create Swing elements
 		text = new JTextArea("Don't forget your appointment " + alarm.getAppointment().getName() + " on " + alarm.getAppointment().getDate() + " from " + alarm.getAppointment().getStartTime() + " to " + alarm.getAppointment().getEndTime() + ".");
 		text.setEditable(false);
 		text.setBackground( new Color(0, 0, 0, 0) ); // Transparent background
 		text.setMargin(new Insets(0, 0, 10, 0));
+		text.setName("alarmTextArea");
 		ok = new JButton("OK");
+		ok.setName("alarmOk");
 		goTo = new JButton("Open appointment");
+		goTo.setName("alarmGoTo");
 		
 		// Add listeners
 		ok.addActionListener(this);

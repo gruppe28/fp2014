@@ -40,6 +40,10 @@ public class LoginFrame extends JPanel {
 		feedback.setForeground(Color.RED);
 		loginFrame.getRootPane().setDefaultButton(loginButton); // Pressing Enter will now activate the login button
 		
+		usernameField.setName("LFusernameField");
+		passwordField.setName("LFpasswordField");
+		loginButton.setName("LFloginButton");
+		
 		// Place elements through GridBag
 		this.setLayout(new GridBagLayout());
 		gbc = new GridBagConstraints();

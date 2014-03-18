@@ -186,6 +186,23 @@ public class ManageParticipantsPanel extends JPanel implements ActionListener, L
 		
 		attendBtn.addActionListener(this);
 		notattendBtn.addActionListener(this);
+		
+		//setName on components
+		
+		saveBtn.setName("MPsaveButton");
+		addBtn.setName("MPaddButton");
+		removeBtn.setName("MPremoveButton");
+		attendBtn.setName("MPattendButton");
+		notattendBtn.setName("MPnotAttendButton");
+		people.setName("MPpeopleButton");
+		groupsBtn.setName("MPgroupsButton");
+		
+		employeeList.setName("MPemployeeList");
+		participantsList.setName("MPparticipantsList");
+		groupList.setName("MPgroupList");
+		romFrame.setName("MPromFrame");
+		
+		//
 			
 		romFrame.setModal(true);
 		romFrame.setAlwaysOnTop(true);

@@ -40,7 +40,7 @@ public class RoomPanel extends JPanel implements ActionListener{
 	DefaultListModel<Room> roomListModel;
 	ArrayList<Room> availableRooms;
 	EditAppointmentPanel parent;
-	JDialog romFrame;
+	JDialog roomFrame;
 	
 	String date;
 	String from;
@@ -54,9 +54,9 @@ public class RoomPanel extends JPanel implements ActionListener{
 		
 		this.parent = parent;
 		
-		romFrame = new JDialog();
+		roomFrame = new JDialog();
 		JPanel romPanel = new JPanel();
-		romFrame.setTitle("Select location");
+		roomFrame.setTitle("Select location");
 		
 		chooseRoomBtn = new JRadioButton("Select a meeting room", true);
 		choosePlaceBtn = new JRadioButton("Choose a location");
@@ -109,6 +109,12 @@ public class RoomPanel extends JPanel implements ActionListener{
 		romPanel.add(numberOfParticipantsLabel);
 		romPanel.add(romListScroller);
 		romPanel.add(saveRoomBtn);
+		
+		placeField.setName("RPplaceField");
+		savePlaceBtn.setName("RPsavePlaceButton");
+		saveRoomBtn.setName("RPsaveRoomBtn");
+		roomList.setName("RProomList");
+		roomFrame.setName("RProomFrame");
 
 		locationLabel.setVisible(false);
 		placeField.setVisible(false);
@@ -128,13 +134,13 @@ public class RoomPanel extends JPanel implements ActionListener{
 		saveRoomBtn.addActionListener(this);
 		savePlaceBtn.addActionListener(this);
 		
-		romFrame.setModal(true);
-		romFrame.setMinimumSize(new Dimension(350, 350));
-		romFrame.setContentPane(romPanel);
-		romFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		romFrame.pack();
-		romFrame.setLocationRelativeTo(parent.parent);
-		romFrame.setVisible(true);
+		roomFrame.setModal(true);
+		roomFrame.setMinimumSize(new Dimension(350, 350));
+		roomFrame.setContentPane(romPanel);
+		roomFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		roomFrame.pack();
+		roomFrame.setLocationRelativeTo(parent.parent);
+		roomFrame.setVisible(true);
 	}
 	
 	
@@ -182,12 +188,12 @@ public class RoomPanel extends JPanel implements ActionListener{
 			parent.showLocationField.setText(placeField.getText());
 			parent.getAppointment().setPlace(placeField.getText());
 			parent.getAppointment().setRom(null);
-			romFrame.dispose();
+			roomFrame.dispose();
 		} else if (e.getSource() == saveRoomBtn){
 			parent.showLocationField.setText(roomList.getSelectedValue().getPlace());
 			parent.getAppointment().setRom(roomList.getSelectedValue());
 			parent.getAppointment().setPlace(null);
-			romFrame.dispose();
+			roomFrame.dispose();
 			
 		}
 	}

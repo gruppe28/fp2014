@@ -88,6 +88,12 @@ public class MainFrame extends JPanel implements ActionListener {
 		logOut = new JButton("Log out " + user.getUsername());
 		viewAs = new JButton("View calendar as");
 		
+		previousWeek.setName("MFpreviousWeek");
+		nextWeek.setName("MFnextWeek");
+		alerts.setName("MFalerts");
+		logOut.setName("MFlogOut");
+		viewAs.setName("MFviewAs");
+		
 		// Create watcher. This will update the announcement counter and trigger alarms regularly
 		new Watcher(this, user);
 		
