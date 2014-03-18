@@ -2,6 +2,7 @@ package GUI;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -94,6 +95,12 @@ public class ViewAsPanel extends JPanel implements ActionListener{
 		
 		allUsersLabel = new JLabel("All users:");
 		selectedUsersLabel = new JLabel("Selected users:");
+		
+		allUsersLabel.setFont(new Font("Lucida Grande", Font.BOLD, 12));
+		selectedUsersLabel.setFont(new Font("Lucida Grande", Font.BOLD, 12));
+		add.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		remove.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+	
 		
 		allUsersLabel.setBounds(20,20,200,20);
 		selectedUsersLabel.setBounds(280,20,200,20);

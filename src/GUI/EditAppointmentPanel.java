@@ -3,6 +3,7 @@ package GUI;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -67,6 +68,8 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 
 		setPreferredSize(new Dimension(220, 500));
 		
+		
+		
 		emailParticipants = new ArrayList<String>();
 		
 		nameField = new JTextField("Appointment name");
@@ -93,6 +96,22 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 		duration = new JComboBox<String>();
 		duration.setPrototypeDisplayValue("xx:xx");
 		addDurationsToBox();
+		
+		nameField.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		descriptionField.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		startTimeField.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		endTimeField.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		startTimeLabel.setFont(new Font("Lucida Grande", Font.BOLD, 12));
+		endTimeLabel.setFont(new Font("Lucida Grande", Font.BOLD, 12));
+		dateChooser.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		duration.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		destinationBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		showLocationField.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		manageParticipantsBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		saveBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		cancelBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		inviteViaEmailBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		feedback.setFont(new Font("Lucida Grande", Font.BOLD, 12));
 		
 		startTimeField.setName("EAPstartTimeField");
 		endTimeField.setName("EAPendTimeField");
@@ -129,13 +148,14 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 		
 		this.setLayout(null);
 		
+		
 		nameField.setBounds(5,5,210,25);
 		descriptionField.setBounds(5, 35, 150, 100);
 		scroll.setBounds(5, 35, 210, 100);
 		startTimeLabel.setBounds(5, 137, 50, 25);
 		endTimeLabel.setBounds(5, 163, 50, 25);
-		startTimeField.setBounds(40, 140, 50, 20);
-		endTimeField.setBounds(40, 165, 50, 20);
+		startTimeField.setBounds(43, 140, 50, 20);
+		endTimeField.setBounds(43, 165, 50, 20);
 		duration.setBounds(100,140,115,20);
 		dateChooser.setBounds(100,165,115,20);
 		destinationBtn.setBounds(5,190,210,25);

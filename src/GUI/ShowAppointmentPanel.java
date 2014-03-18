@@ -156,10 +156,25 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 		saveBtn.addActionListener(this);
 		cancelBtn.addActionListener(this);
 		
-		// NYTT ------------------------------------------------------------------------------------------------------
+		name.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+		time.setFont(new Font("Lucida Grande", Font.BOLD, 12));
+		place.setFont(new Font("Lucida Grande", Font.BOLD, 12));
+		scrollDescription.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		attending.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		yes.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		no.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		alert.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		alertBox.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		hide.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		hideBox.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		participants.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		deleteBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		editBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		cancelBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		saveBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		
 		this.setLayout(null);
-		
+	
 		name.setBounds(5,5,210,25);
 		time.setBounds(5,30,210,25);
 		place.setBounds(5,47,210,25);

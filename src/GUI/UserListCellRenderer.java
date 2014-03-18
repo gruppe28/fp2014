@@ -2,6 +2,7 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -13,9 +14,10 @@ public class UserListCellRenderer implements ListCellRenderer {
 
 	@Override
 	public Component getListCellRendererComponent(JList list, Object user,
-			int index, boolean isSelected, boolean cellHasFocus) {
+		int index, boolean isSelected, boolean cellHasFocus) {
 		
 		JLabel label = new JLabel(((User) user).getFirstname() + " " + ((User) user).getLastname());
+		label.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		
 		if (isSelected) {
 			label.setOpaque(true);

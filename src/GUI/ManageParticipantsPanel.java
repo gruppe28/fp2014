@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -119,6 +120,18 @@ public class ManageParticipantsPanel extends JPanel implements ActionListener, L
 		
 		groupListBox = new JScrollPane(groupList);
 		groupListBox.setPreferredSize(new Dimension(150, 130));
+		
+		// Create buttons
+		addBtn = new JButton("→");
+		removeBtn = new JButton("←");
+		saveBtn = new JButton("Save");
+		
+		people.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		groupsBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		attendBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		notattendBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		saveBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		groupList.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 
 		// Fill group list
 		
@@ -127,11 +140,6 @@ public class ManageParticipantsPanel extends JPanel implements ActionListener, L
 		for(Group g : groupsArray){
 			groupListModel.addElement(g);
 		}
-		
-		// Create buttons
-		addBtn = new JButton("→");
-		removeBtn = new JButton("←");
-		saveBtn = new JButton("Save");
 		
 		addBtn.addActionListener(this);
 		removeBtn.addActionListener(this);

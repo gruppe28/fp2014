@@ -2,6 +2,7 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -22,6 +23,7 @@ public class RomListCellRenderer implements ListCellRenderer{
 		
 		// Set item text to room name ("sted")
 		JLabel label = new JLabel(((Room) value).getPlace());
+		label.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		
 		// Apply styles to item
 		if (isSelected) {

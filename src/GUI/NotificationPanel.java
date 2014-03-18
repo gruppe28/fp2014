@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -42,7 +43,8 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 		notificationPanel = new JPanel();
 		
 		// Create GridBag for notification panel. Style it.
-		notificationPanel.setLayout(new GridBagLayout());		
+		notificationPanel.setLayout(new GridBagLayout());	
+		notificationPanel.setBackground(Color.WHITE);
 		GridBagConstraints gb = new GridBagConstraints();
 		gb.anchor = GridBagConstraints.NORTHWEST;
 		gb.weightx = 1;
@@ -55,7 +57,7 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 		for(int i = 0; i < unseenNotifications.size(); i++){
 			JTextArea notification = new JTextArea();
 			notification.setText(unseenNotifications.get(i).getText());
-			notification.setFont(new Font("Arial", Font.BOLD, 13));
+			notification.setFont(new Font("Lucida Grande", Font.BOLD, 12));
 			notification.addFocusListener(this);
 			notification.setName("u" + i);
 			notification.setEditable(false);
@@ -73,7 +75,7 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 		for(int i = 0; i < seenNotifications.size(); i++){
 			JTextArea notification = new JTextArea();
 			notification.setText(seenNotifications.get(i).getText());
-			notification.setFont(new Font("Arial", Font.PLAIN, 12));
+			notification.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 			notification.addFocusListener(this);
 			notification.setName("s" + i);
 			notification.setEditable(false);
@@ -103,6 +105,7 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 		exitBtn = new JButton("Exit");
 		exitBtn.addActionListener(this);
 		exitBtn.setPreferredSize(new Dimension(220, 30));
+		exitBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 
 		// GridBag
 		setLayout(new GridBagLayout());

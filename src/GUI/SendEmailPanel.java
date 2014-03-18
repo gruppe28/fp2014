@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class SendEmailPanel extends JPanel implements ActionListener {
 		emailList = new JList(emailListModel);
 		emailList.setCellRenderer(new DefaultListCellRenderer());
 		emailList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		emailList.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		
 		for (String email : participantsList){
 			emailListModel.addElement(email);
@@ -53,19 +55,25 @@ public class SendEmailPanel extends JPanel implements ActionListener {
 		cancelBtn = new JButton("Cancel");
 		newEmail = new JTextField("Enter email");
 		
+		addAdressBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		saveBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		deleteAdressBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		cancelBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		newEmail.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		
 		addAdressBtn.addActionListener(this);
 		saveBtn.addActionListener(this);
 		deleteAdressBtn.addActionListener(this);
 		cancelBtn.addActionListener(this);
 		
-		addAdressBtn.setBounds(230,20,95,20);
-		deleteAdressBtn.setBounds(230,50,95,20);
+		addAdressBtn.setBounds(230,20,95,25);
+		deleteAdressBtn.setBounds(230,55,95,25);
 		
-		saveBtn.setBounds(125,220,95,20);
-		cancelBtn.setBounds(20,220,95,20);
+		saveBtn.setBounds(125,225,95,25);
+		cancelBtn.setBounds(20,225,95,25);
 		
-		emailList.setBounds(20,50,200,160);
-		newEmail.setBounds(20,20,200,20);
+		emailList.setBounds(20,55,200,160);
+		newEmail.setBounds(20,20,200,25);
 		
 		sendMailPanel.add(addAdressBtn);
 		sendMailPanel.add(saveBtn);

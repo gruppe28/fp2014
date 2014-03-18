@@ -109,7 +109,7 @@ public class MainFrame extends JPanel implements ActionListener {
 
 		 
 		weekNumberLabel = new JLabel("Week " + week + " - " + year);
-		weekNumberLabel.setFont(new Font("Arial", Font.PLAIN, 26)); // Larger font for the week header
+		weekNumberLabel.setFont(new Font("Lucinda Grande", Font.PLAIN, 26)); // Larger font for the week header
 		alerts = new JButton();
 		logOut = new JButton("Log out " + user.getUsername());
 		viewAs = new JButton("View calendar as");
@@ -129,6 +129,10 @@ public class MainFrame extends JPanel implements ActionListener {
 		nextWeek.addActionListener(new changeWeekListener());
 		alerts.addActionListener(this);
 		viewAs.addActionListener(this);
+		
+		logOut.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		alerts.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		viewAs.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		
 		// GridBag, left header
 		headerLeft.setLayout(new GridBagLayout());

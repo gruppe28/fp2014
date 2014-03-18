@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -88,8 +89,6 @@ public class RoomPanel extends JPanel implements ActionListener{
 		});
 		numberOfParticipantsLabel = new JLabel(Integer.toString(numberOfParticipants.getValue()));
 		
-		
-
 		// List of available rooms
 		availableRooms = DBHandler.getAvailableRooms(date, from, to); //Fetch rooms available that date and time from database
 		roomListModel = new DefaultListModel<Room>();
@@ -100,6 +99,32 @@ public class RoomPanel extends JPanel implements ActionListener{
 		roomList.setCellRenderer(new RomListCellRenderer());
 		roomList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		saveRoomBtn = new JButton("Save");
+
+		chooseRoomBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		choosePlaceBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		locationLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		placeField.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		savePlaceBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		saveRoomBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		numberOfParticipants.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		numberOfParticipantsLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		
+		romPanel.setLayout(null);
+		
+		
+		//350, 350
+		
+		
+		chooseRoomBtn.setBounds(20,20,150,25);
+		choosePlaceBtn.setBounds(170,20,150,25);
+		
+		placeField.setBounds(20,50,310,25);
+		savePlaceBtn.setBounds(275,90,60,25);
+		
+		numberOfParticipants.setBounds(20,50,280,25);
+		numberOfParticipantsLabel.setBounds(300,50,25,25);
+		romListScroller.setBounds(20,80,300,100);
+		saveRoomBtn.setBounds(20,400,100,25);
 		
 		// Add elements to window
 		romPanel.add(locationLabel);

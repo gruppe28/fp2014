@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
@@ -76,6 +77,7 @@ public class CalendarPanel extends JPanel implements FocusListener {
 			label = new JLabel( String.format("%02d", i)+":00");
 			
 			label.setBounds(20, CALENDAR_Y_START - 17 +(i*40), 50, 40);
+			label.setFont(new Font("Lucida Grande", Font.BOLD, 12));
 			layeredPane.add(label, 0);
 		}
 		
@@ -118,6 +120,7 @@ public class CalendarPanel extends JPanel implements FocusListener {
 	
 	public void addDay(String day, int i, int x, int y, int width, int height, JLayeredPane panel){
 		JLabel label = new JLabel("<html>" + day + "<br>" + daySpan.get(i) + "</html>");
+		label.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		label.setForeground(Color.WHITE);
 		label.setBounds(x, y, width, height);
 		label.setPreferredSize(new Dimension(106, 45));
