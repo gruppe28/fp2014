@@ -1,7 +1,5 @@
 package GUI;
 
-import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -19,7 +17,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 
-import database.DBHandler;
+import client.ClientDBCalls;
+
 import fp2014.Appointment;
 import fp2014.Notification;
 import fp2014.User;
@@ -43,8 +42,7 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 		notificationPanel = new JPanel();
 		
 		// Create GridBag for notification panel. Style it.
-		notificationPanel.setLayout(new GridBagLayout());	
-		notificationPanel.setBackground(Color.WHITE);
+		notificationPanel.setLayout(new GridBagLayout());		
 		GridBagConstraints gb = new GridBagConstraints();
 		gb.anchor = GridBagConstraints.NORTHWEST;
 		gb.weightx = 1;
@@ -57,7 +55,7 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 		for(int i = 0; i < unseenNotifications.size(); i++){
 			JTextArea notification = new JTextArea();
 			notification.setText(unseenNotifications.get(i).getText());
-			notification.setFont(new Font("Lucida Grande", Font.BOLD, 12));
+			notification.setFont(new Font("Arial", Font.BOLD, 13));
 			notification.addFocusListener(this);
 			notification.setName("u" + i);
 			notification.setEditable(false);
@@ -75,7 +73,7 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 		for(int i = 0; i < seenNotifications.size(); i++){
 			JTextArea notification = new JTextArea();
 			notification.setText(seenNotifications.get(i).getText());
-			notification.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+			notification.setFont(new Font("Arial", Font.PLAIN, 12));
 			notification.addFocusListener(this);
 			notification.setName("s" + i);
 			notification.setEditable(false);
@@ -125,11 +123,11 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 	}
 	
 	private ArrayList<Notification> getUnseenNotifications(){
-		return DBHandler.getUnseenNotifications(user.getUsername());
+		return ClientDBCalls.getUnseenNotifications(user.getUsername());
 	}
 	
 	private ArrayList<Notification> getSeenNotifications(){
-		return DBHandler.getSeenNotifications(user.getUsername());
+		return ClientDBCalls.getSeenNotifications(user.getUsername());
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -142,7 +140,6 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 
 	@Override
 	public void focusGained(FocusEvent e) {
-		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		JTextArea area = ((JTextArea) e.getSource());
 		String name = area.getName();
 		Appointment active;
@@ -150,7 +147,6 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 		else { active = (seenNotifications.get(Integer.parseInt(String.valueOf(name.charAt(1))))).getAppointment(); }
 		
 		parent.addNewPanel("avtale", new ShowAppointmentPanel(parent, user, active));
-		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		
 	}
 

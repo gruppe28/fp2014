@@ -1,7 +1,6 @@
 package GUI;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -24,8 +23,11 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.apple.eawt.Application;
+import client.Client;
+import client.ClientDBCalls;
 
+
+import fp2014.Alarm;
 import fp2014.Appointment;
 import fp2014.User;
 import fp2014.Watcher;
@@ -47,13 +49,19 @@ public class MainFrame extends JPanel implements ActionListener {
 	protected JPanel kalender, headerLeft, headerRight, appointment;
 	private User user;
 	private ArrayList<User> showUsers;
+	private Client client;
+	private Watcher watcher;
 	
 	
-	public MainFrame(User user, JFrame activeWindow) {
+	public MainFrame(User user, JFrame activeWindow, Client newClient) {
 		this.user = user;
 		
 		showUsers = new ArrayList<>();
 		showUsers.add(user);
+		
+		// Set up client
+		client = newClient;
+		ClientDBCalls.setClient(client);
 		
 		this.activeWindow = activeWindow; // Binds argument JFrame to the JFrame field. Makes it possible for the window to close itself on logout.
 		
@@ -109,7 +117,7 @@ public class MainFrame extends JPanel implements ActionListener {
 
 		 
 		weekNumberLabel = new JLabel("Week " + week + " - " + year);
-		weekNumberLabel.setFont(new Font("Lucinda Grande", Font.PLAIN, 26)); // Larger font for the week header
+		weekNumberLabel.setFont(new Font("Arial", Font.PLAIN, 26)); // Larger font for the week header
 		alerts = new JButton();
 		logOut = new JButton("Log out " + user.getUsername());
 		viewAs = new JButton("View calendar as");
@@ -121,7 +129,7 @@ public class MainFrame extends JPanel implements ActionListener {
 		viewAs.setName("MFviewAs");
 		
 		// Create watcher. This will update the announcement counter and trigger alarms regularly
-		new Watcher(this, user);
+		watcher = new Watcher(this, user);
 		
 		// Create listeners
 		logOut.addActionListener(new logOffListener());
@@ -185,11 +193,16 @@ public class MainFrame extends JPanel implements ActionListener {
 			gbc.gridy = 1;
 			this.add(appointment, gbc);
 			
+			// If window is closed abruptly, close down the server connection
+		    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+		        public void run() {
+		            if(client.isOpen()) { client.close(); }
+		        }
+		    }, "Shutdown-thread"));
 	}
 	
 	// Changes the selected week, and if necessary the year too
 	private void changeWeek(int value){
-		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		int newWeek = week;
 		int newYear = year;
 		int weeksInYear = weeksInYear(newYear);
@@ -207,7 +220,6 @@ public class MainFrame extends JPanel implements ActionListener {
 		// Update the calendar panel
 		CalendarPanel newCalendar = new CalendarPanel(this, user, showUsers, week, year);
 		addNewPanel("kalender", newCalendar);
-		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 	
 	
@@ -222,6 +234,8 @@ public class MainFrame extends JPanel implements ActionListener {
 	}
 	
 	private void logOff(){
+		client.close();
+		watcher.stop();
 		String[] args = {};
 		LoginFrame.main(args);
 		activeWindow.dispose(); // Close the calendar window
@@ -289,18 +303,8 @@ public class MainFrame extends JPanel implements ActionListener {
 	public void updateAnnounchementCounter(){
 		int unseenNotifications = user.getNumberOfUnseenNotifications();
 		alerts.setText("Notifications: " + unseenNotifications);
-		if(unseenNotifications > 0) {
-			alerts.setForeground(Color.RED);
-			if (System.getProperty("os.name").equals("Mac OS X")){
-				Application.getApplication().setDockIconBadge(String.valueOf(unseenNotifications));
-			}
-		}
-		else {
-			alerts.setForeground(Color.BLACK);
-			if (System.getProperty("os.name").equals("Mac OS X")){
-				Application.getApplication().setDockIconBadge(String.valueOf(""));
-			}
-		}
+		if(unseenNotifications > 0) { alerts.setForeground(Color.RED); }
+		else { alerts.setForeground(Color.BLACK); }
 	}
 	
 	// Listener classes below
@@ -321,13 +325,15 @@ public class MainFrame extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
 		if (s == alerts){
-			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			addNewPanel("avtale", new NotificationPanel(this, user));
-			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 		else if(s == viewAs){
 			new ViewAsPanel(this);
 		}
+	}
+	
+	public void setAlarms(ArrayList<Alarm> alarms){
+		watcher.setAlarms(alarms);
 	}
 
 }

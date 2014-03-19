@@ -1,15 +1,12 @@
 package GUI;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,15 +14,18 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import com.apple.eawt.Application;
+import client.Client;
+import client.ClientDBCalls;
+import client.UserDB;
 
-import database.DBHandler;
-import database.UserDB;
+
+
 import fp2014.User;
 
 @SuppressWarnings("serial")
 public class LoginFrame extends JPanel {
 	
+
 	private GridBagConstraints gbc;
 	private JPasswordField passwordField;
 	private JTextField usernameField;
@@ -33,24 +33,14 @@ public class LoginFrame extends JPanel {
 	private JLabel usernameLabel;
 	private JLabel passwordLabel;
 	private JButton loginButton;
-	private Image icon;
+	private Client client;
 	
 	public LoginFrame(final JFrame loginFrame){
-		
-		
-		try {
-			if (System.getProperty("os.name").equals("Mac OS X")){
-				icon = ImageIO.read(getClass().getResource("/fp2014/images/macIcon.png"));
-				Application application = Application.getApplication();
-				Image image = icon;
-				application.setDockIconImage(image);
-			}else{
-				icon = ImageIO.read(getClass().getResource("/fp2014/images/winIcon.png"));
-				loginFrame.setIconImage(icon);
-			}
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+
+		// Create client connection
+		client = new Client();
+		ClientDBCalls.setClient(client);
+		client.run();
 		
 		// Create Swing elements
 		usernameLabel = new JLabel("Username: ");
@@ -87,48 +77,45 @@ public class LoginFrame extends JPanel {
 		gbc.gridwidth = 5;
 		gbc.anchor = GridBagConstraints.WEST;
 		add(feedback,gbc);
-		gbc.gridy++;
-		
 		
 		// Listener logging the user in if correct credentials are given
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-				
 				// Fetch data and create user object
 				String pw = new String(passwordField.getPassword());
 				String un = usernameField.getText();
-				UserDB newUser = new UserDB(); // User object to perform validating methods on
+				UserDB newUser = new UserDB(client); // User object to perform validating methods on
 				
 				if(newUser.checkLogin(un, pw)){
-					User you = DBHandler.getAnsatt(un); // Fetch an Ansatt object based on username. Will be used throughout the session in order to identify logged in user.
+					loginFrame.dispose(); // Close the login form before opening the calendar
+					User you = ClientDBCalls.getAnsatt(un); // Fetch an Ansatt object based on username. Will be used throughout the session in order to identify logged in user.
+					
+
 					
 					// Create new calendar window
 					JFrame frame = new JFrame(you.getFirstname() + " " + you.getLastname() + "'s calendar");
-					MainFrame mainPanel = new MainFrame(you, frame);
+					MainFrame mainPanel = new MainFrame(you, frame, client);
 					frame.setContentPane(mainPanel);
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					frame.pack();
 					frame.setResizable(false);
 					frame.setLocationRelativeTo(null);
-					loginFrame.dispose(); // Close the login form before opening the calendar
-					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 					frame.setVisible(true);
 				}
-				else{
-					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-					feedback.setText(newUser.feedback); } // Show feedback message from the login attempt
+				else{ feedback.setText(newUser.feedback); } // Show feedback message from the login attempt
 			}
 		});
 	}
 	
 	public static void main(String[] args) {
+		
+		
 		JFrame frame = new JFrame("Login");
 		LoginFrame mainPanel = new LoginFrame(frame);
 		frame.setContentPane(mainPanel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(1024,600);
+		frame.setSize(1024,768);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);

@@ -1,7 +1,13 @@
 package fp2014;
 
-public class Notification {
+import java.io.Serializable;
 
+public class Notification implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1455321363221785916L;
 	private String owner;
 	private String text;
 	private Appointment appointment;

@@ -22,7 +22,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import database.DBHandler;
+import client.ClientDBCalls;
+
 import fp2014.Room;
 
 @SuppressWarnings({"serial", "unchecked"})
@@ -89,8 +90,10 @@ public class RoomPanel extends JPanel implements ActionListener{
 		});
 		numberOfParticipantsLabel = new JLabel(Integer.toString(numberOfParticipants.getValue()));
 		
+		
+
 		// List of available rooms
-		availableRooms = DBHandler.getAvailableRooms(date, from, to); //Fetch rooms available that date and time from database
+		availableRooms = ClientDBCalls.getAvailableRooms(date, from, to); //Fetch rooms available that date and time from database
 		roomListModel = new DefaultListModel<Room>();
 		showAvailableRooms(); // Fills list
 		roomList = new JList<Room>(roomListModel);
@@ -99,7 +102,7 @@ public class RoomPanel extends JPanel implements ActionListener{
 		roomList.setCellRenderer(new RomListCellRenderer());
 		roomList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		saveRoomBtn = new JButton("Save");
-
+		
 		chooseRoomBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		choosePlaceBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		locationLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
@@ -108,21 +111,6 @@ public class RoomPanel extends JPanel implements ActionListener{
 		saveRoomBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		numberOfParticipants.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		numberOfParticipantsLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
-		
-		romPanel.setLayout(null);
-
-		
-		
-		chooseRoomBtn.setBounds(20,20,160,25);
-		choosePlaceBtn.setBounds(180,20,150,25);
-		
-		placeField.setBounds(20,50,310,25);
-		savePlaceBtn.setBounds(275,90,60,25);
-		
-		numberOfParticipants.setBounds(20,50,280,25);
-		numberOfParticipantsLabel.setBounds(310,50,25,25);
-		romListScroller.setBounds(20,80,310,100);
-		saveRoomBtn.setBounds(230,200,100,25);
 		
 		// Add elements to window
 		romPanel.add(locationLabel);
@@ -158,7 +146,7 @@ public class RoomPanel extends JPanel implements ActionListener{
 		savePlaceBtn.addActionListener(this);
 		
 		roomFrame.setModal(true);
-		roomFrame.setMinimumSize(new Dimension(350, 265));
+		roomFrame.setMinimumSize(new Dimension(350, 350));
 		roomFrame.setContentPane(romPanel);
 		roomFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		roomFrame.pack();
@@ -171,7 +159,7 @@ public class RoomPanel extends JPanel implements ActionListener{
 	private void showAvailableRooms(){
 		roomListModel.clear(); // Clears list in case room criteria has changed
 		
-		ArrayList<Room> capableRooms = DBHandler.getRoomsWithCapacity(numberOfParticipants.getValue());
+		ArrayList<Room> capableRooms = ClientDBCalls.getRoomsWithCapacity(numberOfParticipants.getValue());
 		ArrayList<Integer> roomNumbers = new ArrayList<Integer>();
 
 		for(int i = 0; i < availableRooms.size(); i++){

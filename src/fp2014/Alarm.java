@@ -1,7 +1,13 @@
 package fp2014;
 
-public class Alarm {
+import java.io.Serializable;
 
+public class Alarm implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4105824525081789056L;
 	String time;
 	String date;
 	Appointment appointment;

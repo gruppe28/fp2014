@@ -27,7 +27,6 @@ public class DefaultRightPanel extends JPanel implements ActionListener {
 		nyAvtale.addActionListener(this);
 		nyAvtale.setName("DRPnyAvtale");
 		nyAvtale.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
-		
 		setLayout(new GridBagLayout());
 		
 		this.add(nyAvtale);

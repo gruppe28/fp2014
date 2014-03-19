@@ -1,10 +1,16 @@
 package fp2014;
 
-public class Room {
+import java.io.Serializable;
+
+public class Room implements Serializable {
 	/*
 	 * Rom legges til i databasen direkte, dette er evt noe vi kan legge til hvis vi blir ferdige f�r tiden.
 	 */
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2101758399092291226L;
 	private int roomNumber;
 	private String place;
 	private int capacity;

@@ -1,7 +1,6 @@
 package GUI;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -27,9 +26,10 @@ import javax.swing.text.MaskFormatter;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
+import client.ClientDBCalls;
+
 import com.toedter.calendar.JDateChooser;
 
-import database.DBHandler;
 import fp2014.Appointment;
 import fp2014.Mail;
 import fp2014.User;
@@ -67,8 +67,6 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 		this.participants = appointment.getParticipants();
 
 		setPreferredSize(new Dimension(220, 500));
-		
-		
 		
 		emailParticipants = new ArrayList<String>();
 		
@@ -148,14 +146,13 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 		
 		this.setLayout(null);
 		
-		
 		nameField.setBounds(5,5,210,25);
 		descriptionField.setBounds(5, 35, 150, 100);
 		scroll.setBounds(5, 35, 210, 100);
 		startTimeLabel.setBounds(5, 137, 50, 25);
 		endTimeLabel.setBounds(5, 163, 50, 25);
-		startTimeField.setBounds(43, 140, 50, 20);
-		endTimeField.setBounds(43, 165, 50, 20);
+		startTimeField.setBounds(40, 140, 50, 20);
+		endTimeField.setBounds(40, 165, 50, 20);
 		duration.setBounds(100,140,115,20);
 		dateChooser.setBounds(100,165,115,20);
 		destinationBtn.setBounds(5,190,210,25);
@@ -163,8 +160,8 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 		manageParticipantsBtn.setBounds(5,253,210,25);
 		inviteViaEmailBtn.setBounds(5,283,210,25);
 		feedback.setBounds(5,310,210,25);
-		saveBtn.setBounds(112,470,103,25);
-		cancelBtn.setBounds(5,470,102,25);
+		saveBtn.setBounds(5,470,102,25);
+		cancelBtn.setBounds(112,470,103,25);
 		
 		this.add(nameField);
 		this.add(scroll);
@@ -210,17 +207,17 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 				appointment.getParticipants().put(user, 1);
 				if (nullAppointment) {
 					appointment.sendAppoinmentToDatabase();					
-					int appCount = DBHandler.getCountOfAppointments();
+					int appCount = ClientDBCalls.getCountOfAppointments();
 					
 					for (User a : appointment.getParticipants().keySet()) {
-						DBHandler.createAttendance(a.getUsername(), appCount, appointment.getParticipants().get(a), 0);
+						ClientDBCalls.createAttendance(a.getUsername(), appCount, appointment.getParticipants().get(a), 0);
 					}
 				} else {
-					DBHandler.updateAppointment(appointment);
-					DBHandler.deleteAttendances(appointment.getAppointmentNr());
+					ClientDBCalls.updateAppointment(appointment);
+					ClientDBCalls.deleteAttendances(appointment.getAppointmentNr());
 					
 					for (User a : appointment.getParticipants().keySet()) {
-						DBHandler.createAttendance(a.getUsername(), appointment.getAppointmentNr(), appointment.getParticipants().get(a), 1);
+						ClientDBCalls.createAttendance(a.getUsername(), appointment.getAppointmentNr(), appointment.getParticipants().get(a), 1);
 					}
 				}
 				
@@ -246,11 +243,9 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 			((CalendarPanel) parent.kalender).unSelectAllAppointments();
 			
 		} else if (s == destinationBtn) {
-			
+
 			if (checkDate() == null) {
-				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				new RoomPanel(this, toOtherDateFormat((LocalDate)new DateTime(dateChooser.getDate()).toLocalDate()),startTimeField.getText(), endTimeField.getText());
-				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			} else {
 				feedback.setText(checkDate());
 			}

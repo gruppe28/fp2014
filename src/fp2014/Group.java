@@ -1,9 +1,14 @@
 package fp2014;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Group {
+public class Group implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6966846658780701887L;
 	String name;
 	ArrayList<String> members;
 

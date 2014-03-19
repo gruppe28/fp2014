@@ -2,7 +2,6 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -21,7 +20,8 @@ import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
-import database.DBHandler;
+import client.ClientDBCalls;
+
 import fp2014.Appointment;
 import fp2014.User;
 
@@ -41,6 +41,7 @@ public class CalendarPanel extends JPanel implements FocusListener {
 	private ArrayList<String> daySpan;
 	private JScrollPane s;
 	private User user;
+	@SuppressWarnings("unused")
 	private ArrayList<User> users;
 	ArrayList<Appointment> appointments;
 	
@@ -57,10 +58,10 @@ public class CalendarPanel extends JPanel implements FocusListener {
 		this.user = user;
 		setDaySpan();
 		
-		appointments = DBHandler.getAppointmentsInInterval(users, daySpan);
+		appointments = ClientDBCalls.getAppointmentsInInterval(users, daySpan);
 	
 		for (Appointment a: appointments){
-			a.setParticipants(DBHandler.getAttendants(a.getAppointmentNr()));
+			a.setParticipants(ClientDBCalls.getAttendants(a.getAppointmentNr()));
 		}
 	
 		setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -75,9 +76,8 @@ public class CalendarPanel extends JPanel implements FocusListener {
 		
 		for (int i = 0; i < hours; i++) {
 			label = new JLabel( String.format("%02d", i)+":00");
-			
-			label.setBounds(20, CALENDAR_Y_START - 17 +(i*40), 50, 40);
 			label.setFont(new Font("Lucida Grande", Font.BOLD, 12));
+			label.setBounds(20, CALENDAR_Y_START - 17 +(i*40), 50, 40);
 			layeredPane.add(label, 0);
 		}
 		
@@ -218,7 +218,7 @@ public class CalendarPanel extends JPanel implements FocusListener {
 					currentEvent.setForeground(Color.WHITE);
 					if (user.getUsername().equals(appointments.get(i).getMadeBy().getUsername())){
 						currentEvent.append(" - eier");
-					}else if(DBHandler.isChanged(user.getUsername(), appointments.get(i).getAppointmentNr())){
+					}else if(ClientDBCalls.isChanged(user.getUsername(), appointments.get(i).getAppointmentNr())){
 						currentEvent.append(" - endret");
 					}
 					currentEvent.append("\n" + appointments.get(i).getLocation());
@@ -311,7 +311,7 @@ public class CalendarPanel extends JPanel implements FocusListener {
 
 	@Override
 	public void focusGained(FocusEvent e) {
-		parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		
 		int index = existingTextAreas.indexOf(e.getSource());
 		int i = 0;
 		
@@ -320,17 +320,16 @@ public class CalendarPanel extends JPanel implements FocusListener {
 				eta.setName("");
 				eta.setBackground(appointments.get(i).getStatusColor());
 				eta.setForeground(Color.DARK_GRAY);
-				break;
 			}
 			i++;
 		}
 		
+		//appointments.get(x);
 		existingTextAreas.get(index).setName("focused");
 		existingTextAreas.get(index).setBackground(Color.LIGHT_GRAY);
 		existingTextAreas.get(index).setForeground(Color.WHITE);
 		
 		parent.addNewPanel("avtale", new ShowAppointmentPanel(parent, user, appointments.get(index)));
-		parent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
 	@Override
