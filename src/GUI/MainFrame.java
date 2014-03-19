@@ -9,8 +9,6 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,6 +22,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import database.Client;
+import database.DBHandler;
 
 import fp2014.Appointment;
 import fp2014.User;
@@ -46,13 +47,19 @@ public class MainFrame extends JPanel implements ActionListener {
 	protected JPanel kalender, headerLeft, headerRight, appointment;
 	private User user;
 	private ArrayList<User> showUsers;
+	private Client client;
+	private Watcher watcher;
 	
 	
-	public MainFrame(User user, JFrame activeWindow) {
+	public MainFrame(User user, JFrame activeWindow, Client newClient) {
 		this.user = user;
 		
 		showUsers = new ArrayList<>();
 		showUsers.add(user);
+		
+		// Set up client
+		client = newClient;
+		DBHandler.setClient(client);
 		
 		this.activeWindow = activeWindow; // Binds argument JFrame to the JFrame field. Makes it possible for the window to close itself on logout.
 		
@@ -120,7 +127,7 @@ public class MainFrame extends JPanel implements ActionListener {
 		viewAs.setName("MFviewAs");
 		
 		// Create watcher. This will update the announcement counter and trigger alarms regularly
-		new Watcher(this, user);
+		watcher = new Watcher(this, user);
 		
 		// Create listeners
 		logOut.addActionListener(new logOffListener());
@@ -180,6 +187,12 @@ public class MainFrame extends JPanel implements ActionListener {
 			gbc.gridy = 1;
 			this.add(appointment, gbc);
 			
+			// If window is closed abruptly, close down the server connection
+		    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+		        public void run() {
+		            if(client.isOpen()) { client.close(); }
+		        }
+		    }, "Shutdown-thread"));
 	}
 	
 	// Changes the selected week, and if necessary the year too
@@ -215,6 +228,8 @@ public class MainFrame extends JPanel implements ActionListener {
 	}
 	
 	private void logOff(){
+		client.close();
+		watcher.stop();
 		String[] args = {};
 		LoginFrame.main(args);
 		activeWindow.dispose(); // Close the calendar window
