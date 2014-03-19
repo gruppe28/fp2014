@@ -183,7 +183,26 @@ public class Server{
 							out.writeObject(DBMethods.userExists(username));
 							out.flush();
 						}
-						
+						else if(message.equals("createAppointment")){
+							Appointment app = (Appointment)in.readObject();
+							DBMethods.createAppointment(app);
+						}
+						else if(message.equals("deleteAnsattAvtale")){
+							Appointment app = (Appointment)in.readObject();
+							User a = (User)in.readObject();
+							DBMethods.deleteAnsattAvtale(app, a);
+						}
+						else if(message.equals("createAnsattAvtale")){
+							Appointment app = (Appointment)in.readObject();
+							User a = (User)in.readObject();
+							DBMethods.createAnsattAvtale(app, a);
+						}
+						else if(message.equals("updateAnsattAvtale")){
+							Appointment app = (Appointment)in.readObject();
+							User a = (User)in.readObject();
+							int status = (int)in.readObject();
+							DBMethods.updateAnsattAvtale(app, a, status);
+						}
 						
 					}
 

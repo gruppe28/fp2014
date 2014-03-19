@@ -3,8 +3,7 @@ package fp2014;
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.HashMap;
-
-import database.SQL;
+import database.DBHandler;
 
 public class Appointment implements Serializable {
 	
@@ -117,40 +116,7 @@ public class Appointment implements Serializable {
 		 */
 	
 	public void sendAppoinmentToDatabase(){
-		
-		/*
-		 * Oppretter en ny avtale, som sendes til databasen, f�r et avtalenummer.
-		 * 		db.update("Insert Into Avtale(navn, starttidspunkt, sluttidspunkt, beskrivelse, sted, dato, romNr, opprettetAv) Values('" + appointment.getName() 
-				+ "', '" + appointment.getStartTime()
-				+ "', '" + appointment.getEndTime() 
-				+ "', '" + appointment.getDescription() 
-				+ "', '" + appointment.getPlace() 
-				+ "', '" + appointment.getDate() 
-				+ "', '" + appointment.getRom().getRomNr() 
-				+ "', '" + appointment.getMadeBy().getBrukernavn() + "')");
-		 */
-		
-		SQL db = new SQL();
-		if (this.getRom() == null) {
-			db.update("Insert Into Avtale(navn, starttidspunkt, sluttidspunkt, beskrivelse, sted, dato, opprettetAv) Values('" + this.getName() 
-					+ "', '" + this.getStartTime()
-					+ "', '" + this.getEndTime() 
-					+ "', '" + this.getDescription() 
-					+ "', '" + this.getPlace() 
-					+ "', '" + this.getDate() 
-					+ "', '" + this.getMadeBy().getUsername() + "')");
-		} else {
-			db.update("Insert Into Avtale(navn, starttidspunkt, sluttidspunkt, beskrivelse, dato, romNr, opprettetAv) Values('" 
-					+ this.getName() 
-					+ "', '" + this.getStartTime()
-					+ "', '" + this.getEndTime() 
-					+ "', '" + this.getDescription() 
-					+ "', '" + this.getDate() 
-					+ "', '" + this.getRom().getRoomNumber() 
-					+ "', '" + this.getMadeBy().getUsername() 
-					+ "')");
-		}
-		db.close();		
+		DBHandler.createAppointment(this);
 	}
 	
 	public void addParticipant(User ansatt, Appointment appointment){
@@ -158,11 +124,7 @@ public class Appointment implements Serializable {
 		 * Legger til ansatte som deltagere, opprettet avtaler hos disse med gitt tidspunkt etc.
 		 */
 		
-		SQL db = new SQL();
-		
-		//Adding a AnsattAvtale-relation
-		db.update("Insert into AnsattAvtale values("+appointment.getAppointmentNr()+", "+"'"+ansatt.getUsername()+"'"+", null)");
-		db.close();
+		DBHandler.createAnsattAvtale(appointment, ansatt);
 	}
 	
 	public void changeStatus(User ansatt, boolean status, Appointment appointment){
@@ -179,9 +141,8 @@ public class Appointment implements Serializable {
 			intstatus = 0;
 		}
 		
-		SQL db = new SQL();
-		db.update("Update AnsattAvtale Set deltar='"+intstatus+"' Where avtaleNr = " + "'" + appointment.getAppointmentNr() + "' And brukernavn = '"+ ansatt.getUsername() +"'");
-		db.close();
+		// Kjør update AnsattAvtale her
+		DBHandler.updateAnsattAvtale(appointment, ansatt, intstatus);
 	}
 	
 	public void removeParticipantDB(User ansatt, Appointment appointment){
@@ -189,9 +150,7 @@ public class Appointment implements Serializable {
 		 * fjerner alle relasjoner ansatt har med denne avtalen, kaller opp databasen, kan l�ses fint vha cascade sp�rringer.
 		 */
 		
-		SQL db = new SQL();
-		db.update("Delete from AnsattAvtale Where avtaleNr = '" + appointment.getAppointmentNr() + "' And brukernavn = '" + ansatt.getUsername() + "'");
-		db.close();
+       DBHandler.deleteAnsattAvtale(appointment, ansatt);
 	}
 	
 	public void changeTime(String start, String end){

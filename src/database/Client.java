@@ -24,7 +24,7 @@ public class Client{
 			do{
 				try{
 					message = (String)in.readObject();
-					sendMessage("Hi my server");
+					sendMessage(" start");
 					message = "bye";
 					//sendMessage(message);
 				}

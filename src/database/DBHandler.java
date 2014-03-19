@@ -303,12 +303,33 @@ public final class DBHandler {
 	
 	// Get all groups
 	public static ArrayList<Group> getGroups(){
-		
-		
 		client.sendMessage("getGroups");
 		ArrayList<Group> list = (ArrayList<Group>)client.recieveObject();
-		
 		return list;
+	}
+	
+	public static void createAppointment(Appointment app){
+		client.sendMessage("createAppointment");
+		client.sendObject(app);
+	}
+	
+	public static void deleteAnsattAvtale(Appointment app, User u){
+		client.sendMessage("deleteAnsattAvtale");
+		client.sendObject(app);
+		client.sendObject(u);
+	}
+	
+	public static void createAnsattAvtale(Appointment app, User u){
+		client.sendMessage("createAppointment");
+		client.sendObject(app);
+		client.sendObject(u);
+	}
+	
+	public static void updateAnsattAvtale(Appointment app, User u, int status){
+		client.sendMessage("updateAnsattAvtale");
+		client.sendObject(app);
+		client.sendObject(u);
+		client.sendObject(status);
 	}
 	
 }

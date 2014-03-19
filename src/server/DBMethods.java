@@ -452,4 +452,47 @@ public final class DBMethods {
 		return password;
 	}
 	
+	public static void createAppointment(Appointment app){
+		Database db = new Database();
+		if (app.getRom() == null) {
+			db.update("Insert Into Avtale(navn, starttidspunkt, sluttidspunkt, beskrivelse, sted, dato, opprettetAv) Values('" + app.getName() 
+					+ "', '" + app.getStartTime()
+					+ "', '" + app.getEndTime() 
+					+ "', '" + app.getDescription() 
+					+ "', '" + app.getPlace() 
+					+ "', '" + app.getDate() 
+					+ "', '" + app.getMadeBy().getUsername() + "')");
+		} else {
+			db.update("Insert Into Avtale(navn, starttidspunkt, sluttidspunkt, beskrivelse, dato, romNr, opprettetAv) Values('" 
+					+ app.getName() 
+					+ "', '" + app.getStartTime()
+					+ "', '" + app.getEndTime() 
+					+ "', '" + app.getDescription() 
+					+ "', '" + app.getDate() 
+					+ "', '" + app.getRom().getRoomNumber() 
+					+ "', '" + app.getMadeBy().getUsername() 
+					+ "')");
+		}
+		db.close();
+	}
+	
+	public static void deleteAnsattAvtale(Appointment app, User a){
+		Database db = new Database();
+		db.update("Delete from AnsattAvtale Where avtaleNr = '" + app.getAppointmentNr() + "' And brukernavn = '" + a.getUsername() + "'");
+		db.close();
+	}
+	
+	public static void createAnsattAvtale(Appointment app, User a){
+		Database db = new Database();
+		db.update("Insert into AnsattAvtale values("+app.getAppointmentNr()+", "+"'"+a.getUsername()+"'"+", null)");
+		db.close();
+	}
+	
+	
+	public static void updateAnsattAvtale(Appointment app, User a, int status){
+		Database db = new Database();
+		db.update("Update AnsattAvtale Set deltar='"+status+"' Where avtaleNr = " + "'" + app.getAppointmentNr() + "' And brukernavn = '"+ a.getUsername() +"'");
+		db.close();
+	}
+	
 }
