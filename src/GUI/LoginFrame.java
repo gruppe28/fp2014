@@ -3,8 +3,7 @@ package GUI;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,8 +14,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import com.apple.eawt.Application;
 
+
+import database.Client;
 import database.DBHandler;
 import database.UserDB;
 import fp2014.User;
@@ -24,6 +24,7 @@ import fp2014.User;
 @SuppressWarnings("serial")
 public class LoginFrame extends JPanel {
 	
+
 	private GridBagConstraints gbc;
 	private JPasswordField passwordField;
 	private JTextField usernameField;
@@ -31,9 +32,15 @@ public class LoginFrame extends JPanel {
 	private JLabel usernameLabel;
 	private JLabel passwordLabel;
 	private JButton loginButton;
+	private Client client;
 	
 	public LoginFrame(final JFrame loginFrame){
 
+		// Create client connection
+		client = new Client();
+		DBHandler.setClient(client);
+		client.run();
+		
 		// Create Swing elements
 		usernameLabel = new JLabel("Username: ");
 		passwordLabel = new JLabel("Password: ");
@@ -77,15 +84,17 @@ public class LoginFrame extends JPanel {
 				// Fetch data and create user object
 				String pw = new String(passwordField.getPassword());
 				String un = usernameField.getText();
-				UserDB newUser = new UserDB(); // User object to perform validating methods on
+				UserDB newUser = new UserDB(client); // User object to perform validating methods on
 				
 				if(newUser.checkLogin(un, pw)){
 					loginFrame.dispose(); // Close the login form before opening the calendar
 					User you = DBHandler.getAnsatt(un); // Fetch an Ansatt object based on username. Will be used throughout the session in order to identify logged in user.
 					
+
+					
 					// Create new calendar window
 					JFrame frame = new JFrame(you.getFirstname() + " " + you.getLastname() + "'s calendar");
-					MainFrame mainPanel = new MainFrame(you, frame);
+					MainFrame mainPanel = new MainFrame(you, frame, client);
 					frame.setContentPane(mainPanel);
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					frame.pack();
@@ -100,9 +109,6 @@ public class LoginFrame extends JPanel {
 	
 	public static void main(String[] args) {
 		
-		Application application = Application.getApplication();
-		Image image = Toolkit.getDefaultToolkit().getImage("resources/icon.png");
-		application.setDockIconImage(image);
 		
 		JFrame frame = new JFrame("Login");
 		LoginFrame mainPanel = new LoginFrame(frame);
