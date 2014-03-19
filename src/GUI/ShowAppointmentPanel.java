@@ -22,7 +22,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import database.DBHandler;
+import database.ClientDBCalls;
 import fp2014.Appointment;
 import fp2014.User;
 
@@ -50,11 +50,11 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 		this.appointment = appointment;
 		this.user = user;
 		
-		if(appointment.getParticipants().size() == 0){ appointment.setParticipants(DBHandler.getAttendants(appointment.getAppointmentNr())); }
+		if(appointment.getParticipants().size() == 0){ appointment.setParticipants(ClientDBCalls.getAttendants(appointment.getAppointmentNr())); }
 		
 		isOwner = (appointment.getMadeBy().getUsername().equals(user.getUsername()));
 		
-		DBHandler.updateChanged(user.getUsername(), appointment.getAppointmentNr());
+		ClientDBCalls.updateChanged(user.getUsername(), appointment.getAppointmentNr());
 		
 		this.setPreferredSize(new Dimension(220, 500));
 		
@@ -143,7 +143,7 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 		alertBox.addItem("1 day before");
 		alertBox.addItem("2 days before");
 		
-		alertBox.setSelectedIndex(DBHandler.getAlarmType(user.getUsername(), appointment.getAppointmentNr())); // Set index of alert box to previously chosen option
+		alertBox.setSelectedIndex(ClientDBCalls.getAlarmType(user.getUsername(), appointment.getAppointmentNr())); // Set index of alert box to previously chosen option
 		
 		editBtn = new JButton("Edit");
 		deleteBtn = new JButton("Delete");
@@ -223,6 +223,23 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 		no.setName("SAPno");
 		alertBox.setName("SAPalertBox");
 		hideBox.setName("SAPhideBox");
+		
+		name.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+		time.setFont(new Font("Lucida Grande", Font.BOLD, 12));
+		place.setFont(new Font("Lucida Grande", Font.BOLD, 12));
+		scrollDescription.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		attending.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		yes.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		no.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		alert.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		alertBox.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		hide.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		hideBox.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		participants.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		deleteBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		editBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		cancelBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		saveBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 	}
 
 	@Override
@@ -259,18 +276,18 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 			int newStatus = getStatus();
 			// Save attending status
 			if(yourStatus != newStatus){ // Only update if status has changed.
-				DBHandler.updateAttendance(user.getUsername(), appointment.getAppointmentNr(), newStatus); // Updates database
+				ClientDBCalls.updateAttendance(user.getUsername(), appointment.getAppointmentNr(), newStatus); // Updates database
 			}
 			
 			//Save hidden
 			if(hideBox.isSelected()){
-				DBHandler.updateHidden(user.getUsername(), appointment.getAppointmentNr(), 1);
+				ClientDBCalls.updateHidden(user.getUsername(), appointment.getAppointmentNr(), 1);
 			}else{
-				DBHandler.updateHidden(user.getUsername(), appointment.getAppointmentNr(), 0);
+				ClientDBCalls.updateHidden(user.getUsername(), appointment.getAppointmentNr(), 0);
 			}
 			
 			// Save alarm
-			DBHandler.deleteAlarm(user.getUsername(), appointment.getAppointmentNr()); // Deletes existing alarm before creating a new one.
+			ClientDBCalls.deleteAlarm(user.getUsername(), appointment.getAppointmentNr()); // Deletes existing alarm before creating a new one.
 			
 			if(!alertBox.getSelectedItem().equals("none")){
 				int back = 0;
@@ -285,7 +302,8 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 				
 				String[] parts = timeBefore(appointment.getDate(), appointment.getStartTime(), back).split(",");
 				
-				DBHandler.createAlarm(parts[0], parts[1], user.getUsername(), appointment.getAppointmentNr(), alertBox.getSelectedIndex());
+				ClientDBCalls.createAlarm(parts[0], parts[1], user.getUsername(), appointment.getAppointmentNr(), alertBox.getSelectedIndex());
+				parent.setAlarms(ClientDBCalls.getAlarms(user));
 			}
 			
 			parent.addNewPanel("avtale", new DefaultRightPanel(parent, user));
@@ -301,14 +319,14 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 			//Hvis user er admin for avtalen, slett avtalen for alle
 			
 			if (isOwner){
-				DBHandler.deleteAppointment(appointment.getAppointmentNr());
+				ClientDBCalls.deleteAppointment(appointment.getAppointmentNr());
 				
 				
 			}else{
-				DBHandler.deleteAttendance(user.getUsername(), appointment.getAppointmentNr());
+				ClientDBCalls.deleteAttendance(user.getUsername(), appointment.getAppointmentNr());
 				Set<User> tmp = appointment.getParticipants().keySet();
 				tmp.remove(user);
-				DBHandler.createNotification(user.getFirstname() + " " + user.getLastname() + " will not be attending " + appointment.getName() + ".", tmp, appointment.getAppointmentNr());
+				ClientDBCalls.createNotification(user.getFirstname() + " " + user.getLastname() + " will not be attending " + appointment.getName() + ".", tmp, appointment.getAppointmentNr());
 			}
 			
 			

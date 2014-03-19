@@ -3,7 +3,7 @@ package fp2014;
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.HashMap;
-import database.DBHandler;
+import database.ClientDBCalls;
 
 public class Appointment implements Serializable {
 	
@@ -116,7 +116,7 @@ public class Appointment implements Serializable {
 		 */
 	
 	public void sendAppoinmentToDatabase(){
-		DBHandler.createAppointment(this);
+		ClientDBCalls.createAppointment(this);
 	}
 	
 	public void addParticipant(User ansatt, Appointment appointment){
@@ -124,7 +124,7 @@ public class Appointment implements Serializable {
 		 * Legger til ansatte som deltagere, opprettet avtaler hos disse med gitt tidspunkt etc.
 		 */
 		
-		DBHandler.createAnsattAvtale(appointment, ansatt);
+		ClientDBCalls.createAnsattAvtale(appointment, ansatt);
 	}
 	
 	public void changeStatus(User ansatt, boolean status, Appointment appointment){
@@ -142,7 +142,7 @@ public class Appointment implements Serializable {
 		}
 		
 		// Kjør update AnsattAvtale her
-		DBHandler.updateAnsattAvtale(appointment, ansatt, intstatus);
+		ClientDBCalls.updateAnsattAvtale(appointment, ansatt, intstatus);
 	}
 	
 	public void removeParticipantDB(User ansatt, Appointment appointment){
@@ -150,7 +150,7 @@ public class Appointment implements Serializable {
 		 * fjerner alle relasjoner ansatt har med denne avtalen, kaller opp databasen, kan l�ses fint vha cascade sp�rringer.
 		 */
 		
-       DBHandler.deleteAnsattAvtale(appointment, ansatt);
+       ClientDBCalls.deleteAnsattAvtale(appointment, ansatt);
 	}
 	
 	public void changeTime(String start, String end){

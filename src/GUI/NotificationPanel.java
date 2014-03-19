@@ -17,7 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 
-import database.DBHandler;
+import database.ClientDBCalls;
 import fp2014.Appointment;
 import fp2014.Notification;
 import fp2014.User;
@@ -102,6 +102,7 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 		exitBtn = new JButton("Exit");
 		exitBtn.addActionListener(this);
 		exitBtn.setPreferredSize(new Dimension(220, 30));
+		exitBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 
 		// GridBag
 		setLayout(new GridBagLayout());
@@ -121,11 +122,11 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 	}
 	
 	private ArrayList<Notification> getUnseenNotifications(){
-		return DBHandler.getUnseenNotifications(user.getUsername());
+		return ClientDBCalls.getUnseenNotifications(user.getUsername());
 	}
 	
 	private ArrayList<Notification> getSeenNotifications(){
-		return DBHandler.getSeenNotifications(user.getUsername());
+		return ClientDBCalls.getSeenNotifications(user.getUsername());
 	}
 	
 	public void actionPerformed(ActionEvent e) {

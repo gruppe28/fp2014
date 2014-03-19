@@ -17,7 +17,7 @@ import javax.swing.JTextField;
 
 
 import database.Client;
-import database.DBHandler;
+import database.ClientDBCalls;
 import database.UserDB;
 import fp2014.User;
 
@@ -38,7 +38,7 @@ public class LoginFrame extends JPanel {
 
 		// Create client connection
 		client = new Client();
-		DBHandler.setClient(client);
+		ClientDBCalls.setClient(client);
 		client.run();
 		
 		// Create Swing elements
@@ -88,7 +88,7 @@ public class LoginFrame extends JPanel {
 				
 				if(newUser.checkLogin(un, pw)){
 					loginFrame.dispose(); // Close the login form before opening the calendar
-					User you = DBHandler.getAnsatt(un); // Fetch an Ansatt object based on username. Will be used throughout the session in order to identify logged in user.
+					User you = ClientDBCalls.getAnsatt(un); // Fetch an Ansatt object based on username. Will be used throughout the session in order to identify logged in user.
 					
 
 					

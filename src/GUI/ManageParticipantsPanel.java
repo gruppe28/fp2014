@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -23,7 +24,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import database.DBHandler;
+import database.ClientDBCalls;
 import fp2014.Appointment;
 import fp2014.Group;
 import fp2014.User;
@@ -119,7 +120,7 @@ public class ManageParticipantsPanel extends JPanel implements ActionListener, L
 
 		// Fill group list
 		
-		groupsArray = DBHandler.getGroups();
+		groupsArray = ClientDBCalls.getGroups();
 		
 		for(Group g : groupsArray){
 			groupListModel.addElement(g);
@@ -133,6 +134,13 @@ public class ManageParticipantsPanel extends JPanel implements ActionListener, L
 		addBtn.addActionListener(this);
 		removeBtn.addActionListener(this);
 		saveBtn.addActionListener(this);
+		
+		people.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		groupsBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		attendBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		notattendBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		saveBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		groupList.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 
 		// Add elements and manage layout
 		romPanel.setLayout(new GridBagLayout());
@@ -223,7 +231,7 @@ public class ManageParticipantsPanel extends JPanel implements ActionListener, L
 			}
 		}
 		
-		ArrayList<User> allUsers = DBHandler.getAllUsers();
+		ArrayList<User> allUsers = ClientDBCalls.getAllUsers();
 		
 		for (User i : allUsers) {
 			if (!i.getUsername().equals(parent.user.getUsername())) {

@@ -2,6 +2,7 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -27,7 +28,7 @@ import org.joda.time.LocalDate;
 
 import com.toedter.calendar.JDateChooser;
 
-import database.DBHandler;
+import database.ClientDBCalls;
 import fp2014.Appointment;
 import fp2014.Mail;
 import fp2014.User;
@@ -92,6 +93,22 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 		duration = new JComboBox<String>();
 		duration.setPrototypeDisplayValue("xx:xx");
 		addDurationsToBox();
+		
+		nameField.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		descriptionField.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		startTimeField.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		endTimeField.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		startTimeLabel.setFont(new Font("Lucida Grande", Font.BOLD, 12));
+		endTimeLabel.setFont(new Font("Lucida Grande", Font.BOLD, 12));
+		dateChooser.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		duration.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		destinationBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		showLocationField.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		manageParticipantsBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		saveBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		cancelBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		inviteViaEmailBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		feedback.setFont(new Font("Lucida Grande", Font.BOLD, 12));
 		
 		startTimeField.setName("EAPstartTimeField");
 		endTimeField.setName("EAPendTimeField");
@@ -189,17 +206,17 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 				appointment.getParticipants().put(user, 1);
 				if (nullAppointment) {
 					appointment.sendAppoinmentToDatabase();					
-					int appCount = DBHandler.getCountOfAppointments();
+					int appCount = ClientDBCalls.getCountOfAppointments();
 					
 					for (User a : appointment.getParticipants().keySet()) {
-						DBHandler.createAttendance(a.getUsername(), appCount, appointment.getParticipants().get(a), 0);
+						ClientDBCalls.createAttendance(a.getUsername(), appCount, appointment.getParticipants().get(a), 0);
 					}
 				} else {
-					DBHandler.updateAppointment(appointment);
-					DBHandler.deleteAttendances(appointment.getAppointmentNr());
+					ClientDBCalls.updateAppointment(appointment);
+					ClientDBCalls.deleteAttendances(appointment.getAppointmentNr());
 					
 					for (User a : appointment.getParticipants().keySet()) {
-						DBHandler.createAttendance(a.getUsername(), appointment.getAppointmentNr(), appointment.getParticipants().get(a), 1);
+						ClientDBCalls.createAttendance(a.getUsername(), appointment.getAppointmentNr(), appointment.getParticipants().get(a), 1);
 					}
 				}
 				

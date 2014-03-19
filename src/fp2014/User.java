@@ -3,7 +3,7 @@ package fp2014;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import database.DBHandler;
+import database.ClientDBCalls;
 
 public class User implements Serializable {
 
@@ -76,6 +76,6 @@ public class User implements Serializable {
 	}
 	
 	public int getNumberOfUnseenNotifications(){
-		return DBHandler.numberOfUnseenNotifications(username);
+		return ClientDBCalls.numberOfUnseenNotifications(username);
 	}
 }

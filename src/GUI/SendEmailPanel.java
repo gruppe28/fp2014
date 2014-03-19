@@ -1,10 +1,10 @@
 package GUI;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
+@SuppressWarnings({"unchecked", "rawtypes", "serial"})
 public class SendEmailPanel extends JPanel implements ActionListener {
 	
 	JButton addAdressBtn;
@@ -28,6 +29,7 @@ public class SendEmailPanel extends JPanel implements ActionListener {
 	JDialog sendMailFrame;
 	JPanel sendMailPanel;
 	ArrayList<String> participantsList;
+	
 	
 	public SendEmailPanel (EditAppointmentPanel parent, ArrayList<String> participantsList){
 		this.parent = parent;
@@ -52,6 +54,12 @@ public class SendEmailPanel extends JPanel implements ActionListener {
 		deleteAdressBtn = new JButton("Remove");
 		cancelBtn = new JButton("Cancel");
 		newEmail = new JTextField("Enter email");
+		
+		addAdressBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		saveBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		deleteAdressBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		cancelBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		newEmail.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		
 		addAdressBtn.addActionListener(this);
 		saveBtn.addActionListener(this);

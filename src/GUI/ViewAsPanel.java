@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -17,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import database.DBHandler;
+import database.ClientDBCalls;
 import fp2014.User;
 
 @SuppressWarnings({"serial", "unchecked"})
@@ -64,7 +65,7 @@ public class ViewAsPanel extends JPanel implements ActionListener{
 		selectedListBox.setPreferredSize(new Dimension(150, 150));
 		
 		// Fill lists
-		ArrayList<User> allUsers = DBHandler.getAllUsers();
+		ArrayList<User> allUsers = ClientDBCalls.getAllUsers();
 		boolean userShownFromBefore;
 		
 		for (User i : allUsers) {
@@ -92,6 +93,11 @@ public class ViewAsPanel extends JPanel implements ActionListener{
 		
 		allUsersLabel = new JLabel("All users:");
 		selectedUsersLabel = new JLabel("Selected users:");
+		
+		allUsersLabel.setFont(new Font("Lucida Grande", Font.BOLD, 12));
+		selectedUsersLabel.setFont(new Font("Lucida Grande", Font.BOLD, 12));
+		add.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		remove.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 
 		// Add elements and manage layout
 		viewPanel.setLayout(new GridBagLayout());

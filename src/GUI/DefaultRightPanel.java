@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,7 +26,7 @@ public class DefaultRightPanel extends JPanel implements ActionListener {
 		nyAvtale = new JButton("New appointment");
 		nyAvtale.addActionListener(this);
 		nyAvtale.setName("DRPnyAvtale");
-		
+		nyAvtale.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		setLayout(new GridBagLayout());
 		
 		this.add(nyAvtale);

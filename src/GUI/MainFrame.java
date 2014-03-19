@@ -24,8 +24,9 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import database.Client;
-import database.DBHandler;
+import database.ClientDBCalls;
 
+import fp2014.Alarm;
 import fp2014.Appointment;
 import fp2014.User;
 import fp2014.Watcher;
@@ -59,7 +60,7 @@ public class MainFrame extends JPanel implements ActionListener {
 		
 		// Set up client
 		client = newClient;
-		DBHandler.setClient(client);
+		ClientDBCalls.setClient(client);
 		
 		this.activeWindow = activeWindow; // Binds argument JFrame to the JFrame field. Makes it possible for the window to close itself on logout.
 		
@@ -135,6 +136,10 @@ public class MainFrame extends JPanel implements ActionListener {
 		nextWeek.addActionListener(new changeWeekListener());
 		alerts.addActionListener(this);
 		viewAs.addActionListener(this);
+		
+		logOut.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		alerts.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		viewAs.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		
 		// GridBag, left header
 		headerLeft.setLayout(new GridBagLayout());
@@ -324,6 +329,10 @@ public class MainFrame extends JPanel implements ActionListener {
 		else if(s == viewAs){
 			new ViewAsPanel(this);
 		}
+	}
+	
+	public void setAlarms(ArrayList<Alarm> alarms){
+		watcher.setAlarms(alarms);
 	}
 
 }

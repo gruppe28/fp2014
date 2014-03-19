@@ -8,7 +8,7 @@ import java.util.TimerTask;
 
 import GUI.AlarmPanel;
 import GUI.MainFrame;
-import database.DBHandler;
+import database.ClientDBCalls;
 
 public class Watcher {
 
@@ -46,12 +46,16 @@ public class Watcher {
 		        }
 		    },
 		    0,
-		    20000); // Repeat each 60 seconds
+		    60000); // Repeat each 60 seconds
 		
 	}
 	
 	public void loadAlarms(){
-		alarms = DBHandler.getAlarms(user);
+		alarms = ClientDBCalls.getAlarms(user);
+	}
+	
+	public void setAlarms(ArrayList<Alarm> alarms){
+		this.alarms = alarms;
 	}
 	
 	public void stop(){
