@@ -10,15 +10,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
-
 import client.ClientDBCalls;
-
 import fp2014.Appointment;
 import fp2014.Notification;
 import fp2014.User;
@@ -89,7 +85,8 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 		parent.updateAnnounchementCounter();
 
 		// Dirty solution for filling up the remaining space of the frame:
-		JTextPane filler = new JTextPane();
+		JTextArea filler = new JTextArea();
+		filler.setEditable(false);
 		gb.weighty = 1;
 		notificationPanel.add(filler, gb);
 		
