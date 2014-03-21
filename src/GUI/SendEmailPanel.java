@@ -99,6 +99,7 @@ public class SendEmailPanel extends JPanel implements ActionListener, FocusListe
 		sendMailFrame.setContentPane(sendMailPanel);
 		sendMailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		sendMailFrame.pack();
+		sendMailFrame.setResizable(false);
 		sendMailFrame.setLocationRelativeTo(parent.parent);
 		sendMailFrame.setVisible(true);
 		
