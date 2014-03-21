@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -16,7 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 @SuppressWarnings({"unchecked", "rawtypes", "serial"})
-public class SendEmailPanel extends JPanel implements ActionListener {
+public class SendEmailPanel extends JPanel implements ActionListener, FocusListener{
 	
 	JButton addAdressBtn;
 	JButton saveBtn;
@@ -65,15 +67,16 @@ public class SendEmailPanel extends JPanel implements ActionListener {
 		saveBtn.addActionListener(this);
 		deleteAdressBtn.addActionListener(this);
 		cancelBtn.addActionListener(this);
+		newEmail.addFocusListener(this);
 		
-		addAdressBtn.setBounds(230,20,95,20);
-		deleteAdressBtn.setBounds(230,50,95,20);
+		addAdressBtn.setBounds(230,20,95,25);
+		deleteAdressBtn.setBounds(230,55,95,25);
 		
-		saveBtn.setBounds(125,220,95,20);
-		cancelBtn.setBounds(20,220,95,20);
+		saveBtn.setBounds(125,225,95,25);
+		cancelBtn.setBounds(20,225,95,25);
 		
-		emailList.setBounds(20,50,200,160);
-		newEmail.setBounds(20,20,200,20);
+		emailList.setBounds(20,55,200,160);
+		newEmail.setBounds(20,20,200,25);
 		
 		sendMailPanel.add(addAdressBtn);
 		sendMailPanel.add(saveBtn);
@@ -91,7 +94,8 @@ public class SendEmailPanel extends JPanel implements ActionListener {
 		sendMailFrame.setName("SEPsendMailFrame");
 		
 		sendMailFrame.setModal(true);
-		sendMailFrame.setMinimumSize(new Dimension(450, 300));
+		sendMailFrame.setPreferredSize(new Dimension(338, 290));
+		sendMailFrame.setMinimumSize(new Dimension(338, 290));
 		sendMailFrame.setContentPane(sendMailPanel);
 		sendMailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		sendMailFrame.pack();
@@ -121,6 +125,22 @@ public class SendEmailPanel extends JPanel implements ActionListener {
 		} else if (s == cancelBtn){
 			sendMailFrame.dispose();
 		}
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		if (e.getSource() == newEmail ){
+			newEmail.selectAll();
+		}
+		
+	}
+	
+	@Override
+	public void focusLost(FocusEvent e) {
+		if (e.getSource() == newEmail){
+			newEmail.select(0, 0);
+		}
+		
 	}
 
 }

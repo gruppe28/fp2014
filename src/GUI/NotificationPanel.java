@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -40,6 +41,7 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 		
 		// Create a panel to store notifications in
 		notificationPanel = new JPanel();
+		notificationPanel.setBackground(Color.WHITE);
 		
 		// Create GridBag for notification panel. Style it.
 		notificationPanel.setLayout(new GridBagLayout());		

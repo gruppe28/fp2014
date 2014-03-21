@@ -2,6 +2,7 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -55,36 +56,33 @@ public class AlarmPanel extends JPanel implements ActionListener{
 		goTo = new JButton("Open appointment");
 		goTo.setName("alarmGoTo");
 		
+		goTo.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		ok.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		text.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		
 		// Add listeners
 		ok.addActionListener(this);
 		goTo.addActionListener(this);
 		
-		// GridBag
-		panel.setLayout(new GridBagLayout());		
-		gb = new GridBagConstraints();
-		gb.fill = GridBagConstraints.BOTH;
-
+		panel.setLayout(null);
 		
-		gb.gridx = 0;
-		gb.gridy = 0;
-		gb.gridwidth = 2;
-		panel.add(text, gb);
+		text.setBounds(20,20,1000,25);
+		ok.setBounds(20,55,160,25);
+		goTo.setBounds(200,55,160,25);
 		
-		gb.gridy = 1;
-		gb.gridwidth = 1;
-		panel.add(ok, gb);
-		
-		gb.gridx = 1;
-		panel.add(goTo, gb);
+		panel.add(text);
+		panel.add(ok);
+		panel.add(goTo);
 		
 		// Generate window
 		dialog.setModal(true);
 		dialog.setAlwaysOnTop(true);
-		dialog.setMinimumSize(new Dimension(440, 100));
+		dialog.setPreferredSize(new Dimension(650, 115));
 		dialog.setContentPane(panel);
 		dialog.setLocationRelativeTo(null);
 		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		dialog.pack();
+		dialog.setResizable(false);
 		dialog.setLocationRelativeTo(parent);
 		dialog.setVisible(true);
 	}

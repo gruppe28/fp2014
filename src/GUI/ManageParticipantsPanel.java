@@ -144,54 +144,33 @@ public class ManageParticipantsPanel extends JPanel implements ActionListener, L
 		groupList.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 
 		// Add elements and manage layout
-		romPanel.setLayout(new GridBagLayout());
-		GridBagConstraints gb = new GridBagConstraints();
+		romPanel.setLayout(null);
+		
+		employeeListBox.setBounds(20,20,200,130);
+		groupListBox.setBounds(20,20,200,130);
+		participantsListBox.setBounds(280,20,200,130);
+		
+		addBtn.setBounds(224,20,50,25); 
+		removeBtn.setBounds(224,55,50,25);
+		
+		people.setBounds(20,150,100,25);
+		groupsBtn.setBounds(120,150,110,25);
+		
+		attendBtn.setBounds(280,150,90,25); 
+		notattendBtn.setBounds(370,150,130,25);
+		
+		saveBtn.setBounds(400,180,80,25);
 
-		gb.fill = GridBagConstraints.HORIZONTAL;
-		gb.anchor = GridBagConstraints.NORTH;
-		gb.weightx = 1;
-		gb.weighty = 0;
-
-		gb.gridx = 0;
-		gb.gridy = 0;
-		gb.gridheight = 3;
-		gb.gridwidth = 2;
-		romPanel.add(employeeListBox, gb);
-		romPanel.add(groupListBox, gb);
-		gb.gridheight = 1;
-		gb.gridwidth = 1;
-		
-		gb.gridx = 2;
-		gb.anchor = GridBagConstraints.SOUTH;
-		romPanel.add(addBtn, gb);
-		gb.gridy = 1;
-		gb.anchor = GridBagConstraints.NORTH;
-		romPanel.add(removeBtn, gb);
-		
-		gb.gridx = 3;
-		gb.gridy = 0;
-		gb.gridwidth = 2;
-		gb.gridheight = 2;
-		gb.anchor = GridBagConstraints.NORTH;
-		romPanel.add(participantsListBox, gb);
-		gb.gridy = 2;
-		gb.gridwidth = 1;
-		gb.gridheight = 1;
-		
-		gb.gridx = 0;
-		romPanel.add(people, gb);
-		
-		gb.gridx = 1;
-		romPanel.add(groupsBtn, gb);
-		
-		gb.gridx = 3;
-		romPanel.add(attendBtn, gb);
-		
-		gb.gridx = 4;
-		romPanel.add(notattendBtn, gb);
-		
-		gb.gridy = 4;
-		romPanel.add(saveBtn, gb);
+		romPanel.add(employeeListBox);
+		romPanel.add(groupListBox);
+		romPanel.add(addBtn);
+		romPanel.add(removeBtn);
+		romPanel.add(participantsListBox);
+		romPanel.add(people);
+		romPanel.add(groupsBtn);
+		romPanel.add(attendBtn);
+		romPanel.add(notattendBtn);
+		romPanel.add(saveBtn);
 		
 		attendBtn.addActionListener(this);
 		notattendBtn.addActionListener(this);
@@ -215,10 +194,11 @@ public class ManageParticipantsPanel extends JPanel implements ActionListener, L
 			
 		romFrame.setModal(true);
 		romFrame.setAlwaysOnTop(true);
-		romFrame.setMinimumSize(new Dimension(450, 230));
+		romFrame.setMinimumSize(new Dimension(500, 245));
 		romFrame.setContentPane(romPanel);
 		romFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		romFrame.pack();
+		romFrame.setResizable(false);
 		romFrame.setLocationRelativeTo(parent.parent);
 		romFrame.setVisible(true);
 	}

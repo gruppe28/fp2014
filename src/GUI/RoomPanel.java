@@ -112,6 +112,19 @@ public class RoomPanel extends JPanel implements ActionListener{
 		numberOfParticipants.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		numberOfParticipantsLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		
+		romPanel.setLayout(null);
+		
+		chooseRoomBtn.setBounds(20,20,160,25);
+		choosePlaceBtn.setBounds(180,20,150,25);
+		
+		placeField.setBounds(20,50,310,25);
+		savePlaceBtn.setBounds(275,90,60,25);
+		
+		numberOfParticipants.setBounds(20,50,280,25);
+		numberOfParticipantsLabel.setBounds(310,50,25,25);
+		romListScroller.setBounds(20,80,310,100);
+		saveRoomBtn.setBounds(230,200,100,25);
+		
 		// Add elements to window
 		romPanel.add(locationLabel);
 		romPanel.add(placeField);
@@ -146,10 +159,11 @@ public class RoomPanel extends JPanel implements ActionListener{
 		savePlaceBtn.addActionListener(this);
 		
 		roomFrame.setModal(true);
-		roomFrame.setMinimumSize(new Dimension(350, 350));
+		roomFrame.setMinimumSize(new Dimension(350, 265));
 		roomFrame.setContentPane(romPanel);
 		roomFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		roomFrame.pack();
+		roomFrame.setResizable(false);
 		roomFrame.setLocationRelativeTo(parent.parent);
 		roomFrame.setVisible(true);
 	}
