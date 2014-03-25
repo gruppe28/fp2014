@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -25,37 +26,30 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import client.Client;
 import client.ClientDBCalls;
-
-
 import fp2014.Alarm;
-import fp2014.Appointment;
+import fp2014.Main;
 import fp2014.User;
 import fp2014.Watcher;
 
 @SuppressWarnings("serial")
-public class MainFrame extends JPanel implements ActionListener {
+public class MainPanel extends JPanel implements ActionListener {
 	
-	protected ArrayList<Appointment> appointments;
-	private GridBagConstraints gbc;
-	protected JFrame activeWindow;
-	private int week;
-	private int year;
-	private JLabel weekNumberLabel;
-	private JButton previousWeek;
-	private JButton nextWeek;
-	private JButton alerts;
-	private JButton logOut;
-	private JButton viewAs;
-	protected JPanel kalender, headerLeft, headerRight, appointment;
+	private JFrame activeWindow;
 	private User user;
-	private ArrayList<User> showUsers;
 	private Client client;
 	private Watcher watcher;
+	private int year, week;
+	private JPanel kalender, headerLeft, headerRight, appointment;
+	private JButton previousWeek, nextWeek, notificationBtn, logOut, viewAs;
+	private JLabel weekNumberLabel;
+	private ArrayList<User> showUsers;
+	private GridBagConstraints gbc;
 	
-	
-	public MainFrame(User user, JFrame activeWindow, Client newClient) {
+	public MainPanel(User user, JFrame activeWindow, Client newClient) {
 		this.user = user;
+		this.activeWindow = activeWindow; // Binds argument JFrame to the JFrame field. Makes it possible for the window to close itself on logout.
 		
+		// Initiate list of users to show in calendar
 		showUsers = new ArrayList<>();
 		showUsers.add(user);
 		
@@ -63,7 +57,6 @@ public class MainFrame extends JPanel implements ActionListener {
 		client = newClient;
 		ClientDBCalls.setClient(client);
 		
-		this.activeWindow = activeWindow; // Binds argument JFrame to the JFrame field. Makes it possible for the window to close itself on logout.
 		
 		// Assures uniform LookAndFeel across systems
 		try {
@@ -98,7 +91,9 @@ public class MainFrame extends JPanel implements ActionListener {
 		// Create Swing elements
 		
 		previousWeek = new JButton("");
+		previousWeek.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		nextWeek = new JButton("");
+		nextWeek.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		  try {
 		    Image leftArrowIcon = ImageIO.read(getClass().getResource("/fp2014/images/left_arrow.png"));
 		    previousWeek.setIcon(new ImageIcon(leftArrowIcon));
@@ -118,13 +113,16 @@ public class MainFrame extends JPanel implements ActionListener {
 		 
 		weekNumberLabel = new JLabel("Week " + week + " - " + year);
 		weekNumberLabel.setFont(new Font("Arial", Font.PLAIN, 26)); // Larger font for the week header
-		alerts = new JButton();
+		notificationBtn = new JButton();
+		notificationBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		logOut = new JButton("Log out " + user.getUsername());
+		logOut.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		viewAs = new JButton("View calendar as");
+		viewAs.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
 		previousWeek.setName("MFpreviousWeek");
 		nextWeek.setName("MFnextWeek");
-		alerts.setName("MFalerts");
+		notificationBtn.setName("MFalerts");
 		logOut.setName("MFlogOut");
 		viewAs.setName("MFviewAs");
 		
@@ -135,11 +133,11 @@ public class MainFrame extends JPanel implements ActionListener {
 		logOut.addActionListener(new logOffListener());
 		previousWeek.addActionListener(new changeWeekListener());
 		nextWeek.addActionListener(new changeWeekListener());
-		alerts.addActionListener(this);
+		notificationBtn.addActionListener(this);
 		viewAs.addActionListener(this);
 		
 		logOut.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
-		alerts.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		notificationBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		viewAs.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		
 		// GridBag, left header
@@ -172,7 +170,7 @@ public class MainFrame extends JPanel implements ActionListener {
 		
 		gbcH.gridx=3;
 		gbcH.gridy=1;
-		headerRight.add(alerts, gbcH);
+		headerRight.add(notificationBtn, gbcH);
 		gbcH.gridy=2;
 		headerRight.add(viewAs, gbcH);
 		
@@ -237,7 +235,13 @@ public class MainFrame extends JPanel implements ActionListener {
 		client.close();
 		watcher.stop();
 		String[] args = {};
-		LoginFrame.main(args);
+		try {
+			Main.main(args);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		activeWindow.setContentPane(new LoginPanel(activeWindow));
 		activeWindow.dispose(); // Close the calendar window
 	}
 
@@ -282,6 +286,10 @@ public class MainFrame extends JPanel implements ActionListener {
 		this.appointment = avtale;
 	}
 	
+	public JPanel getKalender() {
+		return kalender;
+	}
+
 	public int getWeek() {
 		return week;
 	}
@@ -302,9 +310,9 @@ public class MainFrame extends JPanel implements ActionListener {
 	
 	public void updateAnnounchementCounter(){
 		int unseenNotifications = user.getNumberOfUnseenNotifications();
-		alerts.setText("Notifications: " + unseenNotifications);
-		if(unseenNotifications > 0) { alerts.setForeground(Color.RED); }
-		else { alerts.setForeground(Color.BLACK); }
+		notificationBtn.setText("Notifications: " + unseenNotifications);
+		if(unseenNotifications > 0) { notificationBtn.setForeground(Color.RED); }
+		else { notificationBtn.setForeground(Color.BLACK); }
 	}
 	
 	// Listener classes below
@@ -324,7 +332,7 @@ public class MainFrame extends JPanel implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
-		if (s == alerts){
+		if (s == notificationBtn){
 			addNewPanel("avtale", new NotificationPanel(this, user));
 		}
 		else if(s == viewAs){

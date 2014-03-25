@@ -2,34 +2,51 @@ package client;
 
 public class UserDB{
 	
-	public String feedback;
+	private String feedback;
 	private Client client;
+	private String username, password;
 	
-	public UserDB(Client client){
+	public UserDB(Client client, String username, String password){
 		this.client = client;
+		this.username = username;
+		this.password = password;
 	}
 	
 	// Checks the existence of a username with the database
-	public boolean userExists(String inputUsername){
+	public boolean userExists(){
 		client.sendMessage("userExists");
-		client.sendMessage(inputUsername);
+		client.sendMessage(username);
 		boolean exists = (boolean)client.recieveObject();
 		return exists;
 	}
 	
 	// Check if a username/password combination is valid. Proper feedback is written to the feedback field
-	public boolean checkLogin(String inputUsername, String inputPassword){
+	public boolean checkLogin(){
 		
-		boolean exists = userExists(inputUsername);
+		boolean exists = userExists();
 
 		client.sendMessage("findPassword");
-		client.sendMessage(inputUsername);
+		client.sendMessage(username);
 		String password = (String)client.recieveObject();
 		
-		if (exists && (inputPassword.equals(password))) { return true; }
-		else if (exists) { feedback = "Incorrect password."; }
-		else { feedback = "Username does not exist."; }
+		if (exists && (password.equals(password))) {
+			return true;
+			
+		}else if (exists) {
+			feedback = "Incorrect password.";
+			
+		}else {
+			feedback = "User does not exist.";
+			
+		}
 		return false;
+	}
+	
+	public String getFeedback(){
+		if (feedback == null){
+			return "Something went wrong, please contact the system administrator";
+		}
+		return feedback;
 	}
 
 }

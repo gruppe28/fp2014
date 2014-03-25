@@ -7,28 +7,16 @@ import java.util.HashMap;
 import client.ClientDBCalls;
 
 public class Appointment implements Serializable {
-	
-	/*
-	 * muligens best � ha en metode som ser p� alle endringer som er gjort i avtale, og deretter endrer dette i databasen???? Koble dette til lagre knappen elns.
-	 */
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4109998445878823995L;
-	private int appointmentNr;
-	private String name;
-	private String startTime;
-	private String endTime;
-	private String description;
-	private String place;
-	private String Date;
+	
 	private User madeBy;
 	private Room rom;
+	private int appointmentNr;
+	private String name, startTime, endTime, description, place, Date;
 	private HashMap<User, Integer> participants = new HashMap<User, Integer>();
-//	private ArrayList<Ansatt> participants = new ArrayList<Ansatt>();
 	
-	public Appointment (){
+	public Appointment(){
 	}
 	
 	public Appointment(int appointmentNr, String name, String startTime, String endTime, String description, String place, Room room, String startDate, User madeBy) {

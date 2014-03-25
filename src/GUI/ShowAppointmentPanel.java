@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -23,7 +24,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import client.ClientDBCalls;
-
 import fp2014.Appointment;
 import fp2014.User;
 
@@ -40,12 +40,12 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 	private JButton editBtn, deleteBtn, saveBtn, cancelBtn;
 	private JCheckBox hideBox;
 	private Appointment appointment;
-	private MainFrame parent;
+	private MainPanel parent;
 	private User user;
 	private boolean isOwner, isParticipant = false;
 	private int yourStatus;
 	
-	public ShowAppointmentPanel(MainFrame parent, User user, Appointment appointment){
+	public ShowAppointmentPanel(MainPanel parent, User user, Appointment appointment){
 		
 		this.parent = parent;
 		this.appointment = appointment;
@@ -156,6 +156,11 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 		saveBtn.addActionListener(this);
 		cancelBtn.addActionListener(this);
 		
+		editBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		deleteBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		saveBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		cancelBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
 		name.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
 		time.setFont(new Font("Lucida Grande", Font.BOLD, 12));
 		place.setFont(new Font("Lucida Grande", Font.BOLD, 12));
@@ -265,7 +270,7 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 			parent.addNewPanel("avtale", new DefaultRightPanel(parent, user));
 			
 			// Oppdaterer kalenderen til aa vise ingen valgt avtale
-			((CalendarPanel) parent.kalender).unSelectAllAppointments();
+			((CalendarPanel) parent.getKalender()).unSelectAllAppointments();
 			
 		}else if(s == editBtn){
 			parent.addNewPanel("avtale", new EditAppointmentPanel(parent, user, appointment));
@@ -332,7 +337,7 @@ public class ShowAppointmentPanel extends JPanel implements ActionListener{
 			parent.addNewPanel("avtale", new DefaultRightPanel(parent, user));
 			parent.addNewPanel("kalender", new CalendarPanel(parent, user, parent.getShowUsers(), parent.getWeek(), parent.getYear()));
 			// Oppdaterer kalenderen til aa vise ingen valgt avtale
-			((CalendarPanel) parent.kalender).unSelectAllAppointments();
+			((CalendarPanel) parent.getKalender()).unSelectAllAppointments();
 		}
 		
 	}

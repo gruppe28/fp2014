@@ -9,7 +9,7 @@ import java.util.TimerTask;
 import client.ClientDBCalls;
 
 import GUI.AlarmPanel;
-import GUI.MainFrame;
+import GUI.MainPanel;
 
 public class Watcher {
 
@@ -17,7 +17,7 @@ public class Watcher {
 	private User user;
 	private Timer t;
 
-	public Watcher(final MainFrame parent, final User user){
+	public Watcher(final MainPanel parent, final User user){
 		
 		this.user = user;
 		

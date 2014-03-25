@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -9,7 +10,6 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -23,46 +23,44 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import client.ClientDBCalls;
-
 import fp2014.Appointment;
 import fp2014.Group;
 import fp2014.User;
 
 @SuppressWarnings({"serial", "unchecked"})
 public class ManageParticipantsPanel extends JPanel implements ActionListener, ListSelectionListener, ItemListener{
-	
-	JButton saveBtn;
-	JButton addBtn;
-	JButton removeBtn;
-	JRadioButton attendBtn;
-	JRadioButton notattendBtn;
-	
-	JRadioButton groupsBtn;
-	JRadioButton people;
-	
-	DefaultListModel<User> employeeListModel;
-	DefaultListModel<User> participantsListModel;
-	DefaultListModel<Group> groupListModel;
-	
-	JList<User> employeeList;
-	JList<User> participantsList;
-	JScrollPane employeeListBox;
-	JScrollPane participantsListBox;
-	
-	JList<Group> groupList;
-	JScrollPane groupListBox;
-	
-	EditAppointmentPanel parent;
-	JDialog romFrame;
-	HashMap<User, Integer> participants;
-	private boolean changeBlock;
+
+	private EditAppointmentPanel parent;
+	private JDialog romFrame;
 	private Appointment appointment;
+	
+	private JButton saveBtn;
+	private JButton addBtn;
+	private JButton removeBtn;
+	
+	private JRadioButton attendBtn;
+	private JRadioButton notattendBtn;
+	private JRadioButton groupsBtn;
+	private JRadioButton people;
+	
+	private DefaultListModel<User> employeeListModel;
+	private DefaultListModel<User> participantsListModel;
+	private DefaultListModel<Group> groupListModel;
+	
+	private JList<User> employeeList;
+	private JList<User> participantsList;
+	private JList<Group> groupList;
+
+	private JScrollPane employeeListBox;
+	private JScrollPane participantsListBox;
+	private JScrollPane groupListBox;
+	
 	private ArrayList<Group> groupsArray;
 	
+	private boolean changeBlock;
+	
 	public ManageParticipantsPanel(EditAppointmentPanel parent, HashMap<User, Integer> participants) {
-		
 		this.parent = parent;
-		this.participants = participants;
 		
 		changeBlock = false;
 		
@@ -87,10 +85,6 @@ public class ManageParticipantsPanel extends JPanel implements ActionListener, L
 		groupsBtn.addActionListener(this);
 		people.addActionListener(this);
 		people.setSelected(true);
-		
-		ButtonGroup group = new ButtonGroup();
-		group.add(groupsBtn);
-		group.add(people);
 		
 		// Create lists
 		employeeListModel = new DefaultListModel<User>();
@@ -118,7 +112,6 @@ public class ManageParticipantsPanel extends JPanel implements ActionListener, L
 		groupListBox.setPreferredSize(new Dimension(150, 130));
 
 		// Fill group list
-		
 		groupsArray = ClientDBCalls.getGroups();
 		
 		for(Group g : groupsArray){
@@ -131,8 +124,11 @@ public class ManageParticipantsPanel extends JPanel implements ActionListener, L
 		saveBtn = new JButton("Save");
 		
 		addBtn.addActionListener(this);
+		addBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		removeBtn.addActionListener(this);
+		removeBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		saveBtn.addActionListener(this);
+		saveBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
 		people.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		groupsBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
@@ -197,14 +193,14 @@ public class ManageParticipantsPanel extends JPanel implements ActionListener, L
 		romFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		romFrame.pack();
 		romFrame.setResizable(false);
-		romFrame.setLocationRelativeTo(parent.parent);
+		romFrame.setLocationRelativeTo(parent.getParent());
 		romFrame.setVisible(true);
 	}
 	
 	public void getUsers(HashMap<User, Integer> participants){
 		
 		for (User i : participants.keySet()) {
-			if (!i.getUsername().equals(parent.user.getUsername())) {
+			if (!i.getUsername().equals(parent.getUser().getUsername())) {
 				participantsListModel.addElement(i);
 				appointment.editParticipant(i, participants.get(i));				
 			}
@@ -213,7 +209,7 @@ public class ManageParticipantsPanel extends JPanel implements ActionListener, L
 		ArrayList<User> allUsers = ClientDBCalls.getAllUsers();
 		
 		for (User i : allUsers) {
-			if (!i.getUsername().equals(parent.user.getUsername())) {
+			if (!i.getUsername().equals(parent.getUser().getUsername())) {
 				employeeListModel.addElement(i);
 			}
 		}
@@ -292,7 +288,7 @@ public class ManageParticipantsPanel extends JPanel implements ActionListener, L
 				participantsListModel.removeElement(participantsList.getSelectedValue());
 			}
 		} else if (s == saveBtn) {
-			parent.appointment.setParticipants(appointment.getParticipants());
+			parent.getAppointment().setParticipants(appointment.getParticipants());
 			romFrame.dispose();
 		} 
 		

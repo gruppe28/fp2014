@@ -10,8 +10,6 @@ public class Client{
  	String message;
  	Boolean open;
  	
-	public Client(){}
-	
 	public void run()
 	{
 		try{

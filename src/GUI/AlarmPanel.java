@@ -1,9 +1,9 @@
 package GUI;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,19 +20,15 @@ import fp2014.User;
 @SuppressWarnings("serial")
 public class AlarmPanel extends JPanel implements ActionListener{
 
-	GridBagConstraints gb;
-	JTextArea text;
-	JButton ok;
-	JButton goTo;
-	JDialog dialog;
-	JPanel panel;
-	MainFrame parent;
-	Alarm alarm;
-	User user;
+	private MainPanel parent;
+	private Alarm alarm;
+	private User user;
+	private JDialog dialog;
+	private JPanel panel;
+	private JTextArea text;
+	private JButton ok, goTo;
 	
-	
-	public AlarmPanel(MainFrame parent, User user, Alarm alarm){
-		
+	public AlarmPanel(MainPanel parent, User user, Alarm alarm){
 		this.alarm = alarm;
 		this.user = user;
 		this.parent = parent;
@@ -50,10 +46,13 @@ public class AlarmPanel extends JPanel implements ActionListener{
 		text.setBackground( new Color(0, 0, 0, 0) ); // Transparent background
 		text.setMargin(new Insets(0, 0, 10, 0));
 		text.setName("alarmTextArea");
+		
 		ok = new JButton("OK");
 		ok.setName("alarmOk");
+		ok.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		goTo = new JButton("Open appointment");
 		goTo.setName("alarmGoTo");
+		goTo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
 		goTo.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		ok.setFont(new Font("Lucida Grande", Font.PLAIN, 12));

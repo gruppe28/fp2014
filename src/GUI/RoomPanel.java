@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -23,37 +24,24 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import client.ClientDBCalls;
-
 import fp2014.Room;
 
 @SuppressWarnings({"serial", "unchecked"})
 public class RoomPanel extends JPanel implements ActionListener{
 	
-	JLabel locationLabel;
-	JTextField placeField;
-	JButton savePlaceBtn;
-	JSlider numberOfParticipants;
-	JList<Room> roomList;
-	JScrollPane romListScroller;
-	JButton saveRoomBtn;
-	JLabel numberOfParticipantsLabel;
-	JRadioButton choosePlaceBtn;
-	JRadioButton chooseRoomBtn;
-	DefaultListModel<Room> roomListModel;
-	ArrayList<Room> availableRooms;
-	EditAppointmentPanel parent;
-	JDialog roomFrame;
-	
-	String date;
-	String from;
-	String to;
+	private EditAppointmentPanel parent;
+	private JDialog roomFrame;
+	private DefaultListModel<Room> roomListModel;
+	private ArrayList<Room> availableRooms;
+	private JLabel locationLabel, numberOfParticipantsLabel;
+	private JTextField placeField;
+	private JButton savePlaceBtn, saveRoomBtn;
+	private JSlider numberOfParticipants;
+	private JList<Room> roomList;
+	private JScrollPane romListScroller;
+	private JRadioButton choosePlaceBtn, chooseRoomBtn;
 	
 	public RoomPanel(EditAppointmentPanel parent, String date, String from, String to) {
-		
-		this.date = date;
-		this.from = from;
-		this.to = to;
-		
 		this.parent = parent;
 		
 		roomFrame = new JDialog();
@@ -63,16 +51,13 @@ public class RoomPanel extends JPanel implements ActionListener{
 		chooseRoomBtn = new JRadioButton("Select a meeting room", true);
 		choosePlaceBtn = new JRadioButton("Choose a location");
 		
-		
 		romPanel.add(chooseRoomBtn);
 		romPanel.add(choosePlaceBtn);
-		
-		// M�tested-kompo
 		
 		locationLabel = new JLabel("Enter a location:");
 		placeField = new JTextField(20);
 		savePlaceBtn = new JButton("Save");
-		
+		savePlaceBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
 		/*
 		 * Moterom-komponenter
@@ -102,6 +87,7 @@ public class RoomPanel extends JPanel implements ActionListener{
 		roomList.setCellRenderer(new RomListCellRenderer());
 		roomList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		saveRoomBtn = new JButton("Save");
+		saveRoomBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
 		chooseRoomBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		choosePlaceBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
@@ -164,7 +150,7 @@ public class RoomPanel extends JPanel implements ActionListener{
 		roomFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		roomFrame.pack();
 		roomFrame.setResizable(false);
-		roomFrame.setLocationRelativeTo(parent.parent);
+		roomFrame.setLocationRelativeTo(parent.getParent());
 		roomFrame.setVisible(true);
 	}
 	
@@ -210,12 +196,12 @@ public class RoomPanel extends JPanel implements ActionListener{
 			saveRoomBtn.setVisible(false);
 		} 
 		if (e.getSource() == savePlaceBtn){
-			parent.showLocationField.setText(placeField.getText());
+			parent.getShowLocationField().setText(placeField.getText());
 			parent.getAppointment().setPlace(placeField.getText());
 			parent.getAppointment().setRom(null);
 			roomFrame.dispose();
 		} else if (e.getSource() == saveRoomBtn){
-			parent.showLocationField.setText(roomList.getSelectedValue().getPlace());
+			parent.getShowLocationField().setText(roomList.getSelectedValue().getPlace());
 			parent.getAppointment().setRom(roomList.getSelectedValue());
 			parent.getAppointment().setPlace(null);
 			roomFrame.dispose();

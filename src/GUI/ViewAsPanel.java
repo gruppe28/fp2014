@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -17,29 +18,21 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
 import client.ClientDBCalls;
-
 import fp2014.User;
 
 @SuppressWarnings({"serial", "unchecked"})
 public class ViewAsPanel extends JPanel implements ActionListener{
 	
-	JButton save;
-	JButton add;
-	JButton remove;
-	DefaultListModel<User> employeeListModel;
-	DefaultListModel<User> selectedListModel;
-	JList<User> employeeList;
-	JList<User> selectedList;
-	JScrollPane employeeListBox;
-	JScrollPane selectedListBox;
-	MainFrame parent;
-	JDialog viewFrame;
-	ArrayList<User> showUsers;
-	JLabel allUsersLabel;
-	JLabel selectedUsersLabel;
+	private MainPanel parent;
+	private JDialog viewFrame;
+	private ArrayList<User> showUsers;
+	private JList<User> employeeList, selectedList;
+	private JScrollPane employeeListBox, selectedListBox;
+	private DefaultListModel<User> employeeListModel, selectedListModel;
+	private JButton save, add, remove;
+	private JLabel allUsersLabel, selectedUsersLabel;
 	
-	public ViewAsPanel(MainFrame parent) {
-		
+	public ViewAsPanel(MainPanel parent) {
 		this.parent = parent;
 		showUsers = new ArrayList<>();
 		
@@ -91,6 +84,10 @@ public class ViewAsPanel extends JPanel implements ActionListener{
 		remove.addActionListener(this);
 		save.addActionListener(this);
 		
+		add.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		remove.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		save.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
 		allUsersLabel = new JLabel("All users:");
 		selectedUsersLabel = new JLabel("Selected users:");
 		
@@ -124,13 +121,6 @@ public class ViewAsPanel extends JPanel implements ActionListener{
 		
 		viewPanel.add(save);
 		
-		viewFrame.setName("VAPviewFrame");
-		employeeList.setName("VAPemployeeList");
-		selectedList.setName("VAPselectedList");
-		add.setName("VAPaddButton");
-		remove.setName("VAPremove");
-		save.setName("VAPsave");
-		
 		// Set frame options
 		viewFrame.setModal(true);
 		viewFrame.setAlwaysOnTop(true);
@@ -143,7 +133,6 @@ public class ViewAsPanel extends JPanel implements ActionListener{
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		
 		Object s = e.getSource();
 		
 		if (s == add) {

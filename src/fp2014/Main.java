@@ -1,22 +1,19 @@
 package fp2014;
 
-import client.UserDB;
+import javax.swing.JFrame;
+
+import GUI.LoginPanel;
 
 public class Main {
-
-	private UserDB usr;
-
-	public Main() throws Exception {
-		//usr = new UserDB();
-	}
-
+	
 	public static void main(String[] args) throws Exception {
-
-		Main main = new Main();
-		
-		// Tester:
-		System.out.println(main.usr.userExists("admin"));
-		System.out.println(main.usr.checkLogin("admin", "adminpw"));
+		JFrame frame = new JFrame("Login");
+		frame.setContentPane(new LoginPanel(frame));
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(1024,600);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
 	}
 
 }

@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -37,29 +38,21 @@ import fp2014.User;
 @SuppressWarnings("serial")
 public class EditAppointmentPanel extends JPanel implements ActionListener, FocusListener{
 
-	private JTextField nameField;
-	private JTextArea descriptionField;
-	private JLabel startTimeLabel;
-	private JLabel endTimeLabel;
-	private JLabel feedback;
-	private JFormattedTextField startTimeField;
-	private JFormattedTextField endTimeField;
-	private JDateChooser dateChooser;
-	private JButton destinationBtn;
-	public JTextField showLocationField;
-	private JButton inviteViaEmailBtn;
-	private JButton manageParticipantsBtn;
-	private JButton saveBtn;
-	private JButton cancelBtn;
-	protected MainFrame parent;
-	protected User user;
-	protected Appointment appointment;
+	private MainPanel parent;
+	private User user;
+	private Appointment appointment;
 	private MaskFormatter formatter;
-	public ArrayList<String> emailParticipants;
+	private ArrayList<String> emailParticipants;
 	private HashMap<User, Integer> participants;
 	private JComboBox<String> duration;
+	private JTextField nameField, showLocationField;
+	private JTextArea descriptionField;
+	private JLabel startTimeLabel, endTimeLabel, feedback;
+	private JFormattedTextField startTimeField, endTimeField;
+	private JDateChooser dateChooser;
+	private JButton destinationBtn, inviteViaEmailBtn, manageParticipantsBtn, saveBtn, cancelBtn;
 
-	public EditAppointmentPanel(MainFrame parent, User ansatt, Appointment appointment) {
+	public EditAppointmentPanel(MainPanel parent, User ansatt, Appointment appointment) {
 
 		this.appointment = appointment;
 		this.parent = parent;
@@ -82,15 +75,25 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 		startTimeLabel = new JLabel("From:");
 		endTimeLabel = new JLabel("To:");
 		feedback = new JLabel(" ");
+		
 		startTimeField = new JFormattedTextField(formatter);
 		endTimeField = new JFormattedTextField(formatter);
-		dateChooser = new JDateChooser();
-		destinationBtn = new JButton("Select location");
+
 		showLocationField = new JTextField("Location not chosen");
+		
+		dateChooser = new JDateChooser();
+		
+		destinationBtn = new JButton("Select location");
+		destinationBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		manageParticipantsBtn = new JButton("Manage participants");
+		manageParticipantsBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		saveBtn = new JButton("Save");
+		saveBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		cancelBtn = new JButton("Cancel");
+		cancelBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		inviteViaEmailBtn = new JButton("Invite participants via email");
+		inviteViaEmailBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
 		duration = new JComboBox<String>();
 		duration.setPrototypeDisplayValue("xx:xx");
 		addDurationsToBox();
@@ -110,17 +113,6 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 		cancelBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		inviteViaEmailBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		feedback.setFont(new Font("Lucida Grande", Font.BOLD, 12));
-		
-		startTimeField.setName("EAPstartTimeField");
-		endTimeField.setName("EAPendTimeField");
-		dateChooser.setName("EAPdateChooser");
-		destinationBtn.setName("EAPdestinationButton");
-		showLocationField.setName("EAPshowLocationField");
-		manageParticipantsBtn.setName("EAPmanageParticipantsButton");
-		saveBtn.setName("EAPsaveButton");
-		cancelBtn.setName("EAPcancelButton");
-		inviteViaEmailBtn.setName("EAPinviteViaEmailButton");
-		duration.setName("EAPduration");
 		
 		feedback.setForeground(Color.RED);
 		
@@ -228,7 +220,7 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 				parent.addNewPanel("kalender", new CalendarPanel(parent, user, parent.getShowUsers(), parent.getWeek(), parent.getYear()));
 				
 				// Oppdaterer kalenderen til å vise ingen valgt avtale
-				((CalendarPanel) parent.kalender).unSelectAllAppointments();
+				((CalendarPanel) parent.getKalender()).unSelectAllAppointments();
 				
 			}
 
@@ -240,7 +232,7 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 			parent.addNewPanel("avtale", new DefaultRightPanel(parent, user));
 			
 			// Oppdaterer kalenderen til å vise ingen valgt avtale
-			((CalendarPanel) parent.kalender).unSelectAllAppointments();
+			((CalendarPanel) parent.getKalender()).unSelectAllAppointments();
 			
 		} else if (s == destinationBtn) {
 
@@ -299,6 +291,18 @@ public class EditAppointmentPanel extends JPanel implements ActionListener, Focu
 	
 	public void setParticipants(HashMap<User, Integer> participants){
 		this.participants = participants;
+	}
+
+	public JTextField getShowLocationField() {
+		return showLocationField;
+	}
+
+	public MainPanel getParent() {
+		return parent;
+	}
+
+	public User getUser() {
+		return user;
 	}
 
 	public String checkDate() {

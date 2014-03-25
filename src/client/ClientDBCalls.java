@@ -3,16 +3,17 @@ package client;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
+
 import fp2014.Alarm;
+import fp2014.Appointment;
 import fp2014.Group;
 import fp2014.Notification;
-import fp2014.User;
-import fp2014.Appointment;
 import fp2014.Room;
+import fp2014.User;
 
+// All communication with the database should go through this class.
 @SuppressWarnings("unchecked")
 public final class ClientDBCalls {
-	
 	
 	private static Client client;
 	
@@ -20,13 +21,9 @@ public final class ClientDBCalls {
 		client = c;
 	}
 	
-	// All communication with the database should go through this class.
-	
 	private ClientDBCalls(){ } // Ensures that you cannot make instances of class.
 	
 	public static int numberOfUnseenNotifications(String username){
-
-		
 		client.sendMessage("numberOfUnseenNotifications");
 		client.sendMessage(username);
 		int number = (int)client.recieveObject();
@@ -34,10 +31,7 @@ public final class ClientDBCalls {
 		return number;
 	}
 	
-
 	public static ArrayList<Notification> getUnseenNotifications(String username){
-		
-		
 		client.sendMessage("getUnseenNotifications");
 		client.sendMessage(username);
 		ArrayList<Notification> list = (ArrayList<Notification>)client.recieveObject();
@@ -46,8 +40,6 @@ public final class ClientDBCalls {
 	}
 	
 	public static ArrayList<Notification> getSeenNotifications(String username){
-		
-		
 		client.sendMessage("getSeenNotifications");
 		client.sendMessage(username);
 		ArrayList<Notification> list = (ArrayList<Notification>)client.recieveObject();
@@ -56,8 +48,6 @@ public final class ClientDBCalls {
 	}
 	
 	public static ArrayList<Room> getAvailableRooms(String date, String from, String to){
-		
-		
 		client.sendMessage("getAvailableRooms");
 		client.sendMessage(date);
 		client.sendMessage(from);
@@ -68,8 +58,6 @@ public final class ClientDBCalls {
 	}
 	
 	public static ArrayList<Room> getRoomsWithCapacity(int capacity){
-		
-		
 		client.sendMessage("getRoomsWithCapacity");
 		client.sendObject(capacity);
 		ArrayList<Room> list = (ArrayList<Room>)client.recieveObject();
@@ -78,8 +66,6 @@ public final class ClientDBCalls {
 	}
 	
 	public static ArrayList<Appointment> getAppointmentsInInterval(ArrayList<User> users, ArrayList<String> days){
-		
-		
 		client.sendMessage("getAppointmentsInInterval");
 		client.sendObject(users);
 		client.sendObject(days);
@@ -90,7 +76,6 @@ public final class ClientDBCalls {
 	
 	// Fetches an Ansatt from the database based on username and returns it as an Ansatt object
 	public static User getAnsatt(String brukernavn) {
-		
 		client.sendMessage("getAnsatt");
 		client.sendObject(brukernavn);
 		User a = (User)client.recieveObject();
@@ -99,8 +84,6 @@ public final class ClientDBCalls {
 	}
 	
 	public static Room getRom(int romNr) {
-		
-		
 		client.sendMessage("getRom");
 		client.sendObject(romNr);
 		Room r = (Room)client.recieveObject();
@@ -117,8 +100,6 @@ public final class ClientDBCalls {
 	}
 	
 	public static ArrayList<User> getAllUsers(){
-		
-		
 		client.sendMessage("getAllUsers");
 		ArrayList<User> list = (ArrayList<User>)client.recieveObject();
 		
@@ -127,8 +108,6 @@ public final class ClientDBCalls {
 	
 	// Alarm queries
 	public static ArrayList<Alarm> getAlarms(User user){
-		
-		
 		client.sendMessage("getAlarms");
 		client.sendObject(user);
 		ArrayList<Alarm> list = (ArrayList<Alarm>)client.recieveObject();
@@ -137,8 +116,6 @@ public final class ClientDBCalls {
 	}
 	
 	public static void createAlarm(String time, String date, String username, int appointmentNum, int type){
-		
-		
 		client.sendMessage("createAlarm");
 		client.sendMessage(time);
 		client.sendMessage(date);
@@ -149,8 +126,6 @@ public final class ClientDBCalls {
 	}
 	
 	public static void createNotification(String text, Set<User> recipients, int appointmentNum){
-		
-		
 		client.sendMessage("createNotification");
 		client.sendMessage(text);
 		client.sendObject(recipients);
@@ -159,8 +134,6 @@ public final class ClientDBCalls {
 	}
 	
 	public static void deleteAlarm(String username, int appointmentNum){
-		
-		
 		client.sendMessage("deleteAlarm");
 		client.sendMessage(username);
 		client.sendObject(appointmentNum);
@@ -177,8 +150,6 @@ public final class ClientDBCalls {
 	
 	// Update attendance
 	public static void updateAttendance(String username, int appointmentNum, int attendance){
-		
-		
 		client.sendMessage("updateAttendance");
 		client.sendMessage(username);
 		client.sendObject(appointmentNum);
@@ -188,8 +159,6 @@ public final class ClientDBCalls {
 	
 	// Update hidden
 	public static void updateHidden(String username, int appointmentNum, int status){
-		
-		
 		client.sendMessage("updateHidden");
 		client.sendMessage(username);
 		client.sendObject(appointmentNum);
@@ -199,8 +168,6 @@ public final class ClientDBCalls {
 	
 	// Update changed
 	public static void updateChanged(String username, int appointmentNum){
-		
-		
 		client.sendMessage("updateChanged");
 		client.sendMessage(username);
 		client.sendObject(appointmentNum);
@@ -209,8 +176,6 @@ public final class ClientDBCalls {
 	
 	// Get attendants and their status
 	public static HashMap<User, Integer> getAttendants(int appointmentNum){
-		
-		
 		client.sendMessage("getAttendants");
 		client.sendObject(appointmentNum);
 		HashMap<User, Integer> map = (HashMap<User, Integer>)client.recieveObject();
@@ -219,8 +184,6 @@ public final class ClientDBCalls {
 	}
 	
 	public static void createAttendance(String username, int appointmentNum, int attendance, int change) {
-		
-		
 		client.sendMessage("createAttendance");
 		client.sendMessage(username);
 		client.sendObject(appointmentNum);
@@ -230,8 +193,6 @@ public final class ClientDBCalls {
 	}
 	
 	public static int getCountOfAppointments(){
-		
-		
 		client.sendMessage("getCountOfAppointments");
 		int count = (int)client.recieveObject();
 		
@@ -239,16 +200,12 @@ public final class ClientDBCalls {
 	}
 	
 	public static void deleteAttendances(int appointmentNum){
-		
-		
 		client.sendMessage("deleteAttendances");
 		client.sendObject(appointmentNum);
 		
 	}
 	
 	public static void deleteAttendance(String brukernavn, int appointmentNum){
-		
-		
 		client.sendMessage("deleteAttendance");
 		client.sendMessage(brukernavn);
 		client.sendObject(appointmentNum);
@@ -256,24 +213,18 @@ public final class ClientDBCalls {
 	}
 	
 	public static void deleteAppointment(int appointmentNum){
-		
-		
 		client.sendMessage("deleteAppointment");
 		client.sendObject(appointmentNum);
 		
 	}
 	
 	public static void updateAppointment(Appointment appointment) {
-		
-		
 		client.sendMessage("updateAppointment");
 		client.sendObject(appointment);
 		
 	}
 	
 	public static boolean isChanged(String username, int appointmentNum){
-		
-		
 		client.sendMessage("isChanged");
 		client.sendMessage(username);
 		client.sendObject(appointmentNum);

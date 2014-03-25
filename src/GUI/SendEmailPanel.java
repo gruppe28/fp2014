@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -7,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
+
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -20,17 +22,14 @@ import javax.swing.ListSelectionModel;
 @SuppressWarnings({"unchecked", "rawtypes", "serial"})
 public class SendEmailPanel extends JPanel implements ActionListener, FocusListener{
 	
-	JButton addAdressBtn;
-	JButton saveBtn;
-	JButton deleteAdressBtn;
-	JButton cancelBtn;
-	JList emailList;
-	JTextField newEmail;
-	EditAppointmentPanel parent;
-	DefaultListModel<String> emailListModel;
-	JDialog sendMailFrame;
-	JPanel sendMailPanel;
-	ArrayList<String> participantsList;
+	private EditAppointmentPanel parent;
+	private JDialog sendMailFrame;
+	private JPanel sendMailPanel;
+	private	DefaultListModel<String> emailListModel;
+	private ArrayList<String> participantsList;
+	private JList emailList;
+	private JTextField newEmail;
+	private JButton addAdressBtn, saveBtn, deleteAdressBtn, cancelBtn;
 	
 	
 	public SendEmailPanel (EditAppointmentPanel parent, ArrayList<String> participantsList){
@@ -69,6 +68,12 @@ public class SendEmailPanel extends JPanel implements ActionListener, FocusListe
 		cancelBtn.addActionListener(this);
 		newEmail.addFocusListener(this);
 		
+		addAdressBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		saveBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		deleteAdressBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		cancelBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		newEmail.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
 		addAdressBtn.setBounds(230,20,95,25);
 		deleteAdressBtn.setBounds(230,55,95,25);
 		
@@ -100,7 +105,7 @@ public class SendEmailPanel extends JPanel implements ActionListener, FocusListe
 		sendMailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		sendMailFrame.pack();
 		sendMailFrame.setResizable(false);
-		sendMailFrame.setLocationRelativeTo(parent.parent);
+		sendMailFrame.setLocationRelativeTo(parent.getParent());
 		sendMailFrame.setVisible(true);
 		
 	}

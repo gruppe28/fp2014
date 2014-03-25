@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -19,7 +20,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 
 import client.ClientDBCalls;
-
 import fp2014.Appointment;
 import fp2014.Notification;
 import fp2014.User;
@@ -28,14 +28,13 @@ import fp2014.User;
 public class NotificationPanel extends JPanel implements ActionListener, FocusListener {
 
 	private JButton exitBtn;
-	private MainFrame parent;
+	private MainPanel parent;
 	private JPanel notificationPanel;
 	private JScrollPane scrollPanel;
 	private User user;
-	private ArrayList<Notification> unseenNotifications;
-	private ArrayList<Notification> seenNotifications;
+	private ArrayList<Notification> unseenNotifications, seenNotifications;
 
-	public NotificationPanel(MainFrame parent, User user) {
+	public NotificationPanel(MainPanel parent, User user) {
 		this.parent = parent; 
 		this.user = user;
 		
@@ -66,6 +65,7 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 			notification.setLayout(null);
 			notification.setSize(200, 200);
 			notification.setMargin(new Insets(5, 5, 15, 0));
+			notification.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			notificationPanel.add(notification, gb);
 			gb.gridy++;
 		}
@@ -103,6 +103,7 @@ public class NotificationPanel extends JPanel implements ActionListener, FocusLi
 		
 		// Style exit button
 		exitBtn = new JButton("Exit");
+		exitBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		exitBtn.addActionListener(this);
 		exitBtn.setPreferredSize(new Dimension(220, 30));
 		exitBtn.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
