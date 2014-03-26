@@ -22,7 +22,7 @@ public class Server{
 	void run()
 	{
 		try{
-			providerSocket = new ServerSocket(2808, 1000);
+			providerSocket = new ServerSocket(2828, 1000);
 			System.out.println("Waiting for connection");
 			connection = providerSocket.accept();
 			out = new ObjectOutputStream(connection.getOutputStream());
