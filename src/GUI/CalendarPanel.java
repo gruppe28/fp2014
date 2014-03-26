@@ -309,9 +309,6 @@ public class CalendarPanel extends JPanel implements FocusListener {
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		//int x = existingTextAreas.indexOf(e.getSource());
-		//existingTextAreas.get(x).setBackground(Color.GRAY);
-		
 	}
 
 }
