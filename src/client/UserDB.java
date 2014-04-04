@@ -1,5 +1,6 @@
 package client;
 
+@SuppressWarnings("unused")
 public class UserDB{
 	
 	private String feedback;
